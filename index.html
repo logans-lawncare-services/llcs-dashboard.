@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLCS Modular Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>LLCS Dashboard (Modular)</h1>
+    <div class="row">
+      <label>Current role</label>
+      <select id="currentRole">
+        <option value="founder">Founder</option>
+        <option value="admin">Admin</option>
+        <option value="employee">Employee</option>
+      </select>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="home">Home</button>
+    <button class="tab" data-tab="jobs">Jobs</button>
+    <button class="tab" data-tab="expenses">Expenses</button>
+    <button class="tab" data-tab="customers">Customers</button>
+    <button class="tab" data-tab="charts">Charts</button>
+    <button class="tab" data-tab="admin">Admin</button>
+  </nav>
+
+  <main>
+    <section id="home" class="panel active">
+      <h2>Today schedule</h2>
+      <div id="todaySummary"></div>
+      <h3>Quick stats</h3>
+      <div id="quickStats" class="cards"></div>
+    </section>
+
+    <section id="jobs" class="panel">
+      <h2>Add job</h2>
+      <form id="jobForm" class="grid">
+        <input id="jobName" placeholder="Job name" required />
+        <select id="jobCustomer"></select>
+        <input id="jobNeighborhood" placeholder="Neighborhood" />
+        <input id="jobZip" placeholder="Zip code" />
+        <select id="jobSize">
+          <option value="small">Small</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+        </select>
+        <input id="jobBasePayment" type="number" min="0" step="0.01" placeholder="Base payment" required />
+        <input id="jobTipAmount" type="number" min="0" step="0.01" placeholder="Tip amount" />
+        <input id="jobScheduledDate" type="date" required />
+        <input id="jobWindow" placeholder="Time window (e.g. 8:00-10:00)" />
+        <input id="jobCompletedDate" type="date" />
+        <textarea id="jobNotes" placeholder="Notes"></textarea>
+        <div class="checklist">
+          <label><input type="checkbox" id="taskMow" checked /> Mow</label>
+          <label><input type="checkbox" id="taskTrim" checked /> Trim</label>
+          <label><input type="checkbox" id="taskEdge" checked /> Edge</label>
+          <label><input type="checkbox" id="taskBlow" checked /> Blow</label>
+        </div>
+        <button type="submit">Save job</button>
+      </form>
+      <div id="jobsList"></div>
+    </section>
+
+    <section id="expenses" class="panel">
+      <h2>Add expense</h2>
+      <form id="expenseForm" class="grid">
+        <input id="expenseDescription" placeholder="Description" required />
+        <input id="expenseAmount" type="number" min="0" step="0.01" placeholder="Amount" required />
+        <input id="expenseDate" type="date" required />
+        <select id="expenseCategory">
+          <option>gas</option><option>equipment</option><option>supplies</option><option>advertising</option><option>other</option>
+        </select>
+        <select id="expensePaymentMethod">
+          <option>cash</option><option>card</option><option>Zelle</option><option>check</option><option>other</option>
+        </select>
+        <input id="expenseVendor" placeholder="Vendor" />
+        <button type="submit">Save expense</button>
+      </form>
+      <div id="expensesList"></div>
+    </section>
+
+    <section id="customers" class="panel">
+      <h2>Customer profiles</h2>
+      <form id="customerForm" class="grid">
+        <input id="customerName" placeholder="Name" required />
+        <input id="customerAddress" placeholder="Address" />
+        <input id="customerPhone" placeholder="Phone" />
+        <input id="customerNeighborhood" placeholder="Neighborhood" />
+        <input id="customerZip" placeholder="Zip code" />
+        <textarea id="customerNotes" placeholder="Notes"></textarea>
+        <button type="submit">Add customer</button>
+      </form>
+      <div id="customersList"></div>
+    </section>
+
+    <section id="charts" class="panel">
+      <h2>Analytics</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Profit by month</h3>
+          <canvas id="profitChart" width="700" height="260"></canvas>
+        </div>
+        <div class="card">
+          <h3>Average revenue per job by area</h3>
+          <select id="areaMode"><option value="neighborhood">Neighborhood</option><option value="zip">Zip</option></select>
+          <canvas id="avgAreaChart" width="700" height="260"></canvas>
+        </div>
+        <div class="card">
+          <h3>Job size trend by month</h3>
+          <canvas id="sizeTrendChart" width="700" height="260"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section id="admin" class="panel">
+      <h2>Backup &amp; migrate</h2>
+      <p class="muted">Export this app&apos;s data, or import from a backup file / your old LLCS dashboard (same browser).</p>
+      <div class="backup-row row-wrap">
+        <button type="button" id="exportBackupBtn">Download full backup (JSON)</button>
+        <label class="muted" style="display:flex; align-items:center; gap:8px;">
+          Import mode:
+          <select id="importModeSelect">
+            <option value="merge">Merge with current data</option>
+            <option value="replace">Replace all modular data</option>
+          </select>
+        </label>
+        <input type="file" id="importFileInput" accept="application/json,.json" hidden />
+        <button type="button" id="importBackupBtn" class="btn-secondary">Import from JSON file…</button>
+        <button type="button" id="pullLegacyLsBtn" class="btn-secondary">Import from legacy localStorage (bd_*)</button>
+      </div>
+      <p class="muted">Legacy dashboard uses keys <code>bd_jobs</code>, <code>bd_expenses</code>, etc. Pull reads them only in this browser (open the old page once first if needed).</p>
+      <h2>Role permissions editor</h2>
+      <div id="permissionsEditor"></div>
+      <h2>Audit log</h2>
+      <div id="auditList"></div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
