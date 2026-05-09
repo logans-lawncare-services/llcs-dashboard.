@@ -484,6 +484,7 @@
 
     .charts-grid { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
 
+    /* Chart card hover pop */
     .chart-card {
       background-color: var(--card-elevated);
       border-radius: 16px;
@@ -494,9 +495,9 @@
       transform-origin: center;
     }
     .chart-card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.75);
-      border-color: rgba(56, 189, 248, 0.6);
+      transform: scale(1.03);
+      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.8);
+      border-color: rgba(56, 189, 248, 0.75);
     }
     .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
     .chart-title {
@@ -552,7 +553,7 @@
     .chart-card.fullscreen:hover {
       transform: none;
       box-shadow: 0 12px 40px rgba(0,0,0,0.85);
-      border-color: rgba(56, 189, 248, 0.6);
+      border-color: rgba(56, 189, 248, 0.75);
     }
     .chart-card.fullscreen .chart-canvas {
       height: calc(100vh - 140px);
@@ -683,10 +684,567 @@
   </style>
 </head>
 <body>
-  <!-- (HTML body identical to previous answer: login, tabs, etc.) -->
-  <!-- For brevity, only the SCRIPT changed in ways that matter to you. -->
-  <!-- Paste your existing HTML body from the previous file here unchanged. -->
-  <!-- THEN replace the entire <script>...</script> section with the one below. -->
+  <!-- LOGIN PAGE -->
+  <div class="login" id="loginPage">
+    <div class="login-card">
+      <h2>LLCS Business Dashboard</h2>
+      <p class="login-subtitle">Sign in with your LLCS account</p>
+      <form id="loginForm" onsubmit="return false;">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input id="username" type="text" autocomplete="off" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="off" required />
+        </div>
+        <div class="form-actions" style="justify-content:center;">
+          <button type="button" class="btn" id="loginBtn">Login</button>
+        </div>
+      </form>
+      <div id="loginError" class="alert"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+    <header class="header">
+      <div class="logo">
+        <img src="https://i.postimg.cc/3RJNmCnN/Untitled-removebg-preview.png" alt="LLCS Logo" class="logo-img" />
+        LLCS Business Dashboard
+      </div>
+
+      <button type="button" class="btn small secondary" id="themeToggleBtn" style="margin-right:0.5rem;">
+        <span id="themeToggleLabel">Dark</span> mode
+      </button>
+
+      <div class="user-info">
+        <span id="currentUserLabel">User</span>
+        <span id="currentNameLabel" style="font-weight:500;"></span>
+        <span class="admin-tag" id="currentRoleLabel">Role</span>
+        <button class="btn danger small" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+
+    <input type="checkbox" id="navToggle" class="nav-toggle" />
+    <label for="navToggle" class="hamburger">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav class="nav" id="navBar">
+      <ul class="nav-menu">
+        <li><a href="#" class="nav-link" data-tab="homeTab" id="homeNav">Home</a></li>
+        <li>
+          <a href="#" class="nav-link" data-tab="expensesTab" id="expensesNav">
+            Expenses <span id="expensesBadge" style="margin-left:4px;font-size:0.75rem;display:none;"></span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-tab="jobsTab" id="jobsNav">
+            Jobs <span id="jobsBadge" style="margin-left:4px;font-size:0.75rem;display:none;"></span>
+          </a>
+        </li>
+        <li><a href="#" class="nav-link" data-tab="kanbanTab" id="kanbanNav">Jobs columned</a></li>
+        <li><a href="#" class="nav-link" data-tab="chartsTab" id="chartsNav">Charts</a></li>
+        <li><a href="#" class="nav-link" data-tab="adminTab" id="adminNav" style="display:none;">Admin</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <!-- HOME TAB -->
+      <section class="tab" id="homeTab">
+        <div class="card">
+          <div class="card-header">Welcome to LLCS dashboard</div>
+          <div class="card-subtitle">
+            Keep track of jobs, expenses, and money for Logan’s Lawncare Services in one place.
+          </div>
+          <p style="font-size:0.86rem;color:#d1d5db;margin-bottom:0.5rem;">
+            Use the navigation to move between sections:
+          </p>
+          <ul style="font-size:0.84rem;color:#e5e7eb;margin-left:1rem;margin-bottom:0.6rem;list-style:disc;">
+            <li><strong>Expenses</strong>: Submit and approve expenses.</li>
+            <li><strong>Jobs</strong>: Add work, payments, and notes.</li>
+            <li><strong>Jobs columned</strong>: Kanban view by status.</li>
+            <li><strong>Charts</strong>: See patterns in your work and money.</li>
+            <li><strong>Admin</strong>: Manage accounts, totals, and exports.</li>
+          </ul>
+          <p style="font-size:0.82rem;color:#9ca3af;">
+            All data is stored locally in this browser for your LLCS GitHub Pages site.
+          </p>
+        </div>
+
+        <div class="card" id="homeAdminCard" style="display:none;">
+          <div class="card-header">Founder / Admin quick tools</div>
+          <div class="card-subtitle">Shortcuts to common admin actions.</div>
+          <div class="form-actions">
+            <button type="button" class="btn secondary small" id="homeGoAdminBtn">Open admin page</button>
+            <button type="button" class="btn small" id="exportAllDataBtn">Export all data (JSON)</button>
+          </div>
+        </div>
+
+        <div class="card" id="homePendingCard" style="display:none;">
+          <div class="card-header">Pending approvals</div>
+          <div class="card-subtitle" id="homePendingText">
+            You have pending expenses to review.
+          </div>
+        </div>
+
+        <div class="card" id="homeMySummaryCard" style="display:none; cursor:pointer;">
+          <div class="card-header">Your snapshot</div>
+          <div class="card-subtitle">Tap to jump to this month’s jobs.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.4rem;font-size:0.85rem;">
+            <div style="flex:1 1 120px;min-width:120px;">
+              <div style="color:#9ca3af;">Jobs done this week</div>
+              <div id="homeMyJobsWeek" style="font-weight:600;font-size:1.1rem;">0</div>
+            </div>
+            <div style="flex:1 1 120px;min-width:120px;">
+              <div style="color:#9ca3af;">Revenue this month (your jobs)</div>
+              <div id="homeMyRevenueMonth" style="font-weight:600;font-size:1.1rem;">$0.00</div>
+            </div>
+            <div style="flex:1 1 120px;min-width:120px;">
+              <div style="color:#9ca3af;">Your pending expenses</div>
+              <div id="homeMyPendingExpenses" style="font-weight:600;font-size:1.1rem;">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPENSES TAB -->
+      <section class="tab" id="expensesTab">
+        <div class="card">
+          <div class="filter-bar">
+            <div class="filter-row">
+              <span><strong>Expenses</strong> filters:</span>
+              <input type="text" id="expenseSearch" placeholder="Search description or name" />
+              <select id="expenseStatusFilter">
+                <option value="all">All statuses</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+              </select>
+              <span>Date:</span>
+              <select id="expenseQuickRange">
+                <option value="all">All time</option>
+                <option value="week">This week</option>
+                <option value="month">This month</option>
+                <option value="season">This season</option>
+                <option value="year">This year</option>
+              </select>
+              <input type="date" id="expenseFromDate" />
+              <input type="date" id="expenseToDate" />
+              <button type="button" class="btn small secondary" id="expenseFilterApply">Apply</button>
+              <button type="button" class="btn small secondary" id="expenseFilterClear">Clear</button>
+            </div>
+          </div>
+          <div class="card-header">Add expense</div>
+          <div class="card-subtitle">Everyone can submit expenses. Admins approve them.</div>
+          <form id="expenseForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="expenseDesc">What did you buy?</label>
+              <input id="expenseDesc" type="text" placeholder="Gas, trimmer line, repair..." required />
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="expenseAmount">Amount</label>
+                <input id="expenseAmount" type="number" min="0" step="0.01" required />
+              </div>
+              <div class="form-group">
+                <label for="expenseDate">Date</label>
+                <input id="expenseDate" type="date" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" id="addExpenseBtn">Save expense</button>
+              <button type="button" class="btn secondary small" id="exportExpensesCsvBtn">Export expenses CSV</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Expenses list</div>
+          <div class="card-subtitle">See what’s pending and what’s already approved.</div>
+          <div class="table-container">
+            <table id="expensesTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="desc" data-key="description">Description</th>
+                  <th class="sortable" data-sort="desc" data-key="amount">Amount</th>
+                  <th class="sortable" data-sort="desc" data-key="date">Date</th>
+                  <th class="sortable" data-sort="desc" data-key="status">Status</th>
+                  <th class="sortable" data-sort="desc" data-key="submittedByName">Submitted by</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="expensesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- JOBS TAB -->
+      <section class="tab" id="jobsTab">
+        <div class="card">
+          <div class="filter-bar">
+            <div class="filter-row">
+              <span><strong>Jobs</strong> filters:</span>
+              <input type="text" id="jobSearch" placeholder="Search job name, tags, or worker" />
+              <select id="jobStatusFilter">
+                <option value="all">All statuses</option>
+                <option value="planned">Planned</option>
+                <option value="in_progress">In progress</option>
+                <option value="done">Done</option>
+                <option value="paid">Paid</option>
+              </select>
+              <select id="jobPriorityFilter">
+                <option value="all">All priority</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+              <select id="jobViewFilter">
+                <option value="all">All jobs</option>
+                <option value="mine">My jobs only</option>
+              </select>
+              <span>Date:</span>
+              <select id="jobQuickRange">
+                <option value="all">All time</option>
+                <option value="week">This week</option>
+                <option value="month">This month</option>
+                <option value="season">This season</option>
+                <option value="year">This year</option>
+              </select>
+              <input type="date" id="jobFromDate" />
+              <input type="date" id="jobToDate" />
+              <button type="button" class="btn small secondary" id="jobFilterApply">Apply</button>
+              <button type="button" class="btn small secondary" id="jobFilterClear">Clear</button>
+            </div>
+          </div>
+          <div class="card-header">Add job</div>
+          <div class="card-subtitle">Your account sets the worker name and creator.</div>
+          <form id="jobForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="jobName">Job name</label>
+              <input id="jobName" type="text" placeholder="Front yard mow, leaf cleanup..." required />
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="jobSize">Size</label>
+                <select id="jobSize" required>
+                  <option value="">Select size</option>
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="jobPayment">Payment</label>
+                <input id="jobPayment" type="number" min="0" step="0.01" required />
+              </div>
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="jobStatus">Status</label>
+                <select id="jobStatus" required>
+                  <option value="planned">Planned</option>
+                  <option value="in_progress">In progress</option>
+                  <option value="done">Done</option>
+                  <option value="paid">Paid</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="jobPriority">Priority</label>
+                <select id="jobPriority" required>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="jobTags">Tags (optional)</label>
+              <input id="jobTags" type="text" placeholder="front-yard, weekly, new-customer" />
+            </div>
+            <div class="form-group">
+              <label for="jobAttachment">Attachment URL (optional)</label>
+              <input id="jobAttachment" type="url" placeholder="Link to photo or doc (https://...)" />
+            </div>
+            <div class="form-group">
+              <label for="jobNotes">Notes (optional)</label>
+              <textarea id="jobNotes" placeholder="Gate code, special requests, etc."></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" id="addJobBtn">Save job</button>
+              <button type="button" class="btn secondary small" id="exportJobsCsvBtn">Export jobs CSV</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Jobs list</div>
+          <div class="card-subtitle">Jobs are grouped by worker name. Admins can edit any job inline.</div>
+          <div class="table-container">
+            <table id="jobsTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="desc" data-key="name">Job</th>
+                  <th class="sortable" data-sort="desc" data-key="status">Status</th>
+                  <th class="sortable" data-sort="desc" data-key="priority">Priority</th>
+                  <th class="sortable" data-sort="desc" data-key="size">Size</th>
+                  <th class="sortable" data-sort="desc" data-key="payment">Payment</th>
+                  <th class="sortable" data-sort="desc" data-key="date">Date</th>
+                  <th>Worker</th>
+                  <th>Tags</th>
+                  <th>Attachment</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="jobsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- KANBAN TAB -->
+      <section class="tab" id="kanbanTab">
+        <div class="card">
+          <div class="kanban-bar">
+            <div>
+              <span class="card-header">Jobs columned</span>
+              <span class="card-subtitle">See jobs move from planned → paid.</span>
+            </div>
+            <div class="kanban-toggle">
+              <label><input type="radio" name="kanbanView" value="all" checked /> All jobs</label>
+              <label><input type="radio" name="kanbanView" value="mine" /> My jobs only</label>
+            </div>
+          </div>
+          <div class="kanban-board" id="kanbanBoard"></div>
+        </div>
+      </section>
+
+      <!-- CHARTS TAB -->
+      <section class="tab" id="chartsTab">
+        <div class="card">
+          <div class="card-header">Charts & goals</div>
+
+          <div class="filter-row" style="margin-bottom:0.4rem;">
+            <span>Monthly revenue goal:</span>
+            <input type="number" id="chartsMonthlyGoal" min="0" step="50" style="width:110px;" />
+            <button type="button" class="btn small secondary" id="saveChartsGoalBtn">Save goal</button>
+            <span id="chartsGoalSummary" style="font-size:0.78rem;color:#9ca3af;"></span>
+          </div>
+
+          <div class="filter-row">
+            <span>Chart date range:</span>
+            <input type="date" id="chartsFromDate" />
+            <input type="date" id="chartsToDate" />
+            <span>Quick range:</span>
+            <select id="chartsTimeframe">
+              <option value="all">All</option>
+              <option value="week">Last 7 days</option>
+              <option value="month">Last 30 days</option>
+              <option value="year">Last 365 days</option>
+            </select>
+            <button type="button" class="btn small secondary" id="applyChartsFilterBtn">Apply</button>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Who completes the most jobs?</div>
+                <div class="chart-subtext">Count of jobs completed per worker.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="workersChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="workersChartLoader"></div>
+              <div class="chart-tooltip" id="workersChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">How much do you earn each day?</div>
+                <div class="chart-subtext">Total job revenue by date.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="revenueChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="revenueChartLoader"></div>
+              <div class="chart-tooltip" id="revenueChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Are you ahead or behind?</div>
+                <div class="chart-subtext">Daily income minus approved expenses.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="balanceChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="balanceChartLoader"></div>
+              <div class="chart-tooltip" id="balanceChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Where are your jobs stuck?</div>
+                <div class="chart-subtext">Number of jobs in each status.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="statusChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="statusChartLoader"></div>
+              <div class="chart-tooltip" id="statusChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Which job sizes pay the most?</div>
+                <div class="chart-subtext">Total revenue by job size.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="sizeChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="sizeChartLoader"></div>
+              <div class="chart-tooltip" id="sizeChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Who brings in the most revenue?</div>
+                <div class="chart-subtext">Total earnings per worker.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="userChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="userChartLoader"></div>
+              <div class="chart-tooltip" id="userChartTooltip"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADMIN TAB -->
+      <section class="tab" id="adminTab">
+        <div class="card">
+          <div class="card-header">Admin overview</div>
+          <div class="card-subtitle">Founder and Admin can manage accounts, money, and exports.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Accounts</div>
+          <div class="card-subtitle">Create new workers or adjust names and roles.</div>
+          <form id="createUserForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="newName">Display name</label>
+              <input id="newName" type="text" placeholder="e.g. Logan M." required />
+            </div>
+            <div class="form-group">
+              <label for="newUsername">Username</label>
+              <input id="newUsername" type="text" required />
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Password</label>
+              <input id="newPassword" type="password" required />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" id="createUserBtn">Create user</button>
+            </div>
+          </form>
+          <div id="createUserError" class="alert"></div>
+
+          <hr style="margin:0.9rem 0;border:none;border-top:1px solid #1f2937;" />
+
+          <div class="card-subtitle">Existing accounts</div>
+          <div class="table-container" style="max-height:220px;">
+            <table id="usersTable">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Money totals</div>
+          <div class="card-subtitle">Based on approved jobs and approved expenses.</div>
+          <div class="totals">
+            <div class="total-card"><h4>Income</h4><div class="amount" id="incomeTotal">$0.00</div></div>
+            <div class="total-card"><h4>Expenses</h4><div class="amount" id="expensesTotal">$0.00</div></div>
+            <div class="total-card"><h4>Net</h4><div class="amount" id="netTotal">$0.00</div></div>
+          </div>
+          <div class="filter-row">
+            <span>Money date range:</span>
+            <input type="date" id="moneyFromDate" />
+            <input type="date" id="moneyToDate" />
+            <button type="button" class="btn small secondary" id="applyMoneyFilterBtn">Apply</button>
+            <button type="button" class="btn small secondary" id="moneyFilterClear">Clear</button>
+            <button type="button" class="btn small secondary" id="exportMoneyCsvBtn">Export money CSV</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">All money movements</div>
+          <div class="card-subtitle">Jobs (income) and approved expenses (outgoing).</div>
+          <div class="table-container">
+            <table id="moneyTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="desc" data-key="date">Date</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th class="sortable" data-sort="desc" data-key="amount">Amount</th>
+                  <th>Who</th>
+                </tr>
+              </thead>
+              <tbody id="moneyBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Data export</div>
+          <div class="card-subtitle">Download all LLCS dashboard data as JSON.</div>
+          <button type="button" class="btn" id="exportAllDataBtnAdmin">Export all data (JSON)</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- OVERLAY & TOAST -->
+  <div class="global-overlay" id="globalOverlay">
+    <div>
+      <div class="global-spinner"></div>
+      <div class="global-overlay-text" id="globalOverlayText">Saving...</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span id="toastMessage">Action completed</span>
+    <button type="button" class="btn secondary small" id="toastUndoBtn" style="display:none;">Undo</button>
+  </div>
 
   <script>
     const STORAGE_KEYS = {
@@ -955,12 +1513,6 @@
 
     function clearSession() {
       localStorage.removeItem(STORAGE_KEYS.session);
-    }
-
-    function getUserDisplayName(username) {
-      const users = readJSON(STORAGE_KEYS.users, []);
-      const f = users.find(u => u.username === username);
-      return f ? (f.name || f.username) : username;
     }
 
     const loginPage = document.getElementById('loginPage');
@@ -2014,6 +2566,7 @@
       return { from, to };
     }
 
+    // One chart function for all bar charts
     function simpleBarChart(canvasId, loaderId, tooltipId, getData, type) {
       const c = document.getElementById(canvasId);
       const t = document.getElementById(tooltipId);
@@ -2164,6 +2717,9 @@
         l.classList.remove('show');
       }, 80);
     }
+
+    const chartsFromDateEl = chartsFromDate;
+    const chartsToDateEl = chartsToDate;
 
     function refreshCharts() {
       const jobs = readJSON(STORAGE_KEYS.jobs, []);
@@ -2523,7 +3079,6 @@
       });
     }
 
-    // UNDO TOAST
     document.getElementById('toastUndoBtn').addEventListener('click', () => {
       if (!lastDeleted) return;
       if (lastDeleted.type === 'job') {
@@ -2547,7 +3102,6 @@
       lastDeleted = null;
     });
 
-    // BADGES + HOME banners + MY SUMMARY card
     function updateBadgesAndHomeBanner() {
       const expenses = readJSON(STORAGE_KEYS.expenses, []);
       const jobs = readJSON(STORAGE_KEYS.jobs, []);
@@ -2655,6 +3209,8 @@
       refreshMoney();
       updateBadgesAndHomeBanner();
     }
+
+    applyChartsFilterBtn.addEventListener('click', refreshCharts);
 
     window.addEventListener('load', () => {
       ensureMetaAndMigrate();
