@@ -1,0 +1,3476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LLCS Business Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/3RJNmCnN/Untitled-removebg-preview.png" />
+  <style>
+    :root {
+      --primary: #66b96a;
+      --primary-dark: #3b8d41;
+      --primary-light: #aee2b2;
+      --accent-blue: #4c8bfd;
+      --accent-gray: #95a5a6;
+      --accent-orange: #e67e22;
+      --accent-red: #e74c3c;
+      --text: #222;
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --border: #dde3ea;
+      --shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+      --shadow-soft: 0 2px 6px rgba(15, 23, 42, 0.08);
+      --shadow-hover: 0 6px 18px rgba(15, 23, 42, 0.16);
+      --fade-in: 0.25s ease-out;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at top left, #e9f7ef 0, #f5f7fa 40%, #eef3ff 100%);
+      color: var(--text);
+      min-height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    button {
+      font-family: inherit;
+    }
+
+    /* LOGIN */
+    .login {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background-color: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 1.8rem 1.6rem 1.4rem;
+      animation: fadeIn var(--fade-in);
+      border: 1px solid rgba(102, 185, 106, 0.12);
+    }
+    .login-card h2,
+    .login-card h3 {
+      text-align: center;
+      margin-bottom: 0.3rem;
+      color: var(--primary-dark);
+      letter-spacing: 0.03em;
+    }
+    .login-subtitle {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 0.9rem;
+    }
+    .form-group {
+      margin-bottom: 0.75rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 0.28rem;
+      color: #4b5563;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.55rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.92rem;
+      background-color: #f9fafb;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, transform 0.08s ease;
+    }
+    .form-group textarea {
+      border-radius: 12px;
+      min-height: 60px;
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: rgba(102, 185, 106, 0.6);
+      box-shadow: 0 0 0 2px rgba(102, 185, 106, 0.2);
+      background-color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .form-group-inline {
+      display: flex;
+      gap: 0.6rem;
+    }
+    .form-group-inline .form-group {
+      flex: 1;
+    }
+    .form-actions {
+      margin-top: 0.4rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: linear-gradient(135deg, var(--primary) 0%, #4aa556 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 0.48rem 1.25rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.12s ease-out, box-shadow 0.15s ease-out, filter 0.15s ease-out;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      box-shadow: var(--shadow-soft);
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-hover);
+      filter: brightness(1.03);
+    }
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow-soft);
+      filter: brightness(0.97);
+    }
+    .btn.small {
+      padding: 0.32rem 0.9rem;
+      font-size: 0.8rem;
+    }
+    .btn.secondary {
+      background: #ffffff;
+      color: var(--primary-dark);
+      border: 1px solid rgba(102, 185, 106, 0.4);
+      box-shadow: none;
+    }
+    .btn.secondary:hover {
+      box-shadow: var(--shadow-soft);
+      filter: none;
+    }
+    .btn.danger {
+      background: linear-gradient(135deg, #f97373 0%, #ef4444 100%);
+    }
+    .btn.icon-btn {
+      gap: 0.25rem;
+    }
+    .badge {
+      border-radius: 999px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .badge-status-planned {
+      background-color: #ecf0f1;
+      color: #7f8c8d;
+    }
+    .badge-status-in-progress {
+      background-color: #e3efff;
+      color: var(--accent-blue);
+    }
+    .badge-status-done {
+      background-color: #e8f7ec;
+      color: #27ae60;
+    }
+    .badge-status-paid {
+      background-color: #d9f2df;
+      color: var(--primary-dark);
+    }
+    .badge-priority-low {
+      background-color: #ecf0f1;
+      color: #7f8c8d;
+    }
+    .badge-priority-medium {
+      background-color: #fff5cc;
+      color: #856404;
+    }
+    .badge-priority-high {
+      background-color: #fdecea;
+      color: #b22222;
+    }
+    .alert {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.6rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      background-color: #fef2f2;
+      color: #b91c1c;
+      display: none;
+      border: 1px solid #fecaca;
+    }
+    .alert.show {
+      display: block;
+    }
+
+    /* DASHBOARD LAYOUT */
+    .dashboard {
+      display: none;
+      flex-direction: column;
+      max-height: 100vh;
+    }
+    .header {
+      background: linear-gradient(120deg, var(--primary-dark) 0%, var(--primary) 45%, #8bd497 100%);
+      color: #ffffff;
+      padding: 0.6rem 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: 0 3px 14px rgba(15, 23, 42, 0.35);
+      z-index: 10;
+    }
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: contain;
+      background-color: rgba(255,255,255,0.2);
+      padding: 2px;
+    }
+    .user-info {
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      background-color: rgba(15, 23, 42, 0.18);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+    }
+    .user-info span {
+      white-space: nowrap;
+    }
+
+    /* NAVIGATION */
+    .nav-toggle {
+      display: none;
+    }
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 52px;
+      right: 0.9rem;
+      z-index: 20;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 34px;
+      height: 34px;
+      background-color: #111827;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .hamburger span {
+      width: 18px;
+      height: 2px;
+      background-color: #ffffff;
+      margin: 2px 0;
+      transition: 0.3s;
+    }
+    .nav {
+      background-color: rgba(249, 250, 251, 0.98);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      backdrop-filter: blur(8px);
+    }
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      padding: 0.35rem 0.4rem;
+    }
+    .nav-item {
+      display: block;
+    }
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      color: #4b5563;
+      text-decoration: none;
+      transition: background-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
+    }
+    .nav-link:hover {
+      background-color: rgba(102, 185, 106, 0.12);
+      transform: translateY(-1px);
+      color: var(--primary-dark);
+    }
+    .nav-link.active {
+      background-color: var(--primary-dark);
+      color: #ffffff;
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      padding: 0.9rem;
+      overflow-y: auto;
+      background-color: transparent;
+    }
+    .tab {
+      display: none;
+      animation: fadeIn var(--fade-in);
+    }
+    .tab.active {
+      display: block;
+    }
+
+    .card {
+      background-color: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      padding: 0.85rem 0.9rem;
+      margin-bottom: 0.9rem;
+      animation: fadeIn var(--fade-in);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+    .card-header {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .card-subtitle {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+
+    .filter-bar {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      margin: -0.85rem -0.9rem 0.7rem;
+      padding: 0.45rem 0.9rem 0.55rem;
+      background-color: rgba(249, 250, 251, 0.98);
+      backdrop-filter: blur(5px);
+      border-bottom: 1px solid rgba(209, 213, 219, 0.7);
+      border-radius: 18px 18px 0 0;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+    .filter-row input[type="date"],
+    .filter-row select,
+    .filter-row input[type="text"] {
+      font-size: 0.78rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background-color: #f9fafb;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+    .filter-row input[type="date"]:focus,
+    .filter-row select:focus,
+    .filter-row input[type="text"]:focus {
+      outline: none;
+      border-color: rgba(102, 185, 106, 0.7);
+      box-shadow: 0 0 0 2px rgba(102, 185, 106, 0.25);
+      background-color: #ffffff;
+    }
+
+    /* TABLES – rounded look */
+    .table-container {
+      margin-top: 0.4rem;
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+      background-color: #f9fafb;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.86rem;
+    }
+    th, td {
+      padding: 0.5rem 0.6rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.75);
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    thead th {
+      background-color: #f3f4f6;
+      color: #4b5563;
+      cursor: pointer;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      font-weight: 600;
+    }
+    thead th.sortable::after {
+      content: '⇅';
+      font-size: 0.68rem;
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.55;
+    }
+    tbody tr:first-child td:first-child {
+      border-top-left-radius: 12px;
+    }
+    tbody tr:first-child td:last-child {
+      border-top-right-radius: 12px;
+    }
+    tbody tr:last-child td:first-child {
+      border-bottom-left-radius: 12px;
+    }
+    tbody tr:last-child td:last-child {
+      border-bottom-right-radius: 12px;
+    }
+    tbody tr {
+      transition: background-color 0.12s ease, transform 0.08s ease;
+    }
+    tbody tr:hover {
+      background-color: #eef7f0;
+      transform: translateY(-1px);
+    }
+    td .btn.small {
+      border-radius: 999px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.75rem;
+    }
+    td .btn.small.danger {
+      padding: 0.25rem 0.7rem;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.78rem;
+      border-radius: 999px;
+      padding: 0.1rem 0.55rem;
+    }
+    .status-chip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .status-planned {
+      background-color: #ecf0f1;
+      color: #7f8c8d;
+    }
+    .status-planned .status-chip-dot {
+      background-color: #7f8c8d;
+    }
+    .status-in-progress {
+      background-color: #e3efff;
+      color: var(--accent-blue);
+    }
+    .status-in-progress .status-chip-dot {
+      background-color: var(--accent-blue);
+    }
+    .status-done {
+      background-color: #e8f7ec;
+      color: #27ae60;
+    }
+    .status-done .status-chip-dot {
+      background-color: #27ae60;
+    }
+    .status-paid {
+      background-color: #d9f2df;
+      color: var(--primary-dark);
+    }
+    .status-paid .status-chip-dot {
+      background-color: var(--primary-dark);
+    }
+    .status-pending-text {
+      color: var(--accent-orange);
+      font-weight: 500;
+    }
+    .status-approved-text {
+      color: #27ae60;
+      font-weight: 600;
+    }
+
+    .group-header {
+      background-color: #edf7ee;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .group-header span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      color: #374151;
+    }
+
+    .row-details {
+      background-color: #f3faf4;
+      border-bottom: 1px solid var(--border);
+    }
+    .row-details-inner {
+      padding: 0.4rem 0.7rem 0.6rem;
+      font-size: 0.78rem;
+      color: #4b5563;
+    }
+    .row-details-inner strong {
+      font-weight: 600;
+    }
+
+    /* KANBAN */
+    .kanban-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .kanban-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      background-color: #f3f4f6;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+    }
+    .kanban-toggle label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      cursor: pointer;
+    }
+    .kanban-board {
+      display: flex;
+      gap: 0.7rem;
+      overflow-x: auto;
+      padding-bottom: 0.3rem;
+    }
+    .kanban-column {
+      flex: 0 0 248px;
+      background-color: #f3f7f4;
+      border-radius: 16px;
+      padding: 0.55rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .kanban-column-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+      font-size: 0.82rem;
+      color: var(--primary-dark);
+    }
+    .kanban-count {
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+    .kanban-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+    .kanban-card {
+      background-color: #ffffff;
+      border-radius: 14px;
+      padding: 0.45rem 0.55rem;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+    .kanban-card:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-hover);
+    }
+    .kanban-title {
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+      color: #111827;
+    }
+    .kanban-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-bottom: 0.15rem;
+    }
+    .kanban-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      margin-top: 0.15rem;
+      color: #4b5563;
+    }
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.05rem 0.35rem;
+      font-size: 0.7rem;
+      background-color: #eef1ff;
+      color: #374151;
+    }
+
+    /* CHARTS */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.9rem;
+    }
+    .chart-card {
+      background-color: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      padding: 0.7rem 0.8rem 0.9rem;
+      position: relative;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.3rem;
+    }
+    .chart-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+    .chart-wrapper {
+      margin-top: 0.45rem;
+      position: relative;
+    }
+    canvas.chart-canvas {
+      width: 100%;
+      height: 220px;
+      max-height: 30vh;
+      border-radius: 12px;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      background-color: #ffffff;
+      display: block;
+    }
+    .chart-loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 3px solid rgba(0,0,0,0.08);
+      border-top-color: var(--primary);
+      transform: translate(-50%, -50%);
+      animation: spin 0.8s linear infinite;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+    .chart-loader.show {
+      opacity: 1;
+    }
+    .chart-tooltip {
+      position: absolute;
+      background-color: #111827;
+      border-radius: 8px;
+      padding: 0.28rem 0.4rem;
+      font-size: 0.75rem;
+      color: #f9fafb;
+      box-shadow: var(--shadow-soft);
+      pointer-events: none;
+      transform: translate(-50%, -130%);
+      white-space: nowrap;
+      display: none;
+      z-index: 5;
+    }
+    .chart-legend {
+      margin-top: 0.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: #4b5563;
+    }
+    .legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+
+    /* MONEY */
+    .totals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+    .total-card {
+      flex: 1 1 120px;
+      min-width: 120px;
+      background-color: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      padding: 0.7rem 0.8rem;
+      text-align: center;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .total-card h4 {
+      font-size: 0.85rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.15rem;
+    }
+    .total-card .amount {
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+    .net-positive {
+      color: #27ae60;
+    }
+    .net-negative {
+      color: var(--accent-red);
+    }
+
+    /* TOAST / GLOBAL LOADER */
+    .toast {
+      position: fixed;
+      bottom: 0.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(15, 23, 42, 0.96);
+      color: #ffffff;
+      padding: 0.5rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      display: none;
+      align-items: center;
+      gap: 0.45rem;
+      z-index: 50;
+      box-shadow: var(--shadow-hover);
+    }
+    .toast.show {
+      display: inline-flex;
+      animation: fadeIn var(--fade-in);
+    }
+    .global-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(249, 250, 251, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      backdrop-filter: blur(4px);
+    }
+    .global-overlay.show {
+      display: flex;
+      animation: fadeIn var(--fade-in);
+    }
+    .global-spinner {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 4px solid rgba(15, 23, 42, 0.1);
+      border-top-color: var(--primary-dark);
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto;
+    }
+    .global-overlay-text {
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      color: #374151;
+      text-align: center;
+    }
+
+    /* ADMIN TAG */
+    .admin-tag {
+      font-size: 0.75rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.15);
+      color: #f9fafb;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 599px) {
+      .header {
+        padding: 0.6rem 0.7rem;
+      }
+      .logo {
+        font-size: 1.02rem;
+      }
+      .user-info {
+        font-size: 0.8rem;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .nav {
+        position: fixed;
+        top: 48px;
+        left: 0;
+        right: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+        z-index: 15;
+        box-shadow: 0 2px 10px rgba(15,23,42,0.25);
+      }
+      .nav-menu {
+        flex-direction: column;
+        padding-bottom: 0.35rem;
+      }
+      .nav-toggle:checked ~ .nav {
+        max-height: 230px;
+      }
+      .nav-toggle:checked + .hamburger span:nth-child(1) {
+        transform: translateY(4px) rotate(45deg);
+      }
+      .nav-toggle:checked + .hamburger span:nth-child(2) {
+        opacity: 0;
+      }
+      .nav-toggle:checked + .hamburger span:nth-child(3) {
+        transform: translateY(-4px) rotate(-45deg);
+      }
+      .main {
+        padding-top: 0.7rem;
+      }
+      .kanban-board {
+        padding-bottom: 0.5rem;
+      }
+    }
+
+    @media (min-width: 600px) and (max-width: 1024px) {
+      .main {
+        padding: 1rem;
+      }
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (min-width: 1025px) {
+      body {
+        flex-direction: column;
+      }
+      .dashboard {
+        flex-direction: column;
+      }
+      .header {
+        padding: 0.65rem 1.3rem;
+      }
+      .nav {
+        border-bottom: none;
+        border-top: 1px solid var(--border);
+      }
+      .nav-menu {
+        padding: 0.3rem 1.3rem;
+        gap: 0.4rem;
+      }
+      .main {
+        padding: 1.1rem 1.3rem 1.3rem;
+      }
+      .charts-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGIN PAGE -->
+  <div class="login" id="loginPage">
+    <div class="login-card">
+      <h2>LLCS Business Dashboard</h2>
+      <p class="login-subtitle">Sign in with your LLCS account</p>
+      <form id="loginForm" onsubmit="return false;">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input id="username" type="text" autocomplete="off" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="off" required />
+        </div>
+        <div class="form-actions" style="justify-content: center;">
+          <button type="button" class="btn" id="loginBtn">Login</button>
+        </div>
+      </form>
+      <div id="loginError" class="alert"></div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT MANAGEMENT PAGE -->
+  <div class="login" id="createUserPage" style="display:none;">
+    <div class="login-card">
+      <h3>Account Management</h3>
+      <p class="login-subtitle">
+        Founder and Admin can create users. Founder can also change roles.
+      </p>
+
+      <form id="createUserForm" onsubmit="return false;">
+        <div class="form-group">
+          <label for="newName">Display name</label>
+          <input id="newName" type="text" placeholder="e.g. Logan M." required />
+        </div>
+        <div class="form-group">
+          <label for="newUsername">Username</label>
+          <input id="newUsername" type="text" required />
+        </div>
+        <div class="form-group">
+          <label for="newPassword">Password</label>
+          <input id="newPassword" type="password" required />
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn" id="createUserBtn">Create user</button>
+          <button type="button" class="btn secondary" id="backToDashboardBtn">Back to dashboard</button>
+        </div>
+      </form>
+      <div id="createUserError" class="alert"></div>
+
+      <hr style="margin:0.9rem 0;border:none;border-top:1px solid #e5e7eb;" />
+
+      <div class="card-subtitle" style="margin-bottom:0.5rem;">
+        Existing accounts
+      </div>
+      <div class="table-container" style="max-height:220px;">
+        <table id="usersTable">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+    <header class="header">
+      <div class="logo">
+        <img src="https://i.postimg.cc/3RJNmCnN/Untitled-removebg-preview.png" alt="LLCS Logo" class="logo-img" />
+        LLCS Business Dashboard
+      </div>
+      <div class="user-info">
+        <span id="currentUserLabel">User</span>
+        <span id="currentNameLabel" style="font-weight:500;"></span>
+        <span class="admin-tag" id="currentRoleLabel">Role</span>
+        <button class="btn secondary small" id="openAdminBtn" style="display:none;">Manage accounts</button>
+        <button class="btn danger small" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+
+    <input type="checkbox" id="navToggle" class="nav-toggle" />
+    <label for="navToggle" class="hamburger">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav class="nav" id="navBar">
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="#" class="nav-link" data-tab="expensesTab" id="expensesNav">Expenses</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link" data-tab="jobsTab" id="jobsNav">Jobs</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link" data-tab="kanbanTab" id="kanbanNav">Kanban</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link" data-tab="chartsTab" id="chartsNav">Charts</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link" data-tab="moneyTab" id="moneyNav">Money</a>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <!-- EXPENSES TAB -->
+      <section class="tab" id="expensesTab">
+        <div class="card">
+          <div class="filter-bar">
+            <div class="filter-row">
+              <span><strong>Expenses</strong> filters:</span>
+              <input type="text" id="expenseSearch" placeholder="Search description/name..." />
+              <select id="expenseStatusFilter">
+                <option value="all">All statuses</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+              </select>
+              <span>Date:</span>
+              <input type="date" id="expenseFromDate" />
+              <input type="date" id="expenseToDate" />
+              <button type="button" class="btn small secondary" id="expenseFilterApply">Apply</button>
+              <button type="button" class="btn small secondary" id="expenseFilterClear">Clear</button>
+            </div>
+          </div>
+          <div class="card-header">Add Expense</div>
+          <div class="card-subtitle">All users can submit expenses. Admin approves or deletes them.</div>
+          <form id="expenseForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="expenseDesc">Description</label>
+              <input id="expenseDesc" type="text" required />
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="expenseAmount">Amount</label>
+                <input id="expenseAmount" type="number" min="0" step="0.01" required />
+              </div>
+              <div class="form-group">
+                <label for="expenseDate">Date</label>
+                <input id="expenseDate" type="date" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" id="addExpenseBtn">Save expense</button>
+              <button type="button" class="btn secondary small" id="exportExpensesCsvBtn">Export CSV</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Expenses List</div>
+          <div class="card-subtitle">Pending and approved expenses (sortable, admin can approve/delete).</div>
+          <div class="table-container">
+            <table id="expensesTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="desc" data-key="description">Description</th>
+                  <th class="sortable" data-sort="desc" data-key="amount">Amount</th>
+                  <th class="sortable" data-sort="desc" data-key="date">Date</th>
+                  <th class="sortable" data-sort="desc" data-key="status">Status</th>
+                  <th class="sortable" data-sort="desc" data-key="submittedByName">Submitted By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="expensesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- JOBS TAB -->
+      <section class="tab" id="jobsTab">
+        <div class="card">
+          <div class="filter-bar">
+            <div class="filter-row">
+              <span><strong>Jobs</strong> filters:</span>
+              <input type="text" id="jobSearch" placeholder="Search job/tags/name..." />
+              <select id="jobStatusFilter">
+                <option value="all">All status</option>
+                <option value="planned">Planned</option>
+                <option value="in_progress">In progress</option>
+                <option value="done">Done</option>
+                <option value="paid">Paid</option>
+              </select>
+              <select id="jobPriorityFilter">
+                <option value="all">All priority</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+              <select id="jobViewFilter">
+                <option value="all">All jobs</option>
+                <option value="mine">My jobs</option>
+              </select>
+              <button type="button" class="btn small secondary" id="jobFilterApply">Apply</button>
+              <button type="button" class="btn small secondary" id="jobFilterClear">Clear</button>
+            </div>
+          </div>
+          <div class="card-header">Add Job</div>
+          <div class="card-subtitle">Job creator is auto-filled with your account name. Date defaults to today.</div>
+          <form id="jobForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="jobName">Job name</label>
+              <input id="jobName" type="text" required />
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="jobSize">Size</label>
+                <select id="jobSize" required>
+                  <option value="">Select size</option>
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="jobPayment">Payment</label>
+                <input id="jobPayment" type="number" min="0" step="0.01" required />
+              </div>
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="jobStatus">Status</label>
+                <select id="jobStatus" required>
+                  <option value="planned">Planned</option>
+                  <option value="in_progress">In progress</option>
+                  <option value="done">Done</option>
+                  <option value="paid">Paid</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="jobPriority">Priority</label>
+                <select id="jobPriority" required>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="jobTags">Tags (comma separated)</label>
+              <input id="jobTags" type="text" placeholder="design,urgent,client-x" />
+            </div>
+            <div class="form-group">
+              <label for="jobAttachment">Attachment URL (optional)</label>
+              <input id="jobAttachment" type="url" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+              <label for="jobNotes">Notes</label>
+              <textarea id="jobNotes" placeholder="Optional notes or details"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" id="addJobBtn">Save job</button>
+              <button type="button" class="btn secondary small" id="exportJobsCsvBtn">Export Jobs CSV</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Jobs List</div>
+          <div class="card-subtitle">Grouped by user (display name). Admin can edit all jobs. Row click expands details.</div>
+          <div class="table-container">
+            <table id="jobsTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="desc" data-key="name">Job</th>
+                  <th class="sortable" data-sort="desc" data-key="status">Status</th>
+                  <th class="sortable" data-sort="desc" data-key="priority">Priority</th>
+                  <th class="sortable" data-sort="desc" data-key="size">Size</th>
+                  <th class="sortable" data-sort="desc" data-key="payment">Payment</th>
+                  <th class="sortable" data-sort="desc" data-key="date">Date</th>
+                  <th>Who</th>
+                  <th>Tags</th>
+                  <th>Attachment</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="jobsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- KANBAN TAB -->
+      <section class="tab" id="kanbanTab">
+        <div class="card">
+          <div class="kanban-bar">
+            <div>
+              <span class="card-header">Jobs Kanban</span>
+              <span class="card-subtitle">Status columns with My/All filter.</span>
+            </div>
+            <div class="kanban-toggle">
+              <label>
+                <input type="radio" name="kanbanView" value="all" checked /> All jobs
+              </label>
+              <label>
+                <input type="radio" name="kanbanView" value="mine" /> My jobs
+              </label>
+            </div>
+          </div>
+          <div class="kanban-board" id="kanbanBoard">
+            <!-- columns injected by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- CHARTS TAB -->
+      <section class="tab" id="chartsTab">
+        <div class="card">
+          <div class="card-header">Filters</div>
+          <div class="filter-row">
+            <span>Date range:</span>
+            <input type="date" id="chartsFromDate" />
+            <input type="date" id="chartsToDate" />
+            <span>Timeframe:</span>
+            <select id="chartsTimeframe">
+              <option value="all">All</option>
+              <option value="week">Last 7 days</option>
+              <option value="month">Last 30 days</option>
+              <option value="year">Last 365 days</option>
+            </select>
+            <button type="button" class="btn small secondary" id="applyChartsFilterBtn">Apply</button>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">Top Workers by Job Count</div>
+            </div>
+            <div class="chart-wrapper" data-chart="workers">
+              <canvas id="workersChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="workersChartLoader"></div>
+              <div class="chart-tooltip" id="workersChartTooltip"></div>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item">
+                <span class="legend-color" style="background:#66b96a;"></span> Worker count
+              </span>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">Revenue by Day</div>
+            </div>
+            <div class="chart-wrapper" data-chart="revenue">
+              <canvas id="revenueChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="revenueChartLoader"></div>
+              <div class="chart-tooltip" id="revenueChartTooltip"></div>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item">
+                <span class="legend-color" style="background:#aee2b2;"></span> Daily revenue
+              </span>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">Income vs Expenses Over Time</div>
+            </div>
+            <div class="chart-wrapper" data-chart="balance">
+              <canvas id="balanceChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="balanceChartLoader"></div>
+              <div class="chart-tooltip" id="balanceChartTooltip"></div>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item">
+                <span class="legend-color" style="background:#3b8d41;"></span> Income
+              </span>
+              <span class="legend-item">
+                <span class="legend-color" style="background:#e67e22;"></span> Expense
+              </span>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">Jobs by Status</div>
+            </div>
+            <div class="chart-wrapper" data-chart="statusDist">
+              <canvas id="statusChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="statusChartLoader"></div>
+              <div class="chart-tooltip" id="statusChartTooltip"></div>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item">
+                <span class="legend-color" style="background:#ecf0f1;"></span> Planned
+              </span>
+              <span class="legend-item">
+                <span class="legend-color" style="background:#e3efff;"></span> In progress
+              </span>
+              <span class="legend-item">
+                <span class="legend-color" style="background:#e8f7ec;"></span> Done
+              </span>
+              <span class="legend-item">
+                <span class="legend-color" style="background:#d9f2df;"></span> Paid
+              </span>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">Revenue by Size</div>
+            </div>
+            <div class="chart-wrapper" data-chart="sizeRevenue">
+              <canvas id="sizeChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="sizeChartLoader"></div>
+              <div class="chart-tooltip" id="sizeChartTooltip"></div>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item">
+                <span class="legend-color" style="background:#66b96a;"></span> Small
+              </span>
+              <span class="legend-item">
+                <span class="legend-color" style="background:#3b8d41;"></span> Medium
+              </span>
+              <span class="legend-item">
+                <span class="legend-color" style="background:#aee2b2;"></span> Large
+              </span>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">Earnings by User</div>
+            </div>
+            <div class="chart-wrapper" data-chart="userEarnings">
+              <canvas id="userChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="userChartLoader"></div>
+              <div class="chart-tooltip" id="userChartTooltip"></div>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item">
+                <span class="legend-color" style="background:#66b96a;"></span> Earnings
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MONEY TAB -->
+      <section class="tab" id="moneyTab">
+        <div class="card">
+          <div class="card-header">Totals</div>
+          <div class="card-subtitle">Based on approved jobs and approved expenses.</div>
+          <div class="totals">
+            <div class="total-card">
+              <h4>Income</h4>
+              <div class="amount" id="incomeTotal">$0.00</div>
+            </div>
+            <div class="total-card">
+              <h4>Expenses</h4>
+              <div class="amount" id="expensesTotal">$0.00</div>
+            </div>
+            <div class="total-card">
+              <h4>Net</h4>
+              <div class="amount" id="netTotal">$0.00</div>
+            </div>
+          </div>
+          <div class="filter-row">
+            <span>Date range:</span>
+            <input type="date" id="moneyFromDate" />
+            <input type="date" id="moneyToDate" />
+            <button type="button" class="btn small secondary" id="applyMoneyFilterBtn">Apply</button>
+            <button type="button" class="btn small secondary" id="moneyFilterClear">Clear</button>
+            <button type="button" class="btn small secondary" id="exportMoneyCsvBtn">Export Money CSV</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">All Transactions</div>
+          <div class="card-subtitle">Jobs (income) and expenses (outgoing) in a sortable table.</div>
+          <div class="table-container">
+            <table id="moneyTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="desc" data-key="date">Date</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th class="sortable" data-sort="desc" data-key="amount">Amount</th>
+                  <th>Who</th>
+                </tr>
+              </thead>
+              <tbody id="moneyBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- GLOBAL OVERLAY & TOAST -->
+  <div class="global-overlay" id="globalOverlay">
+    <div>
+      <div class="global-spinner"></div>
+      <div class="global-overlay-text" id="globalOverlayText">Saving...</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span id="toastMessage">Action completed</span>
+    <button type="button" class="btn secondary small" id="toastUndoBtn" style="display:none;">Undo</button>
+  </div>
+
+  <script>
+    // ---------- CONSTANTS & ROLES ----------
+    const STORAGE_KEYS = {
+      users: 'bd_users',
+      expenses: 'bd_expenses',
+      jobs: 'bd_jobs',
+      session: 'bd_currentUser',
+      meta: 'bd_meta'
+    };
+
+    const DEFAULT_META = { version: 3 };
+
+    const ROLES = {
+      FOUNDER: 'founder',
+      ADMIN: 'admin',
+      EMPLOYEE: 'employee'
+    };
+
+    function isFounder(user) {
+      return user && user.role === ROLES.FOUNDER;
+    }
+    function isAdmin(user) {
+      return user && (user.role === ROLES.ADMIN || user.role === ROLES.FOUNDER);
+    }
+    function canManageUsers(user) {
+      return isAdmin(user);
+    }
+    function canEditRoles(user) {
+      return isFounder(user);
+    }
+
+    let lastDeleted = null;
+
+    // ---------- UTILITIES ----------
+    function getToday() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + day;
+    }
+
+    function readJSON(key, defaultValue) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return defaultValue;
+        const parsed = JSON.parse(raw);
+        return Array.isArray(defaultValue) && !Array.isArray(parsed) ? defaultValue : (parsed ?? defaultValue);
+      } catch {
+        return defaultValue;
+      }
+    }
+
+    function writeJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function parseAmount(val) {
+      const n = Number(val);
+      if (Number.isNaN(n) || n < 0) return null;
+      return Math.round(n * 100) / 100;
+    }
+
+    function validDateStr(str) {
+      if (!str || typeof str !== 'string') return false;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false;
+      const t = Date.parse(str);
+      return !Number.isNaN(t);
+    }
+
+    function dateInRange(dateStr, fromStr, toStr) {
+      if (!validDateStr(dateStr)) return false;
+      const t = Date.parse(dateStr);
+      if (fromStr && validDateStr(fromStr) && t < Date.parse(fromStr)) return false;
+      if (toStr && validDateStr(toStr) && t > Date.parse(toStr)) return false;
+      return true;
+    }
+
+    function formatCurrency(amount) {
+      return '$' + amount.toFixed(2);
+    }
+
+    function showGlobalOverlay(text) {
+      const overlay = document.getElementById('globalOverlay');
+      const txt = document.getElementById('globalOverlayText');
+      if (text) txt.textContent = text;
+      overlay.classList.add('show');
+      setTimeout(() => {
+        overlay.classList.remove('show');
+      }, 450);
+    }
+
+    function showToast(message, withUndo = false) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toastMessage');
+      const undoBtn = document.getElementById('toastUndoBtn');
+      msg.textContent = message;
+      undoBtn.style.display = withUndo ? 'inline-flex' : 'none';
+      toast.classList.add('show');
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    // ---------- META + MIGRATION ----------
+    function ensureMetaAndMigrate() {
+      let meta = readJSON(STORAGE_KEYS.meta, null);
+      if (!meta || typeof meta.version !== 'number' || meta.version < 3) {
+        meta = DEFAULT_META;
+        writeJSON(STORAGE_KEYS.meta, meta);
+
+        let users = readJSON(STORAGE_KEYS.users, []);
+        users = users.map(u => ({
+          username: u.username,
+          password: u.password,
+          role: u.role || (u.username === 'admin' ? ROLES.ADMIN : ROLES.EMPLOYEE),
+          name: u.name || (u.username === 'admin' ? 'Logan M.' : u.username)
+        }));
+        writeJSON(STORAGE_KEYS.users, users);
+
+        let jobs = readJSON(STORAGE_KEYS.jobs, []);
+        jobs = jobs.map(j => ({
+          id: j.id || Date.now(),
+          name: j.name || '',
+          size: j.size || 'medium',
+          who: j.who || 'unknown',
+          whoName: j.whoName || j.who || 'unknown',
+          payment: typeof j.payment === 'number' ? j.payment : 0,
+          date: j.date || getToday(),
+          notes: j.notes || '',
+          status: j.status || 'planned',
+          priority: j.priority || 'medium',
+          tags: Array.isArray(j.tags)
+            ? j.tags
+            : (typeof j.tags === 'string' ? j.tags.split(',').map(t => t.trim()).filter(t => t) : []),
+          attachmentUrl: j.attachmentUrl || '',
+          createdAt: j.createdAt || j.date || getToday(),
+          updatedAt: j.updatedAt || j.date || getToday(),
+          lastEditedBy: j.lastEditedBy || j.who || 'unknown',
+          lastEditedByName: j.lastEditedByName || j.whoName || j.who || 'unknown'
+        }));
+        writeJSON(STORAGE_KEYS.jobs, jobs);
+
+        let expenses = readJSON(STORAGE_KEYS.expenses, []);
+        expenses = expenses.map(e => ({
+          id: e.id || Date.now(),
+          description: e.description || '',
+          amount: typeof e.amount === 'number' ? e.amount : 0,
+          date: e.date || getToday(),
+          status: e.status === 'approved' ? 'approved' : 'pending',
+          submittedBy: e.submittedBy || 'unknown',
+          submittedByName: e.submittedByName || e.submittedBy || 'unknown'
+        }));
+        writeJSON(STORAGE_KEYS.expenses, expenses);
+      }
+    }
+
+    // Seed base Founder user
+    function ensureAdminUser() {
+      let users = readJSON(STORAGE_KEYS.users, []);
+      const hasFounder = users.some(u => u.role === ROLES.FOUNDER);
+      if (!hasFounder) {
+        users.push({
+          username: 'LCCSAdmin',
+          password: 'LCCSAdminLog45',
+          role: ROLES.FOUNDER,
+          name: 'LLCS Founder'
+        });
+        writeJSON(STORAGE_KEYS.users, users);
+      }
+    }
+
+    // ---------- SESSION ----------
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.session);
+        if (!raw) return null;
+        const u = JSON.parse(raw);
+        if (!u || !u.username || !u.role) return null;
+        return u;
+      } catch {
+        return null;
+      }
+    }
+
+    function setCurrentUser(user) {
+      localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(user));
+    }
+
+    function clearSession() {
+      localStorage.removeItem(STORAGE_KEYS.session);
+    }
+
+    function getUserDisplayName(username) {
+      const users = readJSON(STORAGE_KEYS.users, []);
+      const found = users.find(u => u.username === username);
+      return found ? (found.name || found.username) : username;
+    }
+
+    // ---------- DOM ----------
+    const loginPage = document.getElementById('loginPage');
+    const createUserPage = document.getElementById('createUserPage');
+    const dashboard = document.getElementById('dashboard');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+    const createUserBtn = document.getElementById('createUserBtn');
+    const backToDashboardBtn = document.getElementById('backToDashboardBtn');
+    const createUserError = document.getElementById('createUserError');
+    const currentUserLabel = document.getElementById('currentUserLabel');
+    const currentNameLabel = document.getElementById('currentNameLabel');
+    const currentRoleLabel = document.getElementById('currentRoleLabel');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const navToggle = document.getElementById('navToggle');
+    const openAdminBtn = document.getElementById('openAdminBtn');
+    const usersBody = document.getElementById('usersBody');
+
+    const tabs = {
+      expensesTab: document.getElementById('expensesTab'),
+      jobsTab: document.getElementById('jobsTab'),
+      kanbanTab: document.getElementById('kanbanTab'),
+      chartsTab: document.getElementById('chartsTab'),
+      moneyTab: document.getElementById('moneyTab')
+    };
+
+    const navLinks = document.querySelectorAll('.nav-link[data-tab]');
+
+    function showLogin() {
+      loginPage.style.display = 'flex';
+      createUserPage.style.display = 'none';
+      dashboard.style.display = 'none';
+    }
+
+    function showCreateUser() {
+      loginPage.style.display = 'none';
+      createUserPage.style.display = 'flex';
+      dashboard.style.display = 'none';
+    }
+
+    function showDashboard() {
+      loginPage.style.display = 'none';
+      createUserPage.style.display = 'none';
+      dashboard.style.display = 'flex';
+    }
+
+    function setActiveTab(tabId) {
+      Object.keys(tabs).forEach(id => {
+        tabs[id].classList.toggle('active', id === tabId);
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.tab === tabId);
+      });
+    }
+
+    function closeMobileNav() {
+      if (navToggle) navToggle.checked = false;
+    }
+
+    // ---------- LOGIN LOGIC ----------
+    function handleLogin() {
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const username = (usernameInput.value || '').trim();
+      const password = (passwordInput.value || '').trim();
+
+      if (!username || !password) {
+        loginError.textContent = 'Please enter username and password.';
+        loginError.classList.add('show');
+        return;
+      }
+
+      let users = readJSON(STORAGE_KEYS.users, []);
+      ensureAdminUser();
+      users = readJSON(STORAGE_KEYS.users, []);
+
+      const found = users.find(u => u.username === username && u.password === password);
+      if (!found) {
+        loginError.textContent = 'Invalid login.';
+        loginError.classList.add('show');
+        return;
+      }
+
+      loginError.classList.remove('show');
+      setCurrentUser(found);
+      updateHeaderUser(found);
+      showDashboard();
+      setActiveTab('jobsTab');
+      closeMobileNav();
+      refreshAllUI();
+      refreshUsersTable();
+      showToast('Welcome back, ' + (found.name || found.username));
+    }
+
+    loginBtn.addEventListener('click', handleLogin);
+
+    function updateHeaderUser(user) {
+      currentUserLabel.textContent = user.username;
+      currentNameLabel.textContent = '· ' + (user.name || user.username);
+
+      let roleLabel = 'Employee';
+      if (user.role === ROLES.FOUNDER) roleLabel = 'Founder';
+      else if (user.role === ROLES.ADMIN) roleLabel = 'Admin';
+      currentRoleLabel.textContent = roleLabel;
+      currentRoleLabel.style.display = 'inline-flex';
+
+      if (canManageUsers(user)) {
+        openAdminBtn.style.display = 'inline-flex';
+      } else {
+        openAdminBtn.style.display = 'none';
+      }
+    }
+
+    openAdminBtn.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user || !canManageUsers(user)) {
+        alert('Admin/Founder access only.');
+        return;
+      }
+      refreshUsersTable();
+      showCreateUser();
+    });
+
+    createUserBtn.addEventListener('click', () => {
+      const name = (document.getElementById('newName').value || '').trim();
+      const username = (document.getElementById('newUsername').value || '').trim();
+      const password = (document.getElementById('newPassword').value || '').trim();
+      if (!name || !username || !password) {
+        createUserError.textContent = 'All fields are required.';
+        createUserError.classList.add('show');
+        return;
+      }
+      let users = readJSON(STORAGE_KEYS.users, []);
+      ensureAdminUser();
+      users = readJSON(STORAGE_KEYS.users, []);
+
+      if (users.some(u => u.username === username)) {
+        createUserError.textContent = 'Username already exists.';
+        createUserError.classList.add('show');
+        return;
+      }
+
+      users.push({ username, password, role: ROLES.EMPLOYEE, name });
+      writeJSON(STORAGE_KEYS.users, users);
+      createUserError.classList.remove('show');
+      document.getElementById('newName').value = '';
+      document.getElementById('newUsername').value = '';
+      document.getElementById('newPassword').value = '';
+      refreshUsersTable();
+      showToast('Employee account created');
+    });
+
+    backToDashboardBtn.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) {
+        showLogin();
+      } else {
+        showDashboard();
+        setActiveTab('jobsTab');
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      clearSession();
+      showLogin();
+    });
+
+    // ---------- USER MANAGEMENT TABLE ----------
+    function refreshUsersTable() {
+      const current = getCurrentUser();
+      if (!usersBody) return;
+      if (!canManageUsers(current)) {
+        usersBody.innerHTML = '';
+        return;
+      }
+      const users = readJSON(STORAGE_KEYS.users, []);
+      usersBody.innerHTML = '';
+
+      users.forEach(u => {
+        const tr = document.createElement('tr');
+
+        const uTd = document.createElement('td');
+        uTd.textContent = u.username;
+
+        const nTd = document.createElement('td');
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.value = u.name || u.username;
+        nameInput.style.width = '120px';
+        nameInput.addEventListener('change', () => {
+          updateUserField(u.username, 'name', nameInput.value.trim());
+        });
+        nTd.appendChild(nameInput);
+
+        const roleTd = document.createElement('td');
+        if (canEditRoles(current) && u.username !== current.username) {
+          const sel = document.createElement('select');
+          [
+            { value: ROLES.EMPLOYEE, label: 'Employee' },
+            { value: ROLES.ADMIN, label: 'Admin' },
+            { value: ROLES.FOUNDER, label: 'Founder' }
+          ].forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r.value;
+            opt.textContent = r.label;
+            if (u.role === r.value) opt.selected = true;
+            sel.appendChild(opt);
+          });
+          sel.addEventListener('change', () => {
+            updateUserField(u.username, 'role', sel.value);
+          });
+          roleTd.appendChild(sel);
+        } else {
+          let label = 'Employee';
+          if (u.role === ROLES.FOUNDER) label = 'Founder';
+          else if (u.role === ROLES.ADMIN) label = 'Admin';
+          roleTd.textContent = label;
+        }
+
+        const actionTd = document.createElement('td');
+        if (canManageUsers(current) && u.username !== current.username) {
+          const del = document.createElement('button');
+          del.className = 'btn small danger';
+          del.textContent = 'Delete';
+          del.addEventListener('click', () => {
+            if (confirm('Delete user "' + u.username + '"?')) {
+              deleteUser(u.username);
+            }
+          });
+          actionTd.appendChild(del);
+        } else {
+          actionTd.textContent = '-';
+        }
+
+        tr.appendChild(uTd);
+        tr.appendChild(nTd);
+        tr.appendChild(roleTd);
+        tr.appendChild(actionTd);
+        usersBody.appendChild(tr);
+      });
+    }
+
+    function updateUserField(username, key, value) {
+      const users = readJSON(STORAGE_KEYS.users, []);
+      const idx = users.findIndex(u => u.username === username);
+      if (idx < 0) return;
+      users[idx][key] = value;
+      writeJSON(STORAGE_KEYS.users, users);
+      refreshUsersTable();
+      showToast('User updated');
+    }
+
+    function deleteUser(username) {
+      let users = readJSON(STORAGE_KEYS.users, []);
+      users = users.filter(u => u.username !== username);
+      writeJSON(STORAGE_KEYS.users, users);
+      refreshUsersTable();
+      showToast('User deleted');
+    }
+
+    // ---------- NAVIGATION ----------
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabId = link.dataset.tab;
+        setActiveTab(tabId);
+        closeMobileNav();
+        if (tabId === 'chartsTab') {
+          refreshCharts();
+        } else if (tabId === 'moneyTab') {
+          refreshMoney();
+        } else if (tabId === 'kanbanTab') {
+          refreshKanban();
+        }
+      });
+    });
+
+    // ---------- EXPENSES ----------
+    const addExpenseBtn = document.getElementById('addExpenseBtn');
+    const expenseDesc = document.getElementById('expenseDesc');
+    const expenseAmount = document.getElementById('expenseAmount');
+    const expenseDate = document.getElementById('expenseDate');
+    const expensesBody = document.getElementById('expensesBody');
+    const expenseSearch = document.getElementById('expenseSearch');
+    const expenseStatusFilter = document.getElementById('expenseStatusFilter');
+    const expenseFromDate = document.getElementById('expenseFromDate');
+    const expenseToDate = document.getElementById('expenseToDate');
+    const expenseFilterApply = document.getElementById('expenseFilterApply');
+    const expenseFilterClear = document.getElementById('expenseFilterClear');
+    const exportExpensesCsvBtn = document.getElementById('exportExpensesCsvBtn');
+
+    expenseDate.value = getToday();
+
+    addExpenseBtn.addEventListener('click', () => {
+      const desc = (expenseDesc.value || '').trim();
+      const amount = parseAmount(expenseAmount.value);
+      const date = expenseDate.value;
+
+      if (!desc || amount === null || !validDateStr(date)) {
+        alert('Please fill description, valid amount and date (YYYY-MM-DD).');
+        return;
+      }
+
+      const user = getCurrentUser();
+      const submittedBy = user ? user.username : 'unknown';
+      const submittedByName = user ? (user.name || user.username) : 'unknown';
+
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+      const newExpense = {
+        id: Date.now(),
+        description: desc,
+        amount,
+        date,
+        status: 'pending',
+        submittedBy,
+        submittedByName
+      };
+      expenses.push(newExpense);
+      writeJSON(STORAGE_KEYS.expenses, expenses);
+
+      expenseDesc.value = '';
+      expenseAmount.value = '';
+      expenseDate.value = getToday();
+      showGlobalOverlay('Saving expense...');
+      refreshExpenses();
+      refreshCharts();
+      refreshMoney();
+      showToast('Expense added');
+      expenseDesc.focus();
+    });
+
+    function getFilteredExpensesRaw() {
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+      const search = (expenseSearch.value || '').toLowerCase();
+      const status = expenseStatusFilter.value;
+      const from = expenseFromDate.value || '';
+      const to = expenseToDate.value || '';
+
+      return expenses.filter(e => {
+        if (status !== 'all' && e.status !== status) return false;
+        if (!dateInRange(e.date, from, to)) return false;
+        const text = (e.description + ' ' + (e.submittedByName || '')).toLowerCase();
+        if (search && !text.includes(search)) return false;
+        return true;
+      });
+    }
+
+    function refreshExpenses() {
+      const user = getCurrentUser();
+      const isAdminUser = isAdmin(user);
+      const rows = getFilteredExpensesRaw();
+
+      expensesBody.innerHTML = '';
+      rows.forEach(exp => {
+        const tr = document.createElement('tr');
+
+        const descTd = document.createElement('td');
+        descTd.textContent = exp.description;
+
+        const amountTd = document.createElement('td');
+        amountTd.textContent = formatCurrency(exp.amount);
+
+        const dateTd = document.createElement('td');
+        dateTd.textContent = exp.date;
+
+        const statusTd = document.createElement('td');
+        statusTd.textContent = exp.status === 'approved' ? 'Approved' : 'Pending';
+        statusTd.className = exp.status === 'approved' ? 'status-approved-text' : 'status-pending-text';
+
+        const subTd = document.createElement('td');
+        subTd.textContent = exp.submittedByName || exp.submittedBy || '';
+
+        const actionTd = document.createElement('td');
+        if (isAdminUser) {
+          const approveBtn = document.createElement('button');
+          approveBtn.className = 'btn small secondary';
+          approveBtn.textContent = exp.status === 'approved' ? 'Mark pending' : 'Approve';
+          approveBtn.style.marginRight = '4px';
+          approveBtn.addEventListener('click', () => {
+            toggleExpenseStatus(exp.id);
+          });
+
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn small danger';
+          delBtn.textContent = 'Delete';
+          delBtn.addEventListener('click', () => {
+            if (confirm('Delete this expense?')) {
+              lastDeleted = { type: 'expense', item: exp };
+              deleteExpense(exp.id);
+              showToast('Expense deleted', true);
+            }
+          });
+
+          actionTd.appendChild(approveBtn);
+          actionTd.appendChild(delBtn);
+        } else {
+          actionTd.textContent = '-';
+        }
+
+        tr.appendChild(descTd);
+        tr.appendChild(amountTd);
+        tr.appendChild(dateTd);
+        tr.appendChild(statusTd);
+        tr.appendChild(subTd);
+        tr.appendChild(actionTd);
+        expensesBody.appendChild(tr);
+      });
+    }
+
+    function toggleExpenseStatus(id) {
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+      const idx = expenses.findIndex(e => e.id === id);
+      if (idx >= 0) {
+        expenses[idx].status = expenses[idx].status === 'approved' ? 'pending' : 'approved';
+        writeJSON(STORAGE_KEYS.expenses, expenses);
+        refreshExpenses();
+        refreshCharts();
+        refreshMoney();
+      }
+    }
+
+    function deleteExpense(id) {
+      let expenses = readJSON(STORAGE_KEYS.expenses, []);
+      expenses = expenses.filter(e => e.id !== id);
+      writeJSON(STORAGE_KEYS.expenses, expenses);
+      refreshExpenses();
+      refreshCharts();
+      refreshMoney();
+    }
+
+    expenseFilterApply.addEventListener('click', () => {
+      refreshExpenses();
+    });
+    expenseFilterClear.addEventListener('click', () => {
+      expenseSearch.value = '';
+      expenseStatusFilter.value = 'all';
+      expenseFromDate.value = '';
+      expenseToDate.value = '';
+      refreshExpenses();
+    });
+
+    exportExpensesCsvBtn.addEventListener('click', () => {
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+      const rows = [['Description', 'Amount', 'Date', 'Status', 'Submitted By']];
+      expenses.forEach(e => {
+        rows.push([e.description, e.amount, e.date, e.status, e.submittedByName || e.submittedBy || '']);
+      });
+      downloadCsv(rows, 'expenses.csv');
+    });
+
+    // ---------- JOBS ----------
+    const addJobBtn = document.getElementById('addJobBtn');
+    const jobName = document.getElementById('jobName');
+    const jobSize = document.getElementById('jobSize');
+    const jobPayment = document.getElementById('jobPayment');
+    const jobNotes = document.getElementById('jobNotes');
+    const jobStatus = document.getElementById('jobStatus');
+    const jobPriority = document.getElementById('jobPriority');
+    const jobTags = document.getElementById('jobTags');
+    const jobAttachment = document.getElementById('jobAttachment');
+    const jobsBody = document.getElementById('jobsBody');
+
+    const jobSearch = document.getElementById('jobSearch');
+    const jobStatusFilter = document.getElementById('jobStatusFilter');
+    const jobPriorityFilter = document.getElementById('jobPriorityFilter');
+    const jobViewFilter = document.getElementById('jobViewFilter');
+    const jobFilterApply = document.getElementById('jobFilterApply');
+    const jobFilterClear = document.getElementById('jobFilterClear');
+    const exportJobsCsvBtn = document.getElementById('exportJobsCsvBtn');
+
+    addJobBtn.addEventListener('click', () => {
+      const name = (jobName.value || '').trim();
+      const size = jobSize.value;
+      const payment = parseAmount(jobPayment.value);
+      const notes = (jobNotes.value || '').trim();
+      const status = jobStatus.value;
+      const priority = jobPriority.value;
+      const tagsStr = (jobTags.value || '').trim();
+      const attachmentUrl = (jobAttachment.value || '').trim();
+      const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(t => t) : [];
+      const date = getToday();
+
+      if (!name || !size || payment === null || !status || !priority) {
+        alert('Please fill job name, size, status, priority and valid payment.');
+        return;
+      }
+
+      const user = getCurrentUser();
+      const who = user ? user.username : 'unknown';
+      const whoName = user ? (user.name || user.username) : 'unknown';
+
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const now = getToday();
+      const newJob = {
+        id: Date.now(),
+        name,
+        size,
+        who,
+        whoName,
+        payment,
+        date,
+        notes,
+        status,
+        priority,
+        tags,
+        attachmentUrl,
+        createdAt: now,
+        updatedAt: now,
+        lastEditedBy: who,
+        lastEditedByName: whoName
+      };
+      jobs.push(newJob);
+      writeJSON(STORAGE_KEYS.jobs, jobs);
+
+      jobName.value = '';
+      jobSize.value = '';
+      jobPayment.value = '';
+      jobNotes.value = '';
+      jobStatus.value = 'planned';
+      jobPriority.value = 'medium';
+      jobTags.value = '';
+      jobAttachment.value = '';
+      showGlobalOverlay('Saving job...');
+      refreshJobs();
+      refreshKanban();
+      refreshCharts();
+      refreshMoney();
+      showToast('Job added');
+      jobName.focus();
+    });
+
+    function getFilteredJobs() {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const user = getCurrentUser();
+      const search = (jobSearch.value || '').toLowerCase();
+      const statusF = jobStatusFilter.value;
+      const priorityF = jobPriorityFilter.value;
+      const viewF = jobViewFilter.value;
+
+      return jobs.filter(j => {
+        if (statusF !== 'all' && j.status !== statusF) return false;
+        if (priorityF !== 'all' && j.priority !== priorityF) return false;
+        if (viewF === 'mine' && user && j.who !== user.username) return false;
+        const text = (j.name + ' ' + (j.notes || '') + ' ' + (j.whoName || '') + ' ' + (j.tags || []).join(' ')).toLowerCase();
+        if (search && !text.includes(search)) return false;
+        return true;
+      });
+    }
+
+    function statusLabel(status) {
+      if (status === 'in_progress') return 'In progress';
+      if (status === 'done') return 'Done';
+      if (status === 'paid') return 'Paid';
+      return 'Planned';
+    }
+
+    function priorityLabel(p) {
+      if (p === 'high') return 'High';
+      if (p === 'low') return 'Low';
+      return 'Medium';
+    }
+
+    function statusChipClass(status) {
+      if (status === 'in_progress') return 'status-chip status-in-progress';
+      if (status === 'done') return 'status-chip status-done';
+      if (status === 'paid') return 'status-chip status-paid';
+      return 'status-chip status-planned';
+    }
+
+    function priorityBadgeClass(p) {
+      if (p === 'high') return 'badge badge-priority-high';
+      if (p === 'low') return 'badge badge-priority-low';
+      return 'badge badge-priority-medium';
+    }
+
+    function renderJobsGroupedByUser(rows) {
+      const user = getCurrentUser();
+      const isAdminUser = isAdmin(user);
+      const groups = {};
+      rows.forEach(j => {
+        const key = j.whoName || j.who || 'unknown';
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(j);
+      });
+
+      jobsBody.innerHTML = '';
+      Object.keys(groups).sort().forEach(username => {
+        const groupRows = groups[username].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+        const headerTr = document.createElement('tr');
+        headerTr.className = 'group-header';
+        const headerTd = document.createElement('td');
+        headerTd.colSpan = 10;
+        const labelSpan = document.createElement('span');
+        labelSpan.innerHTML = '▼ ' + username + ' (' + groupRows.length + ' jobs)';
+        headerTd.appendChild(labelSpan);
+        headerTr.appendChild(headerTd);
+        jobsBody.appendChild(headerTr);
+
+        let collapsed = false;
+
+        headerTr.addEventListener('click', () => {
+          collapsed = !collapsed;
+          labelSpan.innerHTML = (collapsed ? '▶' : '▼') + ' ' + username + ' (' + groupRows.length + ' jobs)';
+          groupRows.forEach(job => {
+            const rowEl = document.querySelector('tr[data-job-id="' + job.id + '"]');
+            const detailEl = document.querySelector('tr[data-job-detail-id="' + job.id + '"]');
+            if (rowEl) rowEl.style.display = collapsed ? 'none' : '';
+            if (detailEl) detailEl.style.display = collapsed ? 'none' : '';
+          });
+        });
+
+        groupRows.forEach(job => {
+          const tr = document.createElement('tr');
+          tr.setAttribute('data-job-id', job.id);
+
+          function makeEditableCell(key, value, type) {
+            const td = document.createElement('td');
+            if (isAdminUser && key !== 'who' && key !== 'date' && key !== 'whoName') {
+              if (key === 'status') {
+                const sel = document.createElement('select');
+                ['planned','in_progress','done','paid'].forEach(s => {
+                  const opt = document.createElement('option');
+                  opt.value = s;
+                  opt.textContent = statusLabel(s);
+                  if (s === value) opt.selected = true;
+                  sel.appendChild(opt);
+                });
+                sel.addEventListener('change', () => {
+                  updateJobField(job.id, key, sel.value, 'text');
+                });
+                td.appendChild(sel);
+              } else if (key === 'priority') {
+                const sel = document.createElement('select');
+                ['low','medium','high'].forEach(p => {
+                  const opt = document.createElement('option');
+                  opt.value = p;
+                  opt.textContent = priorityLabel(p);
+                  if (p === value) opt.selected = true;
+                  sel.appendChild(opt);
+                });
+                sel.addEventListener('change', () => {
+                  updateJobField(job.id, key, sel.value, 'text');
+                });
+                td.appendChild(sel);
+              } else if (key === 'tags') {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = (Array.isArray(value) ? value.join(', ') : '');
+                input.style.width = '140px';
+                input.addEventListener('change', () => {
+                  const tags = input.value.split(',').map(t => t.trim()).filter(t => t);
+                  updateJobField(job.id, key, tags, 'tags');
+                });
+                td.appendChild(input);
+              } else if (key === 'attachmentUrl') {
+                const input = document.createElement('input');
+                input.type = 'url';
+                input.value = value || '';
+                input.style.width = '140px';
+                input.addEventListener('change', () => {
+                  updateJobField(job.id, key, input.value, 'text');
+                });
+                td.appendChild(input);
+              } else if (key === 'payment') {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.value = value;
+                input.style.width = '80px';
+                input.addEventListener('change', () => {
+                  updateJobField(job.id, key, input.value, 'number');
+                });
+                td.appendChild(input);
+              } else {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = value;
+                input.style.width = '120px';
+                input.addEventListener('change', () => {
+                  updateJobField(job.id, key, input.value, 'text');
+                });
+                td.appendChild(input);
+              }
+            } else {
+              if (key === 'status') {
+                const span = document.createElement('span');
+                span.className = statusChipClass(value);
+                span.innerHTML = '<span class="status-chip-dot"></span>' + statusLabel(value);
+                td.appendChild(span);
+              } else if (key === 'priority') {
+                const span = document.createElement('span');
+                span.className = priorityBadgeClass(value);
+                span.textContent = priorityLabel(value);
+                td.appendChild(span);
+              } else if (key === 'tags') {
+                const text = Array.isArray(value) ? value.join(', ') : '';
+                td.textContent = text;
+              } else if (key === 'attachmentUrl') {
+                if (value) {
+                  const a = document.createElement('a');
+                  a.href = value;
+                  a.target = '_blank';
+                  a.textContent = 'Open';
+                  td.appendChild(a);
+                } else {
+                  td.textContent = '-';
+                }
+              } else {
+                td.textContent = value;
+              }
+            }
+            return td;
+          }
+
+          tr.appendChild(makeEditableCell('name', job.name, 'text'));
+          tr.appendChild(makeEditableCell('status', job.status, 'text'));
+          tr.appendChild(makeEditableCell('priority', job.priority, 'text'));
+          tr.appendChild(makeEditableCell('size', job.size, 'text'));
+          tr.appendChild(makeEditableCell('payment', job.payment, 'number'));
+
+          const dateTd = document.createElement('td');
+          dateTd.textContent = job.date;
+          tr.appendChild(dateTd);
+
+          const whoTd = document.createElement('td');
+          whoTd.textContent = job.whoName || job.who;
+          tr.appendChild(whoTd);
+
+          tr.appendChild(makeEditableCell('tags', job.tags || [], 'tags'));
+          tr.appendChild(makeEditableCell('attachmentUrl', job.attachmentUrl || '', 'text'));
+
+          const actionTd = document.createElement('td');
+          if (isAdminUser) {
+            const delBtn = document.createElement('button');
+            delBtn.className = 'btn small danger';
+            delBtn.textContent = 'Delete';
+            delBtn.addEventListener('click', (ev) => {
+              ev.stopPropagation();
+              if (confirm('Delete this job?')) {
+                lastDeleted = { type: 'job', item: job };
+                deleteJob(job.id);
+                showToast('Job deleted', true);
+              }
+            });
+            actionTd.appendChild(delBtn);
+          } else {
+            actionTd.textContent = '-';
+          }
+          tr.appendChild(actionTd);
+
+          tr.addEventListener('click', (ev) => {
+            if (['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA', 'A'].includes(ev.target.tagName)) return;
+            toggleJobDetails(job);
+          });
+
+          jobsBody.appendChild(tr);
+
+          const detailTr = document.createElement('tr');
+          detailTr.setAttribute('data-job-detail-id', job.id);
+          detailTr.style.display = 'none';
+
+          const detailTd = document.createElement('td');
+          detailTd.colSpan = 10;
+          detailTd.className = 'row-details';
+
+          const inner = document.createElement('div');
+          inner.className = 'row-details-inner';
+          inner.innerHTML =
+            '<div><strong>Notes:</strong> ' + (job.notes || '(none)') + '</div>' +
+            '<div><strong>Tags:</strong> ' + ((job.tags && job.tags.length) ? job.tags.join(', ') : '(none)') + '</div>' +
+            '<div><strong>Attachment:</strong> ' + (job.attachmentUrl ? ('<a href="' + job.attachmentUrl + '" target="_blank">Open link</a>') : '(none)') + '</div>' +
+            '<div><strong>Created:</strong> ' + (job.createdAt || job.date) + ' by ' + (job.whoName || job.who || '') + '</div>' +
+            '<div><strong>Updated:</strong> ' + (job.updatedAt || job.date) + ' by ' + (job.lastEditedByName || job.lastEditedBy || '') + '</div>';
+
+          detailTd.appendChild(inner);
+          detailTr.appendChild(detailTd);
+          jobsBody.appendChild(detailTr);
+        });
+      });
+    }
+
+    function toggleJobDetails(job) {
+      const detailRow = document.querySelector('tr[data-job-detail-id="' + job.id + '"]');
+      if (!detailRow) return;
+      detailRow.style.display = detailRow.style.display === 'none' ? '' : 'none';
+    }
+
+    function refreshJobs() {
+      const rows = getFilteredJobs();
+      renderJobsGroupedByUser(rows);
+    }
+
+    function updateJobField(id, key, value, type) {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const idx = jobs.findIndex(j => j.id === id);
+      if (idx < 0) return;
+      if (type === 'number') {
+        const n = parseAmount(value);
+        if (n === null) {
+          alert('Invalid number.');
+          refreshJobs();
+          return;
+        }
+        jobs[idx][key] = n;
+      } else if (type === 'tags') {
+        jobs[idx][key] = Array.isArray(value) ? value : [];
+      } else {
+        jobs[idx][key] = (value || '').trim();
+      }
+      const user = getCurrentUser();
+      jobs[idx].updatedAt = getToday();
+      jobs[idx].lastEditedBy = user ? user.username : (jobs[idx].lastEditedBy || 'unknown');
+      jobs[idx].lastEditedByName = user ? (user.name || user.username) : (jobs[idx].lastEditedByName || jobs[idx].lastEditedBy || 'unknown');
+      writeJSON(STORAGE_KEYS.jobs, jobs);
+      refreshJobs();
+      refreshKanban();
+      refreshCharts();
+      refreshMoney();
+    }
+
+    function deleteJob(id) {
+      let jobs = readJSON(STORAGE_KEYS.jobs, []);
+      jobs = jobs.filter(j => j.id !== id);
+      writeJSON(STORAGE_KEYS.jobs, jobs);
+      refreshJobs();
+      refreshKanban();
+      refreshCharts();
+      refreshMoney();
+    }
+
+    jobFilterApply.addEventListener('click', () => {
+      refreshJobs();
+      refreshKanban();
+    });
+    jobFilterClear.addEventListener('click', () => {
+      jobSearch.value = '';
+      jobStatusFilter.value = 'all';
+      jobPriorityFilter.value = 'all';
+      jobViewFilter.value = 'all';
+      refreshJobs();
+      refreshKanban();
+    });
+
+    exportJobsCsvBtn.addEventListener('click', () => {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const rows = [['Name','Status','Priority','Size','Payment','Date','Who','Tags','Attachment','CreatedAt','UpdatedAt','LastEditedBy']];
+      jobs.forEach(j => {
+        rows.push([
+          j.name,
+          j.status,
+          j.priority,
+          j.size,
+          j.payment,
+          j.date,
+          j.whoName || j.who,
+          (j.tags || []).join('|'),
+          j.attachmentUrl || '',
+          j.createdAt || '',
+          j.updatedAt || '',
+          j.lastEditedByName || j.lastEditedBy || ''
+        ]);
+      });
+      downloadCsv(rows, 'jobs.csv');
+    });
+
+    // ---------- KANBAN ----------
+    const kanbanBoard = document.getElementById('kanbanBoard');
+    const kanbanViewRadios = document.getElementsByName('kanbanView');
+
+    function getKanbanViewFilter() {
+      let val = 'all';
+      kanbanViewRadios.forEach(r => {
+        if (r.checked) val = r.value;
+      });
+      return val;
+    }
+
+    function refreshKanban() {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const user = getCurrentUser();
+      const viewFilter = getKanbanViewFilter();
+      const filtered = jobs.filter(j => {
+        if (viewFilter === 'mine' && user && j.who !== user.username) return false;
+        return true;
+      });
+
+      const statuses = ['planned','in_progress','done','paid'];
+      const columns = {
+        planned: [],
+        in_progress: [],
+        done: [],
+        paid: []
+      };
+      filtered.forEach(j => {
+        const key = statuses.includes(j.status) ? j.status : 'planned';
+        columns[key].push(j);
+      });
+
+      kanbanBoard.innerHTML = '';
+      statuses.forEach(status => {
+        const col = document.createElement('div');
+        col.className = 'kanban-column';
+        const header = document.createElement('div');
+        header.className = 'kanban-column-header';
+        header.innerHTML = '<span>' + statusLabel(status) + '</span><span class="kanban-count">' + columns[status].length + '</span>';
+        col.appendChild(header);
+
+        const list = document.createElement('div');
+        list.className = 'kanban-list';
+
+        columns[status].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0)).forEach(job => {
+          const card = document.createElement('div');
+          card.className = 'kanban-card';
+
+          const title = document.createElement('div');
+          title.className = 'kanban-title';
+          title.textContent = job.name;
+          card.appendChild(title);
+
+          const meta = document.createElement('div');
+          meta.className = 'kanban-meta';
+          const priorityBadge = document.createElement('span');
+          priorityBadge.className = priorityBadgeClass(job.priority);
+          priorityBadge.textContent = priorityLabel(job.priority);
+          meta.appendChild(priorityBadge);
+
+          const sizeBadge = document.createElement('span');
+          sizeBadge.className = 'badge badge-status-planned';
+          sizeBadge.textContent = job.size;
+          meta.appendChild(sizeBadge);
+
+          if (job.tags && job.tags.length) {
+            const tag = document.createElement('span');
+            tag.className = 'tag-pill';
+            tag.textContent = job.tags[0];
+            meta.appendChild(tag);
+          }
+
+          card.appendChild(meta);
+
+          const footer = document.createElement('div');
+          footer.className = 'kanban-footer';
+          footer.innerHTML = '<span>' + (job.whoName || job.who) + '</span><span>' + formatCurrency(job.payment) + '</span>';
+          card.appendChild(footer);
+
+          card.addEventListener('click', () => {
+            const newStatus = prompt('Move "' + job.name + '" to status (planned, in_progress, done, paid):', job.status);
+            if (!newStatus) return;
+            const allowed = ['planned','in_progress','done','paid'];
+            if (!allowed.includes(newStatus)) {
+              alert('Invalid status.');
+              return;
+            }
+            updateJobField(job.id, 'status', newStatus, 'text');
+          });
+
+          list.appendChild(card);
+        });
+
+        col.appendChild(list);
+        kanbanBoard.appendChild(col);
+      });
+    }
+
+    kanbanViewRadios.forEach(r => {
+      r.addEventListener('change', () => {
+        refreshKanban();
+      });
+    });
+
+    // ---------- CSV EXPORT ----------
+    function downloadCsv(rows, filename) {
+      const escape = (val) => {
+        if (val === null || val === undefined) return '';
+        const str = String(val).replace(/"/g, '""');
+        if (/[",\n]/.test(str)) return '"' + str + '"';
+        return str;
+      };
+      const lines = rows.map(row => row.map(escape).join(','));
+      const csv = lines.join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ---------- CHARTS ----------
+    const chartsFromDate = document.getElementById('chartsFromDate');
+    const chartsToDate = document.getElementById('chartsToDate');
+    const chartsTimeframe = document.getElementById('chartsTimeframe');
+    const applyChartsFilterBtn = document.getElementById('applyChartsFilterBtn');
+
+    function getChartsFilterRange() {
+      let from = chartsFromDate.value || '';
+      let to = chartsToDate.value || '';
+      const tf = chartsTimeframe.value || 'all';
+
+      const todayStr = getToday();
+      const todayMs = Date.parse(todayStr);
+
+      if (tf !== 'all') {
+        let days = 0;
+        if (tf === 'week') days = 7;
+        else if (tf === 'month') days = 30;
+        else if (tf === 'year') days = 365;
+        const fromMs = todayMs - days * 24 * 60 * 60 * 1000;
+        const fromDate = new Date(fromMs);
+        const y = fromDate.getFullYear();
+        const m = String(fromDate.getMonth() + 1).padStart(2, '0');
+        const d = String(fromDate.getDate()).padStart(2, '0');
+        const tfFrom = y + '-' + m + '-' + d;
+        if (!from || Date.parse(from) < fromMs) {
+          from = tfFrom;
+        }
+        if (!to) {
+          to = todayStr;
+        }
+      }
+      return { from, to };
+    }
+
+    function showChartLoader(id, show) {
+      const loader = document.getElementById(id);
+      if (!loader) return;
+      loader.classList.toggle('show', show);
+    }
+
+    function setupChart(canvasId, loaderId, tooltipId, drawFn) {
+      const canvas = document.getElementById(canvasId);
+      const tooltip = document.getElementById(tooltipId);
+      if (!canvas || !tooltip) return;
+      const ctx = canvas.getContext('2d');
+
+      let state = { points: [] };
+
+      function resizeAndDraw() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const width = rect.width * dpr;
+        const height = rect.height * dpr;
+        canvas.width = width;
+        canvas.height = height;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        showChartLoader(loaderId, true);
+        setTimeout(() => {
+          state = drawFn(canvas, ctx);
+          showChartLoader(loaderId, false);
+        }, 80);
+      }
+
+      resizeAndDraw();
+      window.addEventListener('resize', resizeAndDraw);
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        let found = null;
+        state.points.forEach(p => {
+          const dx = x - p.x;
+          const dy = y - p.y;
+          if (Math.sqrt(dx * dx + dy * dy) <= p.radius) {
+            found = p;
+          }
+        });
+        if (found) {
+          tooltip.style.left = found.x + 'px';
+          tooltip.style.top = found.y + 'px';
+          tooltip.textContent = found.label + ' : ' + (found.isMoney ? formatCurrency(found.value) : found.value);
+          tooltip.style.display = 'block';
+        } else {
+          tooltip.style.display = 'none';
+        }
+      });
+
+      canvas.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+      });
+
+      return { redraw: resizeAndDraw };
+    }
+
+    let workersChart, revenueChart, balanceChart, statusChart, sizeChart, userChart;
+
+    function rebuildCharts() {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+
+      const filters = getChartsFilterRange();
+      const from = filters.from;
+      const to = filters.to;
+
+      const filteredJobs = jobs.filter(j => dateInRange(j.date, from, to));
+      const filteredExpenses = expenses.filter(e => dateInRange(e.date, from, to) && e.status === 'approved');
+
+      workersChart = setupChart('workersChart', 'workersChartLoader', 'workersChartTooltip', (canvas, ctx) => {
+        const counts = {};
+        filteredJobs.forEach(j => {
+          const name = j.whoName || j.who;
+          counts[name] = (counts[name] || 0) + 1;
+        });
+        const labels = Object.keys(counts);
+        const values = labels.map(l => counts[l]);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const rect = canvas.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+
+        const margin = { top: 20, right: 10, bottom: 40, left: 40 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+
+        ctx.save();
+        ctx.translate(margin.left, margin.top);
+
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, chartHeight);
+        ctx.lineTo(chartWidth, chartHeight);
+        ctx.stroke();
+
+        if (values.length === 0) {
+          ctx.fillStyle = '#9ca3af';
+          ctx.font = '12px system-ui';
+          ctx.fillText('No data', chartWidth / 2 - 20, chartHeight / 2);
+          ctx.restore();
+          return { points: [] };
+        }
+
+        const maxVal = Math.max(...values, 1);
+        const barCount = values.length;
+        const barWidth = chartWidth / (barCount * 1.6);
+        const gap = barWidth * 0.6;
+
+        const points = [];
+
+        values.forEach((val, i) => {
+          const x = i * (barWidth + gap) + gap / 2;
+          const barHeight = (val / maxVal) * (chartHeight - 10);
+          const y = chartHeight - barHeight;
+
+          ctx.fillStyle = i % 2 === 0 ? '#66b96a' : '#3b8d41';
+          ctx.roundRect(x, y, barWidth, barHeight, 6);
+          ctx.fill();
+
+          ctx.fillStyle = '#4b5563';
+          ctx.font = '10px system-ui';
+          const label = labels[i];
+          ctx.save();
+          ctx.translate(x + barWidth / 2, chartHeight + 12);
+          ctx.rotate(-Math.PI / 4);
+          ctx.textAlign = 'right';
+          ctx.fillText(label, 0, 0);
+          ctx.restore();
+
+          points.push({
+            x: margin.left + x + barWidth / 2,
+            y: margin.top + y,
+            radius: Math.max(6, Math.min(barWidth / 2, 10)),
+            label: label,
+            value: val,
+            isMoney: false
+          });
+        });
+
+        ctx.restore();
+        return { points };
+      });
+
+      revenueChart = setupChart('revenueChart', 'revenueChartLoader', 'revenueChartTooltip', (canvas, ctx) => {
+        const totals = {};
+        filteredJobs.forEach(j => {
+          totals[j.date] = (totals[j.date] || 0) + (j.payment || 0);
+        });
+        const labels = Object.keys(totals).sort();
+        const values = labels.map(l => totals[l]);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const rect = canvas.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+
+        const margin = { top: 20, right: 10, bottom: 40, left: 45 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+
+        ctx.save();
+        ctx.translate(margin.left, margin.top);
+
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, chartHeight);
+        ctx.lineTo(chartWidth, chartHeight);
+        ctx.stroke();
+
+        if (values.length === 0) {
+          ctx.fillStyle = '#9ca3af';
+          ctx.font = '12px system-ui';
+          ctx.fillText('No data', chartWidth / 2 - 20, chartHeight / 2);
+          ctx.restore();
+          return { points: [] };
+        }
+
+        const maxVal = Math.max(...values, 1);
+        const barCount = values.length;
+        const barWidth = chartWidth / (barCount * 1.6);
+        const gap = barWidth * 0.6;
+        const points = [];
+
+        values.forEach((val, i) => {
+          const x = i * (barWidth + gap) + gap / 2;
+          const barHeight = (val / maxVal) * (chartHeight - 10);
+          const y = chartHeight - barHeight;
+
+          ctx.fillStyle = '#aee2b2';
+          ctx.roundRect(x, y, barWidth, barHeight, 6);
+          ctx.fill();
+
+          ctx.fillStyle = '#4b5563';
+          ctx.font = '9px system-ui';
+          ctx.save();
+          ctx.translate(x + barWidth / 2, chartHeight + 12);
+          ctx.rotate(-Math.PI / 4);
+          ctx.textAlign = 'right';
+          ctx.fillText(labels[i], 0, 0);
+          ctx.restore();
+
+          points.push({
+            x: margin.left + x + barWidth / 2,
+            y: margin.top + y,
+            radius: Math.max(6, Math.min(barWidth / 2, 10)),
+            label: labels[i],
+            value: val,
+            isMoney: true
+          });
+        });
+
+        ctx.restore();
+        return { points };
+      });
+
+      balanceChart = setupChart('balanceChart', 'balanceChartLoader', 'balanceChartTooltip', (canvas, ctx) => {
+        const incomeByDate = {};
+        filteredJobs.forEach(j => {
+          incomeByDate[j.date] = (incomeByDate[j.date] || 0) + (j.payment || 0);
+        });
+        const expensesByDate = {};
+        filteredExpenses.forEach(e => {
+          expensesByDate[e.date] = (expensesByDate[e.date] || 0) + (e.amount || 0);
+        });
+        const allDates = Array.from(new Set([...Object.keys(incomeByDate), ...Object.keys(expensesByDate)])).sort();
+        const incomeValues = allDates.map(d => incomeByDate[d] || 0);
+        const expenseValues = allDates.map(d => expensesByDate[d] || 0);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const rect = canvas.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+
+        const margin = { top: 20, right: 10, bottom: 40, left: 45 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+
+        ctx.save();
+        ctx.translate(margin.left, margin.top);
+
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, chartHeight);
+        ctx.lineTo(chartWidth, chartHeight);
+        ctx.stroke();
+
+        if (allDates.length === 0) {
+          ctx.fillStyle = '#9ca3af';
+          ctx.font = '12px system-ui';
+          ctx.fillText('No data', chartWidth / 2 - 20, chartHeight / 2);
+          ctx.restore();
+          return { points: [] };
+        }
+
+        const maxVal = Math.max(
+          ...incomeValues,
+          ...expenseValues,
+          1
+        );
+        const xStep = chartWidth / Math.max(allDates.length - 1, 1);
+
+        function drawLine(values, color) {
+          ctx.beginPath();
+          values.forEach((val, i) => {
+            const x = i * xStep;
+            const y = chartHeight - (val / maxVal) * (chartHeight - 10);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          });
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+
+        function drawPoints(values, color, labelPrefix, points) {
+          values.forEach((val, i) => {
+            const x = i * xStep;
+            const y = chartHeight - (val / maxVal) * (chartHeight - 10);
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+            points.push({
+              x: margin.left + x,
+              y: margin.top + y,
+              radius: 6,
+              label: labelPrefix + ' ' + allDates[i],
+              value: val,
+              isMoney: true
+            });
+          });
+        }
+
+        drawLine(incomeValues, '#3b8d41');
+        drawLine(expenseValues, '#e67e22');
+
+        const points = [];
+        drawPoints(incomeValues, '#3b8d41', 'Income', points);
+        drawPoints(expenseValues, '#e67e22', 'Expense', points);
+
+        ctx.fillStyle = '#4b5563';
+        ctx.font = '9px system-ui';
+        allDates.forEach((d, i) => {
+          const x = i * xStep;
+          ctx.save();
+          ctx.translate(x, chartHeight + 12);
+          ctx.rotate(-Math.PI / 4);
+          ctx.textAlign = 'right';
+          ctx.fillText(d, 0, 0);
+          ctx.restore();
+        });
+
+        ctx.restore();
+        return { points };
+      });
+
+      statusChart = setupChart('statusChart', 'statusChartLoader', 'statusChartTooltip', (canvas, ctx) => {
+        const statuses = ['planned','in_progress','done','paid'];
+        const counts = { planned: 0, in_progress: 0, done: 0, paid: 0 };
+        filteredJobs.forEach(j => {
+          const s = statuses.includes(j.status) ? j.status : 'planned';
+          counts[s] += 1;
+        });
+        const labels = statuses;
+        const values = labels.map(l => counts[l]);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const rect = canvas.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+
+        const margin = { top: 20, right: 10, bottom: 30, left: 40 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+
+        ctx.save();
+        ctx.translate(margin.left, margin.top);
+
+        if (values.every(v => v === 0)) {
+          ctx.fillStyle = '#9ca3af';
+          ctx.font = '12px system-ui';
+          ctx.fillText('No data', chartWidth / 2 - 20, chartHeight / 2);
+          ctx.restore();
+          return { points: [] };
+        }
+
+        const maxVal = Math.max(...values, 1);
+        const barCount = values.length;
+        const barWidth = chartWidth / (barCount * 1.6);
+        const gap = barWidth * 0.6;
+
+        const points = [];
+        const colors = ['#ecf0f1','#e3efff','#e8f7ec','#d9f2df'];
+
+        values.forEach((val, i) => {
+          const x = i * (barWidth + gap) + gap / 2;
+          const barHeight = (val / maxVal) * (chartHeight - 10);
+          const y = chartHeight - barHeight;
+
+          ctx.fillStyle = colors[i];
+          ctx.roundRect(x, y, barWidth, barHeight, 6);
+          ctx.fill();
+
+          ctx.fillStyle = '#4b5563';
+          ctx.font = '9px system-ui';
+          ctx.textAlign = 'center';
+          ctx.fillText(statusLabel(labels[i]), x + barWidth / 2, chartHeight + 10);
+
+          points.push({
+            x: margin.left + x + barWidth / 2,
+            y: margin.top + y,
+            radius: Math.max(6, Math.min(barWidth / 2, 10)),
+            label: statusLabel(labels[i]),
+            value: val,
+            isMoney: false
+          });
+        });
+
+        ctx.restore();
+        return { points };
+      });
+
+      sizeChart = setupChart('sizeChart', 'sizeChartLoader', 'sizeChartTooltip', (canvas, ctx) => {
+        const sizes = ['small','medium','large'];
+        const colors = ['#66b96a','#3b8d41','#aee2b2'];
+        const totals = { small: 0, medium: 0, large: 0 };
+        filteredJobs.forEach(j => {
+          const s = sizes.includes(j.size) ? j.size : 'medium';
+          totals[s] += j.payment || 0;
+        });
+        const labels = sizes;
+        const values = labels.map(l => totals[l]);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const rect = canvas.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+
+        const margin = { top: 20, right: 10, bottom: 30, left: 45 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+
+        ctx.save();
+        ctx.translate(margin.left, margin.top);
+
+        if (values.every(v => v === 0)) {
+          ctx.fillStyle = '#9ca3af';
+          ctx.font = '12px system-ui';
+          ctx.fillText('No data', chartWidth / 2 - 20, chartHeight / 2);
+          ctx.restore();
+          return { points: [] };
+        }
+
+        const maxVal = Math.max(...values, 1);
+        const barCount = values.length;
+        const barWidth = chartWidth / (barCount * 1.6);
+        const gap = barWidth * 0.6;
+
+        const points = [];
+
+        values.forEach((val, i) => {
+          const x = i * (barWidth + gap) + gap / 2;
+          const barHeight = (val / maxVal) * (chartHeight - 10);
+          const y = chartHeight - barHeight;
+
+          ctx.fillStyle = colors[i];
+          ctx.roundRect(x, y, barWidth, barHeight, 6);
+          ctx.fill();
+
+          ctx.fillStyle = '#4b5563';
+          ctx.font = '9px system-ui';
+          ctx.textAlign = 'center';
+          ctx.fillText(labels[i], x + barWidth / 2, chartHeight + 10);
+
+          points.push({
+            x: margin.left + x + barWidth / 2,
+            y: margin.top + y,
+            radius: Math.max(6, Math.min(barWidth / 2, 10)),
+            label: labels[i],
+            value: val,
+            isMoney: true
+          });
+        });
+
+        ctx.restore();
+        return { points };
+      });
+
+      userChart = setupChart('userChart', 'userChartLoader', 'userChartTooltip', (canvas, ctx) => {
+        const totals = {};
+        filteredJobs.forEach(j => {
+          const name = j.whoName || j.who;
+          totals[name] = (totals[name] || 0) + (j.payment || 0);
+        });
+        const labels = Object.keys(totals);
+        const values = labels.map(l => totals[l]);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const rect = canvas.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+
+        const margin = { top: 20, right: 10, bottom: 40, left: 45 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+
+        ctx.save();
+        ctx.translate(margin.left, margin.top);
+
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, chartHeight);
+        ctx.lineTo(chartWidth, chartHeight);
+        ctx.stroke();
+
+        if (values.length === 0) {
+          ctx.fillStyle = '#9ca3af';
+          ctx.font = '12px system-ui';
+          ctx.fillText('No data', chartWidth / 2 - 20, chartHeight / 2);
+          ctx.restore();
+          return { points: [] };
+        }
+
+        const maxVal = Math.max(...values, 1);
+        const barCount = values.length;
+        const barWidth = chartWidth / (barCount * 1.6);
+        const gap = barWidth * 0.6;
+        const points = [];
+
+        values.forEach((val, i) => {
+          const x = i * (barWidth + gap) + gap / 2;
+          const barHeight = (val / maxVal) * (chartHeight - 10);
+          const y = chartHeight - barHeight;
+
+          ctx.fillStyle = i % 2 === 0 ? '#66b96a' : '#3b8d41';
+          ctx.roundRect(x, y, barWidth, barHeight, 6);
+          ctx.fill();
+
+          ctx.fillStyle = '#4b5563';
+          ctx.font = '9px system-ui';
+          ctx.save();
+          ctx.translate(x + barWidth / 2, chartHeight + 12);
+          ctx.rotate(-Math.PI / 4);
+          ctx.textAlign = 'right';
+          ctx.fillText(labels[i], 0, 0);
+          ctx.restore();
+
+          points.push({
+            x: margin.left + x + barWidth / 2,
+            y: margin.top + y,
+            radius: Math.max(6, Math.min(barWidth / 2, 10)),
+            label: labels[i],
+            value: val,
+            isMoney: true
+          });
+        });
+
+        ctx.restore();
+        return { points };
+      });
+    }
+
+    function refreshCharts() {
+      showGlobalOverlay('Refreshing charts...');
+      rebuildCharts();
+    }
+
+    applyChartsFilterBtn.addEventListener('click', () => {
+      refreshCharts();
+    });
+
+    // ---------- MONEY ----------
+    const incomeTotal = document.getElementById('incomeTotal');
+    const expensesTotalSpan = document.getElementById('expensesTotal');
+    const netTotal = document.getElementById('netTotal');
+    const moneyFromDate = document.getElementById('moneyFromDate');
+    const moneyToDate = document.getElementById('moneyToDate');
+    const applyMoneyFilterBtn = document.getElementById('applyMoneyFilterBtn');
+    const moneyFilterClear = document.getElementById('moneyFilterClear');
+    const moneyBody = document.getElementById('moneyBody');
+    const exportMoneyCsvBtn = document.getElementById('exportMoneyCsvBtn');
+
+    function buildMoneyRows() {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const expenses = readJSON(STORAGE_KEYS.expenses, []).filter(e => e.status === 'approved');
+
+      const from = moneyFromDate.value || '';
+      const to = moneyToDate.value || '';
+
+      const rows = [];
+
+      jobs.forEach(j => {
+        if (!dateInRange(j.date, from, to)) return;
+        rows.push({
+          date: j.date,
+          type: 'Income',
+          description: j.name,
+          amount: j.payment || 0,
+          who: j.whoName || j.who || ''
+        });
+      });
+
+      expenses.forEach(e => {
+        if (!dateInRange(e.date, from, to)) return;
+        rows.push({
+          date: e.date,
+          type: 'Expense',
+          description: e.description,
+          amount: -(e.amount || 0),
+          who: e.submittedByName || e.submittedBy || ''
+        });
+      });
+
+      rows.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+      return rows;
+    }
+
+    function renderMoneyRows(rows) {
+      moneyBody.innerHTML = '';
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        const dateTd = document.createElement('td');
+        dateTd.textContent = r.date;
+        const typeTd = document.createElement('td');
+        typeTd.textContent = r.type;
+        const descTd = document.createElement('td');
+        descTd.textContent = r.description;
+        const amountTd = document.createElement('td');
+        amountTd.textContent = formatCurrency(Math.abs(r.amount));
+        amountTd.style.color = r.type === 'Income' ? '#22c55e' : '#ef4444';
+        const whoTd = document.createElement('td');
+        whoTd.textContent = r.who;
+
+        tr.appendChild(dateTd);
+        tr.appendChild(typeTd);
+        tr.appendChild(descTd);
+        tr.appendChild(amountTd);
+        tr.appendChild(whoTd);
+        moneyBody.appendChild(tr);
+      });
+    }
+
+    function refreshMoney() {
+      const rows = buildMoneyRows();
+      renderMoneyRows(rows);
+
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+      const from = moneyFromDate.value || '';
+      const to = moneyToDate.value || '';
+
+      const approvedExpenses = expenses.filter(e => e.status === 'approved');
+
+      let incomeSum = 0;
+      jobs.forEach(j => {
+        if (dateInRange(j.date, from, to)) incomeSum += j.payment || 0;
+      });
+
+      let expenseSum = 0;
+      approvedExpenses.forEach(e => {
+        if (dateInRange(e.date, from, to)) expenseSum += e.amount || 0;
+      });
+
+      const net = incomeSum - expenseSum;
+
+      incomeTotal.textContent = formatCurrency(incomeSum);
+      expensesTotalSpan.textContent = formatCurrency(expenseSum);
+      netTotal.textContent = formatCurrency(net);
+      netTotal.classList.remove('net-positive', 'net-negative');
+      if (net > 0) netTotal.classList.add('net-positive');
+      else if (net < 0) netTotal.classList.add('net-negative');
+    }
+
+    applyMoneyFilterBtn.addEventListener('click', () => {
+      refreshMoney();
+    });
+
+    moneyFilterClear.addEventListener('click', () => {
+      moneyFromDate.value = '';
+      moneyToDate.value = '';
+      refreshMoney();
+    });
+
+    exportMoneyCsvBtn.addEventListener('click', () => {
+      const rowsData = buildMoneyRows();
+      const rows = [['Date','Type','Description','Amount','Who']];
+      rowsData.forEach(r => {
+        rows.push([r.date, r.type, r.description, r.amount, r.who]);
+      });
+      downloadCsv(rows, 'money.csv');
+    });
+
+    // ---------- SORTABLE TABLES ----------
+    function attachSorting(tableId, bodyId, getData, renderFunc) {
+      const table = document.getElementById(tableId);
+      if (!table) return;
+      const body = document.getElementById(bodyId);
+      if (!body) return;
+
+      const headers = table.querySelectorAll('thead th.sortable');
+      headers.forEach((th) => {
+        th.addEventListener('click', () => {
+          const key = th.getAttribute('data-key');
+          const currentSort = th.getAttribute('data-sort') || 'desc';
+          const nextSort = currentSort === 'asc' ? 'desc' : 'asc';
+          headers.forEach(h => h.setAttribute('data-sort', 'desc'));
+          th.setAttribute('data-sort', nextSort);
+
+          const data = getData();
+          const sorted = data.slice().sort((a, b) => {
+            const av = a[key];
+            const bv = b[key];
+            if (av === bv) return 0;
+            if (typeof av === 'number' && typeof bv === 'number') {
+              return nextSort === 'asc' ? av - bv : bv - av;
+            }
+            const as = String(av || '');
+            const bs = String(bv || '');
+            if (as < bs) return nextSort === 'asc' ? -1 : 1;
+            if (as > bs) return nextSort === 'asc' ? 1 : -1;
+            return 0;
+          });
+          renderFunc(sorted);
+        });
+      });
+    }
+
+    function initSorting() {
+      attachSorting('expensesTable', 'expensesBody', () => getFilteredExpensesRaw(), (rows) => {
+        const user = getCurrentUser();
+        const isAdminUser = isAdmin(user);
+        expensesBody.innerHTML = '';
+        rows.forEach(exp => {
+          const tr = document.createElement('tr');
+          const descTd = document.createElement('td');
+          descTd.textContent = exp.description;
+          const amountTd = document.createElement('td');
+          amountTd.textContent = formatCurrency(exp.amount);
+          const dateTd = document.createElement('td');
+          dateTd.textContent = exp.date;
+          const statusTd = document.createElement('td');
+          statusTd.textContent = exp.status === 'approved' ? 'Approved' : 'Pending';
+          statusTd.className = exp.status === 'approved' ? 'status-approved-text' : 'status-pending-text';
+          const subTd = document.createElement('td');
+          subTd.textContent = exp.submittedByName || exp.submittedBy || '';
+          const actionTd = document.createElement('td');
+          if (isAdminUser) {
+            const approveBtn = document.createElement('button');
+            approveBtn.className = 'btn small secondary';
+            approveBtn.textContent = exp.status === 'approved' ? 'Mark pending' : 'Approve';
+            approveBtn.style.marginRight = '4px';
+            approveBtn.addEventListener('click', () => toggleExpenseStatus(exp.id));
+
+            const delBtn = document.createElement('button');
+            delBtn.className = 'btn small danger';
+            delBtn.textContent = 'Delete';
+            delBtn.addEventListener('click', () => {
+              if (confirm('Delete this expense?')) {
+                lastDeleted = { type: 'expense', item: exp };
+                deleteExpense(exp.id);
+                showToast('Expense deleted', true);
+              }
+            });
+
+            actionTd.appendChild(approveBtn);
+            actionTd.appendChild(delBtn);
+          } else {
+            actionTd.textContent = '-';
+          }
+          tr.appendChild(descTd);
+          tr.appendChild(amountTd);
+          tr.appendChild(dateTd);
+          tr.appendChild(statusTd);
+          tr.appendChild(subTd);
+          tr.appendChild(actionTd);
+          expensesBody.appendChild(tr);
+        });
+      });
+
+      attachSorting('jobsTable', 'jobsBody', () => getFilteredJobs(), (rows) => {
+        renderJobsGroupedByUser(rows);
+      });
+
+      attachSorting('moneyTable', 'moneyBody', () => buildMoneyRows(), (rows) => {
+        renderMoneyRows(rows);
+      });
+    }
+
+    // ---------- UNDO ----------
+    const toastUndoBtn = document.getElementById('toastUndoBtn');
+    toastUndoBtn.addEventListener('click', () => {
+      if (!lastDeleted) return;
+      if (lastDeleted.type === 'job') {
+        const jobs = readJSON(STORAGE_KEYS.jobs, []);
+        jobs.push(lastDeleted.item);
+        writeJSON(STORAGE_KEYS.jobs, jobs);
+        refreshJobs();
+        refreshKanban();
+        refreshCharts();
+        refreshMoney();
+        showToast('Job restored');
+      } else if (lastDeleted.type === 'expense') {
+        const expenses = readJSON(STORAGE_KEYS.expenses, []);
+        expenses.push(lastDeleted.item);
+        writeJSON(STORAGE_KEYS.expenses, expenses);
+        refreshExpenses();
+        refreshCharts();
+        refreshMoney();
+        showToast('Expense restored');
+      }
+      lastDeleted = null;
+    });
+
+    // ---------- GLOBAL REFRESH ----------
+    function refreshAllUI() {
+      refreshExpenses();
+      refreshJobs();
+      refreshKanban();
+      refreshCharts();
+      refreshMoney();
+    }
+
+    // ---------- INIT ----------
+    window.addEventListener('load', () => {
+      ensureMetaAndMigrate();
+      ensureAdminUser();
+      const sessionUser = getCurrentUser();
+      if (sessionUser) {
+        updateHeaderUser(sessionUser);
+        showDashboard();
+        setActiveTab('jobsTab');
+        refreshAllUI();
+        refreshUsersTable();
+      } else {
+        showLogin();
+      }
+      initSorting();
+    });
+  </script>
+</body>
+</html>
