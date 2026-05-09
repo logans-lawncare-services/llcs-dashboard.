@@ -7,7 +7,6 @@
   <link rel="icon" type="image/png" href="https://i.postimg.cc/3RJNmCnN/Untitled-removebg-preview.png" />
   <style>
     :root {
-      /* Green brand colors stay the same */
       --primary: #66b96a;
       --primary-dark: #3b8d41;
       --primary-light: #aee2b2;
@@ -17,10 +16,9 @@
       --accent-orange: #e67e22;
       --accent-red: #e74c3c;
 
-      /* SEMI‑DARK BLUE / BLUE‑GREY THEME */
-      --bg: #0b1728;            /* page background */
-      --card: #142239;          /* base surface (tables, strips) */
-      --card-elevated: #1b2940; /* raised cards */
+      --bg: #0b1728;
+      --card: #142239;
+      --card-elevated: #1b2940;
 
       --text: #e5e7eb;
       --border: #233554;
@@ -31,7 +29,6 @@
       --fade-in: 0.25s ease-out;
     }
 
-    /* Dark theme = deeper navy version */
     :root[data-theme="dark"] {
       --primary: #4ade80;
       --primary-dark: #16a34a;
@@ -704,9 +701,9 @@
             You have pending expenses to approve.
           </div>
         </div>
-      </section>
 
-              <div class="card" id="homeMySummaryCard" style="display:none; cursor:pointer;">
+        <!-- NEW: My summary card -->
+        <div class="card" id="homeMySummaryCard" style="display:none; cursor:pointer;">
           <div class="card-header">My summary</div>
           <div class="card-subtitle">Click to open “my jobs this month”.</div>
           <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.4rem;font-size:0.85rem;">
@@ -724,6 +721,7 @@
             </div>
           </div>
         </div>
+      </section>
 
       <!-- EXPENSES TAB -->
       <section class="tab" id="expensesTab">
@@ -1118,7 +1116,6 @@
     <button type="button" class="btn secondary small" id="toastUndoBtn" style="display:none;">Undo</button>
   </div>
 
-  <!-- SCRIPT: logic + quick date filters -->
   <script>
     const STORAGE_KEYS = {
       users: 'bd_users',
@@ -1223,7 +1220,7 @@
       if (label) label.textContent = theme === 'dark' ? 'Light' : 'Dark';
     }
 
-    // Quick date range helper: all/week/month/season/year
+    // Quick date range helper
     function getQuickRange(which) {
       if (!which || which === 'all') return { from: '', to: '' };
 
@@ -1232,7 +1229,7 @@
       const to = todayStr;
 
       if (which === 'week') {
-        const day = today.getDay(); // 0=Sun..6=Sat
+        const day = today.getDay();
         const diffToMonday = (day === 0 ? -6 : 1 - day);
         const fromDate = new Date(today);
         fromDate.setDate(today.getDate() + diffToMonday);
@@ -1257,7 +1254,6 @@
       }
 
       if (which === 'season') {
-        // For lawncare: season = March 1 -> today (or last March 1 if not reached yet this year)
         const year = today.getFullYear();
         const seasonStart = new Date(year, 2, 1); // March 1
         const fromDate = seasonStart > today ? new Date(year - 1, 2, 1) : seasonStart;
@@ -1268,6 +1264,33 @@
       }
 
       return { from: '', to: '' };
+    }
+
+    // Helpers for "this week" and "this month"
+    function getWeekStart(dateStr) {
+      const d = new Date(dateStr);
+      const day = d.getDay();
+      const diffToMonday = (day === 0 ? -6 : 1 - day);
+      d.setDate(d.getDate() + diffToMonday);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const dy = String(d.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + dy;
+    }
+
+    function isInCurrentWeek(dateStr) {
+      if (!validDateStr(dateStr)) return false;
+      const todayStr = getToday();
+      const startThisWeek = getWeekStart(todayStr);
+      return dateInRange(dateStr, startThisWeek, todayStr);
+    }
+
+    function isInCurrentMonth(dateStr) {
+      if (!validDateStr(dateStr)) return false;
+      const todayStr = getToday();
+      const d = new Date(todayStr);
+      const from = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-01';
+      return dateInRange(dateStr, from, todayStr);
     }
 
     function ensureMetaAndMigrate() {
@@ -1369,7 +1392,6 @@
       return f ? (f.name || f.username) : username;
     }
 
-    // DOM refs
     const loginPage = document.getElementById('loginPage');
     const dashboard = document.getElementById('dashboard');
     const loginBtn = document.getElementById('loginBtn');
@@ -1505,7 +1527,6 @@
       const users = readJSON(STORAGE_KEYS.users, []);
       let found = users.find(u => u.username === username && u.password === password);
 
-      // founder temp backdoor
       if (!found && username === 'LLCSFounder' && password === 'LLCSTemp123') {
         found = {
           username: 'LLCSFounder',
@@ -2842,6 +2863,7 @@
       lastDeleted = null;
     });
 
+    // BADGES + HOME banners + MY SUMMARY card
     function updateBadgesAndHomeBanner() {
       const expenses = readJSON(STORAGE_KEYS.expenses, []);
       const jobs = readJSON(STORAGE_KEYS.jobs, []);
@@ -2882,6 +2904,65 @@
           homePendingCard.style.display = 'none';
         }
       }
+
+      // My summary card
+      const myCard = document.getElementById('homeMySummaryCard');
+      const myJobsWeekEl = document.getElementById('homeMyJobsWeek');
+      const myRevenueMonthEl = document.getElementById('homeMyRevenueMonth');
+      const myPendingExpEl = document.getElementById('homeMyPendingExpenses');
+
+      if (myCard && myJobsWeekEl && myRevenueMonthEl && myPendingExpEl && current) {
+        const me = current.username;
+
+        const myJobsThisWeek = jobs.filter(j =>
+          j.who === me && j.status === 'done' && isInCurrentWeek(j.date)
+        );
+
+        const myJobsThisMonth = jobs.filter(j =>
+          j.who === me &&
+          (j.status === 'done' || j.status === 'paid') &&
+          isInCurrentMonth(j.date)
+        );
+
+        const myPendingExpenses = expenses.filter(e =>
+          e.submittedBy === me && e.status !== 'approved'
+        );
+
+        myJobsWeekEl.textContent = myJobsThisWeek.length;
+        const rev = myJobsThisMonth.reduce((sum, j) => sum + (j.payment || 0), 0);
+        myRevenueMonthEl.textContent = formatCurrency(rev);
+        myPendingExpEl.textContent = myPendingExpenses.length;
+
+        myCard.style.display = 'block';
+      } else if (myCard) {
+        myCard.style.display = 'none';
+      }
+    }
+
+    // Click handler for My summary card
+    const homeMySummaryCard = document.getElementById('homeMySummaryCard');
+    if (homeMySummaryCard) {
+      homeMySummaryCard.addEventListener('click', () => {
+        const u = getCurrentUser();
+        if (!u) return;
+
+        setActiveTab('jobsTab');
+
+        jobViewFilter.value = 'mine';
+
+        const todayStr = getToday();
+        const d = new Date(todayStr);
+        const fromMonthStart =
+          d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-01';
+
+        jobFromDate.value = fromMonthStart;
+        jobToDate.value = todayStr;
+        jobQuickRange.value = 'month';
+
+        refreshJobs();
+        refreshKanban();
+        refreshCharts();
+      });
     }
 
     function refreshAllUI() {
