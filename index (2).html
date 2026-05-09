@@ -1,0 +1,4237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LLCS Business Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/3RJNmCnN/Untitled-removebg-preview.png" />
+  <style>
+    :root {
+      --primary: #66b96a;
+      --primary-dark: #3b8d41;
+      --primary-light: #aee2b2;
+
+      --accent-blue: #4c8bfd;
+      --accent-gray: #8b949e;
+      --accent-orange: #e67e22;
+      --accent-red: #e74c3c;
+
+      --bg: #0b1728;
+      --card: #142239;
+      --card-elevated: #1b2940;
+
+      --text: #e5e7eb;
+      --border: #233554;
+
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.55);
+      --shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.7);
+      --fade-in: 0.25s ease-out;
+    }
+
+    :root[data-theme="dark"] {
+      --primary: #4ade80;
+      --primary-dark: #16a34a;
+      --primary-light: #22c55e;
+
+      --accent-blue: #60a5fa;
+      --accent-gray: #9ca3af;
+      --accent-orange: #f97316;
+      --accent-red: #f97373;
+
+      --bg: #020616;
+      --card: #050a17;
+      --card-elevated: #0b1220;
+
+      --text: #e5e7eb;
+      --border: #1f2937;
+
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+      --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.55);
+      --shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.75);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    button { font-family: inherit; }
+
+    .login {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background-color: var(--card-elevated);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 1.8rem 1.6rem 1.4rem;
+      animation: fadeIn var(--fade-in);
+      border: 1px solid rgba(102, 185, 106, 0.25);
+    }
+    .login-card h2 {
+      text-align: center;
+      margin-bottom: 0.3rem;
+      color: var(--primary-light);
+      letter-spacing: 0.03em;
+    }
+    .login-subtitle {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-bottom: 0.9rem;
+    }
+    .form-group { margin-bottom: 0.75rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 0.28rem;
+      color: #cbd5f5;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.55rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.92rem;
+      background-color: #111827;
+      color: var(--text);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, transform 0.08s ease;
+    }
+    .form-group textarea {
+      border-radius: 12px;
+      min-height: 60px;
+      resize: vertical;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #6b7280;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: rgba(102, 185, 106, 0.7);
+      box-shadow: 0 0 0 2px rgba(102, 185, 106, 0.35);
+      background-color: #020617;
+      transform: translateY(-1px);
+    }
+    .form-group-inline { display: flex; gap: 0.6rem; }
+    .form-group-inline .form-group { flex: 1; }
+    .form-actions {
+      margin-top: 0.4rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary) 0%, #4aa556 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 0.48rem 1.25rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.12s ease-out, box-shadow 0.15s ease-out, filter 0.15s ease-out;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      box-shadow: var(--shadow-soft);
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); filter: brightness(1.08); }
+    .btn:active { transform: translateY(0); box-shadow: var(--shadow-soft); filter: brightness(0.96); }
+    .btn.small { padding: 0.32rem 0.9rem; font-size: 0.8rem; }
+    .btn.secondary {
+      background: rgba(15, 23, 42, 0.7);
+      color: var(--primary-light);
+      border: 1px solid rgba(102, 185, 106, 0.5);
+      box-shadow: none;
+    }
+    .btn.secondary:hover { box-shadow: var(--shadow-soft); filter: none; }
+    .btn.danger { background: linear-gradient(135deg, #f97373 0%, #ef4444 100%); }
+
+    .badge {
+      border-radius: 999px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .badge-status-planned { background-color: #1f2937; color: #e5e7eb; }
+    .badge-status-in-progress { background-color: #1d3557; color: #9bd3ff; }
+    .badge-status-done { background-color: #14532d; color: #bbf7d0; }
+    .badge-status-paid { background-color: #064e3b; color: #bbf7d0; }
+    .badge-priority-low { background-color: #1f2937; color: #e5e7eb; }
+    .badge-priority-medium { background-color: #78350f; color: #fed7aa; }
+    .badge-priority-high { background-color: #7f1d1d; color: #fecaca; }
+
+    .alert {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.6rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      background-color: #7f1d1d;
+      color: #fee2e2;
+      display: none;
+      border: 1px solid #fecaca;
+    }
+    .alert.show { display: block; }
+
+    .dashboard {
+      display: none;
+      flex-direction: column;
+      max-height: 100vh;
+    }
+    .header {
+      background: linear-gradient(120deg, #1d4ed8 0%, #0f172a 45%, #22c55e 100%);
+      color: #ffffff;
+      padding: 0.6rem 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: 0 3px 14px rgba(0, 0, 0, 0.6);
+      z-index: 10;
+    }
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: contain;
+      background-color: rgba(255,255,255,0.2);
+      padding: 2px;
+    }
+    .user-info {
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      background-color: rgba(15, 23, 42, 0.6);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+    }
+    .admin-tag {
+      font-size: 0.75rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.7);
+      color: #f9fafb;
+    }
+
+    .nav-toggle { display: none; }
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 52px;
+      right: 0.9rem;
+      z-index: 20;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 34px;
+      height: 34px;
+      background-color: #020617;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .hamburger span {
+      width: 18px;
+      height: 2px;
+      background-color: #ffffff;
+      margin: 2px 0;
+      transition: 0.3s;
+    }
+    .nav {
+      background-color: rgba(15, 23, 42, 0.96);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      backdrop-filter: blur(8px);
+    }
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      padding: 0.35rem 0.4rem;
+    }
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      color: #cbd5f5;
+      text-decoration: none;
+      transition: background-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
+    }
+    .nav-link:hover {
+      background-color: rgba(37, 99, 235, 0.25);
+      transform: translateY(-1px);
+      color: #e5e7eb;
+    }
+    .nav-link.active { background-color: #2563eb; color: #ffffff; }
+
+    .main {
+      flex: 1;
+      padding: 0.9rem;
+      overflow-y: auto;
+      background-color: var(--bg);
+    }
+    .tab { display: none; animation: fadeIn var(--fade-in); }
+    .tab.active { display: block; }
+
+    .card {
+      background-color: var(--card-elevated);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      padding: 0.85rem 0.9rem;
+      margin-bottom: 0.9rem;
+      border: 1px solid rgba(15, 23, 42, 0.7);
+    }
+    .card-header {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #bfdbfe;
+      font-size: 0.95rem;
+    }
+    .card-subtitle {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      margin-bottom: 0.5rem;
+    }
+
+    .filter-bar {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      margin: -0.85rem -0.9rem 0.7rem;
+      padding: 0.45rem 0.9rem 0.55rem;
+      background-color: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(5px);
+      border-bottom: 1px solid rgba(37, 99, 235, 0.5);
+      border-radius: 18px 18px 0 0;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+    .filter-row input[type="date"],
+    .filter-row select,
+    .filter-row input[type="text"],
+    .filter-row input[type="number"] {
+      font-size: 0.78rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background-color: #020617;
+      color: var(--text);
+    }
+
+    .table-container {
+      margin-top: 0.4rem;
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      background-color: var(--card);
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.86rem;
+      color: var(--text);
+    }
+    th, td {
+      padding: 0.5rem 0.6rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.6);
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    thead th {
+      background-color: #111827;
+      color: #e5e7eb;
+      cursor: pointer;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      font-weight: 600;
+    }
+    thead th.sortable::after {
+      content: '⇅';
+      font-size: 0.68rem;
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.55;
+    }
+    tbody tr:hover { background-color: #1f2937; transform: translateY(-1px); }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.78rem;
+      border-radius: 999px;
+      padding: 0.1rem 0.55rem;
+    }
+    .status-chip-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .status-planned { background-color: #1f2937; color: #e5e7eb; }
+    .status-planned .status-chip-dot { background-color: #9ca3af; }
+    .status-in-progress { background-color: #1d3557; color: #9bd3ff; }
+    .status-in-progress .status-chip-dot { background-color: #3b82f6; }
+    .status-done { background-color: #14532d; color: #bbf7d0; }
+    .status-done .status-chip-dot { background-color: #22c55e; }
+    .status-paid { background-color: #064e3b; color: #bbf7d0; }
+    .status-paid .status-chip-dot { background-color: #22c55e; }
+
+    .status-pending-text { color: #facc15; font-weight: 500; }
+    .status-approved-text { color: #22c55e; font-weight: 600; }
+
+    .group-header { background-color: #1e293b; font-weight: 600; cursor: pointer; }
+    .row-details { background-color: #020617; border-bottom: 1px solid var(--border); }
+    .row-details-inner { padding: 0.4rem 0.7rem 0.6rem; font-size: 0.78rem; color: #e5e7eb; }
+
+    .kanban-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .kanban-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      background-color: #020617;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid #1d4ed8;
+      color: #e5e7eb;
+    }
+    .kanban-board { display: flex; gap: 0.7rem; overflow-x: auto; padding-bottom: 0.3rem; }
+    .kanban-column {
+      flex: 0 0 248px;
+      background-color: var(--card);
+      border-radius: 16px;
+      padding: 0.55rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(15, 23, 42, 0.8);
+    }
+    .kanban-column-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 0.4rem; font-size: 0.82rem; color: #bfdbfe;
+    }
+    .kanban-list { display: flex; flex-direction: column; gap: 0.35rem; max-height: 50vh; overflow-y: auto; }
+    .kanban-card {
+      background-color: var(--card-elevated);
+      border-radius: 14px;
+      padding: 0.45rem 0.55rem;
+      box-shadow: var(--shadow-soft);
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+    }
+    .kanban-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
+    .kanban-title { font-weight: 600; margin-bottom: 0.1rem; color: #f9fafb; }
+    .kanban-meta { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 0.15rem; }
+    .kanban-footer { display: flex; justify-content: space-between; font-size: 0.75rem; color: #e5e7eb; }
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.05rem 0.35rem;
+      font-size: 0.7rem;
+      background-color: #1d4ed8;
+      color: #e5e7eb;
+    }
+
+    .charts-grid { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
+
+    .chart-card {
+      background-color: var(--card-elevated);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      padding: 0.7rem 0.8rem 0.9rem;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
+      transform-origin: center;
+    }
+    .chart-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.8);
+      border-color: rgba(56, 189, 248, 0.75);
+    }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
+    .chart-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+    .chart-subtext {
+      font-size: 0.76rem;
+      color: #9ca3af;
+    }
+    .chart-card-fullscreen-badge {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+    .chart-wrapper { margin-top: 0.45rem; position: relative; }
+    canvas.chart-canvas {
+      width: 100%; height: 220px; max-height: 30vh;
+      border-radius: 12px; border: 1px solid rgba(30,64,175,0.7); background-color: #020617;
+      display: block;
+    }
+    .chart-loader {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 3px solid rgba(0,0,0,0.08);
+      border-top-color: var(--primary);
+      transform: translate(-50%, -50%);
+      animation: spin 0.8s linear infinite;
+      opacity: 0; pointer-events: none;
+    }
+    .chart-loader.show { opacity: 1; }
+    .chart-tooltip {
+      position: absolute; background-color: #020617;
+      border-radius: 8px; padding: 0.32rem 0.48rem;
+      font-size: 0.75rem; color: #f9fafb;
+      box-shadow: var(--shadow-soft);
+      pointer-events: none; transform: translate(-50%, -130%);
+      white-space: nowrap; display: none; z-index: 5;
+      border: 1px solid rgba(56, 189, 248, 0.7);
+    }
+
+    .chart-card.fullscreen {
+      position: fixed;
+      inset: 56px 8px 8px 8px;
+      z-index: 30;
+      background-color: #020617;
+      border-radius: 18px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.85);
+      transform: none;
+    }
+    .chart-card.fullscreen:hover {
+      transform: none;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.85);
+      border-color: rgba(56, 189, 248, 0.75);
+    }
+    .chart-card.fullscreen .chart-canvas {
+      height: calc(100vh - 140px);
+      max-height: none;
+    }
+
+    .totals { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 0.8rem; }
+    .total-card {
+      flex: 1 1 120px; min-width: 120px;
+      background-color: var(--card-elevated);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      padding: 0.7rem 0.8rem;
+      text-align: center;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+    }
+    .total-card .amount { font-size: 1.15rem; font-weight: 600; }
+    .net-positive { color: #22c55e; }
+    .net-negative { color: var(--accent-red); }
+
+    .toast {
+      position: fixed;
+      bottom: 0.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(15, 23, 42, 0.96);
+      color: #ffffff;
+      padding: 0.5rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      display: none;
+      align-items: center;
+      gap: 0.45rem;
+      z-index: 50;
+      box-shadow: var(--shadow-hover);
+    }
+    .toast.show { display: inline-flex; animation: fadeIn var(--fade-in); }
+
+    .global-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      backdrop-filter: blur(4px);
+    }
+    .global-overlay.show { display: flex; animation: fadeIn var(--fade-in); }
+    .global-spinner {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 4px solid rgba(15, 23, 42, 0.1);
+      border-top-color: var(--primary-dark);
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto;
+    }
+    .global-overlay-text { margin-top: 0.6rem; font-size: 0.9rem; color: #e5e7eb; text-align: center; }
+
+    .table-container input[type="text"],
+    .table-container input[type="number"],
+    .table-container input[type="url"],
+    .table-container select {
+      font-size: 0.8rem;
+      padding: 0.28rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background-color: #020617;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, transform 0.08s ease;
+    }
+    .table-container input[type="text"]:focus,
+    .table-container input[type="number"]:focus,
+    .table-container input[type="url"]:focus,
+    .table-container select:focus {
+      border-color: rgba(102, 185, 106, 0.7);
+      box-shadow: 0 0 0 2px rgba(102, 185, 106, 0.35);
+      background-color: #020617;
+      transform: translateY(-1px);
+    }
+    .table-container select:hover,
+    .table-container input[type="text"]:hover,
+    .table-container input[type="number"]:hover,
+    .table-container input[type="url"]:hover {
+      border-color: rgba(37, 99, 235, 0.7);
+    }
+
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #9ca3af 50%),
+        linear-gradient(135deg, #9ca3af 50%, transparent 50%);
+      background-position:
+        calc(100% - 14px) calc(50% - 3px),
+        calc(100% - 9px) calc(50% - 3px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 1.6rem;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px);} to {opacity:1; transform:translateY(0);} }
+    @keyframes spin { 0%{transform:rotate(0);}100%{transform:rotate(360deg);} }
+
+    @media (max-width: 599px) {
+      .hamburger { display: flex; }
+      .nav {
+        position: fixed; top: 48px; left: 0; right: 0;
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.25s ease;
+        z-index: 15;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      }
+      .nav-menu { flex-direction: column; padding-bottom: 0.35rem; }
+      .nav-toggle:checked ~ .nav { max-height: 260px; }
+      .nav-toggle:checked + .hamburger span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+      .nav-toggle:checked + .hamburger span:nth-child(2) { opacity: 0; }
+      .nav-toggle:checked + .hamburger span:nth-child(3) { transform: translateY(-4px) rotate(-45deg); }
+    }
+    @media (min-width: 1025px) {
+      .header { padding: 0.65rem 1.3rem; }
+      .nav { border-top: 1px solid var(--border); }
+      .nav-menu { padding: 0.3rem 1.3rem; gap: 0.4rem; }
+      .main { padding: 1.1rem 1.3rem 1.3rem; }
+      .charts-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGIN PAGE -->
+  <div class="login" id="loginPage">
+    <div class="login-card">
+      <h2>LLCS Business Dashboard</h2>
+      <p class="login-subtitle">Sign in with your LLCS account</p>
+      <form id="loginForm" onsubmit="return false;">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input id="username" type="text" autocomplete="off" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="off" required />
+        </div>
+        <div class="form-actions" style="justify-content:center;">
+          <button type="button" class="btn" id="loginBtn">Login</button>
+        </div>
+      </form>
+      <div id="loginError" class="alert"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+    <header class="header">
+      <div class="logo">
+        <img src="https://i.postimg.cc/3RJNmCnN/Untitled-removebg-preview.png" alt="LLCS Logo" class="logo-img" />
+        LLCS Business Dashboard
+      </div>
+
+      <button type="button" class="btn small secondary" id="themeToggleBtn" style="margin-right:0.5rem;">
+        <span id="themeToggleLabel">Dark</span> mode
+      </button>
+
+      <div class="user-info">
+        <span id="currentUserLabel">User</span>
+        <span id="currentNameLabel" style="font-weight:500;"></span>
+        <span class="admin-tag" id="currentRoleLabel">Role</span>
+        <button class="btn danger small" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+
+    <input type="checkbox" id="navToggle" class="nav-toggle" />
+    <label for="navToggle" class="hamburger">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav class="nav" id="navBar">
+      <ul class="nav-menu">
+        <li><a href="#" class="nav-link" data-tab="homeTab" id="homeNav">Home</a></li>
+        <li>
+          <a href="#" class="nav-link" data-tab="expensesTab" id="expensesNav">
+            Expenses <span id="expensesBadge" style="margin-left:4px;font-size:0.75rem;display:none;"></span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-tab="jobsTab" id="jobsNav">
+            Jobs <span id="jobsBadge" style="margin-left:4px;font-size:0.75rem;display:none;"></span>
+          </a>
+        </li>
+        <li><a href="#" class="nav-link" data-tab="kanbanTab" id="kanbanNav">Jobs columned</a></li>
+        <li><a href="#" class="nav-link" data-tab="customersTab" id="customersNav">Customers</a></li>
+        <li><a href="#" class="nav-link" data-tab="chartsTab" id="chartsNav">Charts</a></li>
+        <li><a href="#" class="nav-link" data-tab="adminTab" id="adminNav" style="display:none;">Admin</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <!-- HOME TAB -->
+      <section class="tab" id="homeTab">
+        <div class="card">
+          <div class="card-header">Welcome to LLCS dashboard</div>
+          <div class="card-subtitle">
+            Keep track of jobs, expenses, and money for Logan’s Lawncare Services in one place.
+          </div>
+          <p style="font-size:0.86rem;color:#d1d5db;margin-bottom:0.5rem;">
+            Use the navigation to move between sections:
+          </p>
+          <ul style="font-size:0.84rem;color:#e5e7eb;margin-left:1rem;margin-bottom:0.6rem;list-style:disc;">
+            <li><strong>Expenses</strong>: Submit and approve expenses.</li>
+            <li><strong>Jobs</strong>: Add work, payments, and notes.</li>
+            <li><strong>Jobs columned</strong>: Kanban view by status.</li>
+            <li><strong>Charts</strong>: See patterns in your work and money.</li>
+            <li><strong>Admin</strong>: Manage accounts, totals, and exports.</li>
+          </ul>
+          <p style="font-size:0.82rem;color:#9ca3af;">
+            All data is stored locally in this browser for your LLCS GitHub Pages site.
+          </p>
+        </div>
+
+        <div class="card" id="homeAdminCard" style="display:none;">
+          <div class="card-header">Founder / Admin quick tools</div>
+          <div class="card-subtitle">Shortcuts to common admin actions.</div>
+          <div class="form-actions">
+            <button type="button" class="btn secondary small" id="homeGoAdminBtn">Open admin page</button>
+            <button type="button" class="btn small" id="exportAllDataBtn">Export all data (JSON)</button>
+          </div>
+        </div>
+
+        <div class="card" id="homePendingCard" style="display:none;">
+          <div class="card-header">Pending approvals</div>
+          <div class="card-subtitle" id="homePendingText">
+            You have pending expenses to review.
+          </div>
+        </div>
+
+        <div class="card" id="homeScheduleCard" style="display:none;">
+          <div class="card-header">Today’s schedule</div>
+          <div class="card-subtitle" id="homeScheduleSubtitle">Jobs scheduled for today.</div>
+          <div id="homeScheduleList" style="font-size:0.84rem;"></div>
+        </div>
+
+        <div class="card" id="homeMySummaryCard" style="display:none; cursor:pointer;">
+          <div class="card-header">Your snapshot</div>
+          <div class="card-subtitle">Tap to jump to this month’s jobs.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.4rem;font-size:0.85rem;">
+            <div style="flex:1 1 120px;min-width:120px;">
+              <div style="color:#9ca3af;">Jobs done this week</div>
+              <div id="homeMyJobsWeek" style="font-weight:600;font-size:1.1rem;">0</div>
+            </div>
+            <div style="flex:1 1 120px;min-width:120px;">
+              <div style="color:#9ca3af;">Revenue this month (your jobs)</div>
+              <div id="homeMyRevenueMonth" style="font-weight:600;font-size:1.1rem;">$0.00</div>
+            </div>
+            <div style="flex:1 1 120px;min-width:120px;">
+              <div style="color:#9ca3af;">Your pending expenses</div>
+              <div id="homeMyPendingExpenses" style="font-weight:600;font-size:1.1rem;">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPENSES TAB -->
+      <section class="tab" id="expensesTab">
+        <div class="card">
+          <div class="filter-bar">
+            <div class="filter-row">
+              <span><strong>Expenses</strong> filters:</span>
+              <input type="text" id="expenseSearch" placeholder="Search description or name" />
+              <select id="expenseStatusFilter">
+                <option value="all">All statuses</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <span>Date:</span>
+              <select id="expenseQuickRange">
+                <option value="all">All time</option>
+                <option value="week">This week</option>
+                <option value="month">This month</option>
+                <option value="season">This season</option>
+                <option value="year">This year</option>
+              </select>
+              <input type="date" id="expenseFromDate" />
+              <input type="date" id="expenseToDate" />
+              <button type="button" class="btn small secondary" id="expenseFilterApply">Apply</button>
+              <button type="button" class="btn small secondary" id="expenseFilterClear">Clear</button>
+            </div>
+          </div>
+          <div class="card-header">Add expense</div>
+          <div class="card-subtitle">Everyone can submit expenses. Admins approve them.</div>
+          <form id="expenseForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="expenseDesc">What did you buy?</label>
+              <input id="expenseDesc" type="text" placeholder="Gas, trimmer line, repair..." required />
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="expenseAmount">Amount</label>
+                <input id="expenseAmount" type="number" min="0" step="0.01" required />
+              </div>
+              <div class="form-group">
+                <label for="expenseDate">Date</label>
+                <input id="expenseDate" type="date" required />
+              </div>
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="expenseCategory">Category</label>
+                <select id="expenseCategory">
+                  <option value="gas">Gas</option>
+                  <option value="equipment">Equipment</option>
+                  <option value="supplies">Supplies</option>
+                  <option value="advertising">Advertising</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="expensePaymentMethod">Payment method</label>
+                <select id="expensePaymentMethod">
+                  <option value="cash">Cash</option>
+                  <option value="card">Card</option>
+                  <option value="Zelle">Zelle</option>
+                  <option value="check">Check</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="expenseVendor">Vendor (who you paid)</label>
+              <input id="expenseVendor" type="text" placeholder="Home Depot, Shell, etc." />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" id="addExpenseBtn">Save expense</button>
+              <button type="button" class="btn secondary small" id="exportExpensesCsvBtn">Export expenses CSV</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Expenses list</div>
+          <div class="card-subtitle">See what’s pending and what’s already approved.</div>
+          <div class="table-container">
+            <table id="expensesTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="desc" data-key="description">Description</th>
+                  <th class="sortable" data-sort="desc" data-key="amount">Amount</th>
+                  <th class="sortable" data-sort="desc" data-key="date">Date</th>
+                  <th class="sortable" data-sort="desc" data-key="status">Status</th>
+                  <th class="sortable" data-sort="desc" data-key="submittedByName">Submitted by</th>
+                  <th>Category</th>
+                  <th>Pay method</th>
+                  <th>Vendor</th>
+                  <th>Review note</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="expensesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- JOBS TAB -->
+      <section class="tab" id="jobsTab">
+        <div class="card">
+          <div class="filter-bar">
+            <div class="filter-row">
+              <span><strong>Jobs</strong> filters:</span>
+              <input type="text" id="jobSearch" placeholder="Search job name, tags, or worker" />
+              <select id="jobStatusFilter">
+                <option value="all">All statuses</option>
+                <option value="planned">Planned</option>
+                <option value="in_progress">In progress</option>
+                <option value="done">Done</option>
+                <option value="paid">Paid</option>
+              </select>
+              <select id="jobPriorityFilter">
+                <option value="all">All priority</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+              <select id="jobViewFilter">
+                <option value="all">All jobs</option>
+                <option value="mine">My jobs only</option>
+              </select>
+              <span>Date:</span>
+              <select id="jobQuickRange">
+                <option value="all">All time</option>
+                <option value="week">This week</option>
+                <option value="month">This month</option>
+                <option value="season">This season</option>
+                <option value="year">This year</option>
+              </select>
+              <input type="date" id="jobFromDate" />
+              <input type="date" id="jobToDate" />
+              <button type="button" class="btn small secondary" id="jobFilterApply">Apply</button>
+              <button type="button" class="btn small secondary" id="jobFilterClear">Clear</button>
+            </div>
+          </div>
+          <div class="card-header">Add job</div>
+          <div class="card-subtitle">Your account sets the worker name and creator.</div>
+          <form id="jobForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="jobName">Job name</label>
+              <input id="jobName" type="text" placeholder="Front yard mow, leaf cleanup..." required />
+            </div>
+            <div class="form-group">
+              <label for="jobCustomerId">Customer (optional)</label>
+              <select id="jobCustomerId">
+                <option value="">— No customer —</option>
+              </select>
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="jobSize">Size</label>
+                <select id="jobSize" required>
+                  <option value="">Select size</option>
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="jobPayment">Base payment</label>
+                <input id="jobPayment" type="number" min="0" step="0.01" required />
+              </div>
+              <div class="form-group">
+                <label for="jobTipAmount">Tip (optional)</label>
+                <input id="jobTipAmount" type="number" min="0" step="0.01" placeholder="0" />
+              </div>
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="jobScheduledDate">Scheduled date</label>
+                <input id="jobScheduledDate" type="date" required />
+              </div>
+              <div class="form-group">
+                <label for="jobScheduledWindow">Time window</label>
+                <input id="jobScheduledWindow" type="text" placeholder="e.g. 8:00 AM – 10:00 AM" />
+              </div>
+              <div class="form-group">
+                <label for="jobCompletedDate">Completed date (optional)</label>
+                <input id="jobCompletedDate" type="date" />
+              </div>
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="jobNeighborhood">Neighborhood</label>
+                <input id="jobNeighborhood" type="text" placeholder="Area / subdivision" />
+              </div>
+              <div class="form-group">
+                <label for="jobZipCode">ZIP code</label>
+                <input id="jobZipCode" type="text" placeholder="12345" maxlength="12" />
+              </div>
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="jobStatus">Status</label>
+                <select id="jobStatus" required>
+                  <option value="planned">Planned</option>
+                  <option value="in_progress">In progress</option>
+                  <option value="done">Done</option>
+                  <option value="paid">Paid</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="jobPriority">Priority</label>
+                <select id="jobPriority" required>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="jobTags">Tags (optional)</label>
+              <input id="jobTags" type="text" placeholder="front-yard, weekly, new-customer" />
+            </div>
+            <div class="form-group">
+              <label for="jobAttachment">Attachment URL (optional)</label>
+              <input id="jobAttachment" type="url" placeholder="Link to photo or doc (https://...)" />
+            </div>
+            <div class="form-group">
+              <label>Task checklist</label>
+              <div class="filter-row" style="margin-top:0.25rem;">
+                <label><input type="checkbox" id="jobChkMow" checked /> Mow</label>
+                <label><input type="checkbox" id="jobChkTrim" checked /> Trim</label>
+                <label><input type="checkbox" id="jobChkEdge" checked /> Edge</label>
+                <label><input type="checkbox" id="jobChkBlow" checked /> Blow</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="jobNotes">Notes (optional)</label>
+              <textarea id="jobNotes" placeholder="Gate code, special requests, etc."></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" id="addJobBtn">Save job</button>
+              <button type="button" class="btn secondary small" id="exportJobsCsvBtn">Export jobs CSV</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Jobs list</div>
+          <div class="card-subtitle">Jobs are grouped by worker name. Admins can edit any job inline.</div>
+          <div class="table-container">
+            <table id="jobsTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="desc" data-key="name">Job</th>
+                  <th class="sortable" data-sort="desc" data-key="status">Status</th>
+                  <th class="sortable" data-sort="desc" data-key="priority">Priority</th>
+                  <th class="sortable" data-sort="desc" data-key="size">Size</th>
+                  <th class="sortable" data-sort="desc" data-key="payment">Base</th>
+                  <th class="sortable" data-sort="desc" data-key="tipAmount">Tip</th>
+                  <th>Total</th>
+                  <th class="sortable" data-sort="desc" data-key="scheduledDate">Scheduled</th>
+                  <th class="sortable" data-sort="desc" data-key="date">Date</th>
+                  <th>Worker</th>
+                  <th>Tags</th>
+                  <th>Attachment</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="jobsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- CUSTOMERS TAB -->
+      <section class="tab" id="customersTab">
+        <div class="card">
+          <div class="card-header">Customer profiles</div>
+          <div class="card-subtitle">Link jobs to a customer; picking a customer can fill neighborhood / ZIP on the job form.</div>
+          <form id="customerForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="customerName">Name</label>
+              <input id="customerName" type="text" placeholder="Customer or property name" required />
+            </div>
+            <div class="form-group-inline">
+              <div class="form-group">
+                <label for="customerPhone">Phone</label>
+                <input id="customerPhone" type="text" placeholder="(555) 123-4567" />
+              </div>
+              <div class="form-group">
+                <label for="customerNeighborhood">Neighborhood</label>
+                <input id="customerNeighborhood" type="text" placeholder="Optional" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="customerAddress">Address</label>
+              <input id="customerAddress" type="text" placeholder="Street, city" />
+            </div>
+            <div class="form-group">
+              <label for="customerZip">ZIP code</label>
+              <input id="customerZip" type="text" maxlength="12" placeholder="12345" />
+            </div>
+            <div class="form-group">
+              <label for="customerNotesField">Notes</label>
+              <textarea id="customerNotesField" placeholder="Gate codes, pets, billing notes…"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" id="addCustomerBtn">Save customer</button>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-header">All customers</div>
+          <div class="table-container">
+            <table id="customersTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Address</th>
+                  <th>Area / ZIP</th>
+                  <th>Notes</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="customersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- KANBAN TAB -->
+      <section class="tab" id="kanbanTab">
+        <div class="card">
+          <div class="kanban-bar">
+            <div>
+              <span class="card-header">Jobs columned</span>
+              <span class="card-subtitle">See jobs move from planned → paid.</span>
+            </div>
+            <div class="kanban-toggle">
+              <label><input type="radio" name="kanbanView" value="all" checked /> All jobs</label>
+              <label><input type="radio" name="kanbanView" value="mine" /> My jobs only</label>
+            </div>
+          </div>
+          <div class="kanban-board" id="kanbanBoard"></div>
+        </div>
+      </section>
+
+      <!-- CHARTS TAB -->
+      <section class="tab" id="chartsTab">
+        <div class="card">
+          <div class="card-header">Charts & goals</div>
+
+          <div class="filter-row" style="margin-bottom:0.4rem;">
+            <span>Monthly revenue goal:</span>
+            <input type="number" id="chartsMonthlyGoal" min="0" step="50" style="width:110px;" />
+            <button type="button" class="btn small secondary" id="saveChartsGoalBtn">Save goal</button>
+            <span id="chartsGoalSummary" style="font-size:0.78rem;color:#9ca3af;"></span>
+          </div>
+
+          <div class="filter-row">
+            <span>Chart date range:</span>
+            <input type="date" id="chartsFromDate" />
+            <input type="date" id="chartsToDate" />
+            <span>Quick range:</span>
+            <select id="chartsTimeframe">
+              <option value="all">All</option>
+              <option value="week">Last 7 days</option>
+              <option value="month">Last 30 days</option>
+              <option value="year">Last 365 days</option>
+            </select>
+            <span>Area chart:</span>
+            <select id="chartsAreaMode">
+              <option value="neighborhood">By neighborhood</option>
+              <option value="zip">By ZIP</option>
+            </select>
+            <button type="button" class="btn small secondary" id="applyChartsFilterBtn">Apply</button>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Who completes the most jobs?</div>
+                <div class="chart-subtext">Count of jobs completed per worker.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="workersChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="workersChartLoader"></div>
+              <div class="chart-tooltip" id="workersChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">How much do you earn each day?</div>
+                <div class="chart-subtext">Total job revenue by date.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="revenueChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="revenueChartLoader"></div>
+              <div class="chart-tooltip" id="revenueChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Are you ahead or behind?</div>
+                <div class="chart-subtext">Daily income minus approved expenses.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="balanceChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="balanceChartLoader"></div>
+              <div class="chart-tooltip" id="balanceChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Where are your jobs stuck?</div>
+                <div class="chart-subtext">Number of jobs in each status.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="statusChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="statusChartLoader"></div>
+              <div class="chart-tooltip" id="statusChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Which job sizes pay the most?</div>
+                <div class="chart-subtext">Total revenue by job size.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="sizeChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="sizeChartLoader"></div>
+              <div class="chart-tooltip" id="sizeChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Who brings in the most revenue?</div>
+                <div class="chart-subtext">Total earnings per worker (base + tip).</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="userChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="userChartLoader"></div>
+              <div class="chart-tooltip" id="userChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Monthly profit</div>
+                <div class="chart-subtext">Job income (by completed date, else scheduled) minus approved expenses.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="profitMonthChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="profitMonthChartLoader"></div>
+              <div class="chart-tooltip" id="profitMonthChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Average revenue per job by area</div>
+                <div class="chart-subtext">Uses neighborhood or ZIP from the job (see filter above).</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="areaAvgChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="areaAvgChartLoader"></div>
+              <div class="chart-tooltip" id="areaAvgChartTooltip"></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Job size mix by month</div>
+                <div class="chart-subtext">Tallest bar = most common size that month; hover for full counts.</div>
+              </div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="sizeTrendChart" class="chart-canvas"></canvas>
+              <div class="chart-loader" id="sizeTrendChartLoader"></div>
+              <div class="chart-tooltip" id="sizeTrendChartTooltip"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADMIN TAB -->
+      <section class="tab" id="adminTab">
+        <div class="card">
+          <div class="card-header">Admin overview</div>
+          <div class="card-subtitle">Founder and Admin can manage accounts, money, and exports.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Role permissions</div>
+          <div class="card-subtitle">Founder can choose what each role can see and do. Admins always retain admin-tab access when their account role is Admin/Founder.</div>
+          <div id="rolePermissionsEditor"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Audit log</div>
+          <div class="card-subtitle">Important changes: jobs, expenses, customers, users, and permission edits.</div>
+          <div class="form-actions" style="margin-bottom:0.5rem;">
+            <button type="button" class="btn secondary small" id="clearAuditLogBtn">Clear log</button>
+          </div>
+          <div id="auditLogPanel" style="max-height:340px;overflow-y:auto;font-size:0.78rem;border-radius:12px;border:1px solid var(--border);padding:0.5rem;background:#020617;"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Accounts</div>
+          <div class="card-subtitle">Create new workers or adjust names and roles.</div>
+          <form id="createUserForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="newName">Display name</label>
+              <input id="newName" type="text" placeholder="e.g. Logan M." required />
+            </div>
+            <div class="form-group">
+              <label for="newUsername">Username</label>
+              <input id="newUsername" type="text" required />
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Password</label>
+              <input id="newPassword" type="password" required />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" id="createUserBtn">Create user</button>
+            </div>
+          </form>
+          <div id="createUserError" class="alert"></div>
+
+          <hr style="margin:0.9rem 0;border:none;border-top:1px solid #1f2937;" />
+
+          <div class="card-subtitle">Existing accounts</div>
+          <div class="table-container" style="max-height:220px;">
+            <table id="usersTable">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Money totals</div>
+          <div class="card-subtitle">Based on approved jobs and approved expenses.</div>
+          <div class="totals">
+            <div class="total-card"><h4>Income</h4><div class="amount" id="incomeTotal">$0.00</div></div>
+            <div class="total-card"><h4>Expenses</h4><div class="amount" id="expensesTotal">$0.00</div></div>
+            <div class="total-card"><h4>Net</h4><div class="amount" id="netTotal">$0.00</div></div>
+          </div>
+          <div class="filter-row">
+            <span>Money date range:</span>
+            <input type="date" id="moneyFromDate" />
+            <input type="date" id="moneyToDate" />
+            <button type="button" class="btn small secondary" id="applyMoneyFilterBtn">Apply</button>
+            <button type="button" class="btn small secondary" id="moneyFilterClear">Clear</button>
+            <button type="button" class="btn small secondary" id="exportMoneyCsvBtn">Export money CSV</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">All money movements</div>
+          <div class="card-subtitle">Jobs (income) and approved expenses (outgoing).</div>
+          <div class="table-container">
+            <table id="moneyTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="desc" data-key="date">Date</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th class="sortable" data-sort="desc" data-key="amount">Amount</th>
+                  <th>Who</th>
+                </tr>
+              </thead>
+              <tbody id="moneyBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Data export</div>
+          <div class="card-subtitle">Download all LLCS dashboard data as JSON.</div>
+          <button type="button" class="btn" id="exportAllDataBtnAdmin">Export all data (JSON)</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- GLOBAL SMALL OVERLAY (saving) -->
+  <div class="global-overlay" id="globalOverlay">
+    <div>
+      <div class="global-spinner"></div>
+      <div class="global-overlay-text" id="globalOverlayText">Saving...</div>
+    </div>
+  </div>
+
+  <!-- CUSTOM CONFIRM OVERLAY -->
+  <div class="global-overlay" id="confirmOverlay">
+    <div style="max-width:320px;width:100%;background:#020617;border-radius:16px;padding:0.9rem 1rem;box-shadow:0 12px 40px rgba(0,0,0,0.9);border:1px solid rgba(248,113,113,0.6);">
+      <div style="font-size:0.95rem;font-weight:600;margin-bottom:0.35rem;color:#fecaca;">
+        Are you sure?
+      </div>
+      <div id="confirmMessage" style="font-size:0.85rem;color:#e5e7eb;margin-bottom:0.75rem;">
+        This action cannot be undone.
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:0.4rem;">
+        <button type="button" class="btn small secondary" id="confirmCancelBtn">Cancel</button>
+        <button type="button" class="btn small danger" id="confirmOkBtn">Yes, do it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <span id="toastMessage">Action completed</span>
+    <button type="button" class="btn secondary small" id="toastUndoBtn" style="display:none;">Undo</button>
+  </div>
+
+  <script>
+    const STORAGE_KEYS = {
+      users: 'bd_users',
+      expenses: 'bd_expenses',
+      jobs: 'bd_jobs',
+      session: 'bd_currentUser',
+      meta: 'bd_meta',
+      prefs: 'bd_prefs',
+      customers: 'bd_customers',
+      permissions: 'bd_role_permissions',
+      auditLog: 'bd_audit_log'
+    };
+    const DEFAULT_META = { version: 4 };
+    const ROLES = { FOUNDER: 'founder', ADMIN: 'admin', EMPLOYEE: 'employee' };
+
+    const DEFAULT_ROLE_PERMISSIONS = {
+      [ROLES.FOUNDER]: {
+        viewCustomers: true,
+        viewCharts: true,
+        viewJobs: true,
+        viewExpenses: true,
+        viewKanban: true,
+        manageCustomers: true,
+        manageUsers: true,
+        editRolePermissions: true,
+        approveExpenses: true,
+        deleteRecords: true,
+        exportData: true
+      },
+      [ROLES.ADMIN]: {
+        viewCustomers: true,
+        viewCharts: true,
+        viewJobs: true,
+        viewExpenses: true,
+        viewKanban: true,
+        manageCustomers: true,
+        manageUsers: true,
+        editRolePermissions: false,
+        approveExpenses: true,
+        deleteRecords: true,
+        exportData: true
+      },
+      [ROLES.EMPLOYEE]: {
+        viewCustomers: true,
+        viewCharts: true,
+        viewJobs: true,
+        viewExpenses: true,
+        viewKanban: true,
+        manageCustomers: false,
+        manageUsers: false,
+        editRolePermissions: false,
+        approveExpenses: false,
+        deleteRecords: false,
+        exportData: false
+      }
+    };
+
+    function getRolePermissionsMap() {
+      const stored = readJSON(STORAGE_KEYS.permissions, null);
+      const base = JSON.parse(JSON.stringify(DEFAULT_ROLE_PERMISSIONS));
+      if (!stored || typeof stored !== 'object') return base;
+      Object.keys(base).forEach(role => {
+        if (stored[role] && typeof stored[role] === 'object') {
+          Object.keys(base[role]).forEach(k => {
+            if (Object.prototype.hasOwnProperty.call(stored[role], k)) {
+              base[role][k] = !!stored[role][k];
+            }
+          });
+        }
+      });
+      return base;
+    }
+
+    function saveRolePermissionsMap(map) {
+      writeJSON(STORAGE_KEYS.permissions, map);
+    }
+
+    function hasPermission(u, key) {
+      if (!u || !u.role) return false;
+      const map = getRolePermissionsMap();
+      const row = map[u.role];
+      if (!row || row[key] === undefined) {
+        if (key === 'manageUsers' || key === 'approveExpenses' || key === 'deleteRecords' || key === 'exportData') return isAdmin(u);
+        if (key === 'editRolePermissions') return isFounder(u);
+        return true;
+      }
+      return !!row[key];
+    }
+
+    function appendAuditLog(action, summary, detail) {
+      const u = getCurrentUser();
+      const entry = {
+        id: Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+        at: new Date().toISOString(),
+        action: action,
+        summary: summary,
+        detail: detail || null,
+        actor: u ? u.username : 'system',
+        actorName: u ? (u.name || u.username) : 'system',
+        role: u ? u.role : ''
+      };
+      let log = readJSON(STORAGE_KEYS.auditLog, []);
+      log.unshift(entry);
+      if (log.length > 400) log = log.slice(0, 400);
+      writeJSON(STORAGE_KEYS.auditLog, log);
+      renderAuditLogPanel();
+    }
+
+    function renderAuditLogPanel() {
+      const el = document.getElementById('auditLogPanel');
+      if (!el) return;
+      const log = readJSON(STORAGE_KEYS.auditLog, []);
+      if (!log.length) {
+        el.innerHTML = '<div style="color:#9ca3af;">No entries yet.</div>';
+        return;
+      }
+      el.innerHTML = log.map(function (e) {
+        return '<div style="border-bottom:1px solid #1f2937;padding:0.35rem 0;">' +
+          '<div><strong>' + (e.action || '') + '</strong> — ' + (e.summary || '') + '</div>' +
+          '<div style="color:#9ca3af;">' + (e.at || '') + ' · ' + (e.actorName || e.actor || '') + ' (' + (e.role || '') + ')</div>' +
+          (e.detail ? '<div style="color:#cbd5e1;margin-top:0.2rem;white-space:pre-wrap;">' + String(e.detail) + '</div>' : '') +
+          '</div>';
+      }).join('');
+    }
+
+    function applyNavPermissions(u) {
+      function showNav(id, on) {
+        const a = document.getElementById(id);
+        if (a) a.style.display = on ? '' : 'none';
+      }
+      if (!u) return;
+      showNav('customersNav', hasPermission(u, 'viewCustomers'));
+      showNav('chartsNav', hasPermission(u, 'viewCharts'));
+      showNav('jobsNav', hasPermission(u, 'viewJobs'));
+      showNav('expensesNav', hasPermission(u, 'viewExpenses'));
+      showNav('kanbanNav', hasPermission(u, 'viewKanban'));
+    }
+
+    function jobTotalPayment(j) {
+      var base = typeof j.payment === 'number' ? j.payment : 0;
+      var tip = typeof j.tipAmount === 'number' ? j.tipAmount : 0;
+      return Math.round((base + tip) * 100) / 100;
+    }
+
+    function jobRevenueDate(j) {
+      if (j.completedDate && validDateStr(j.completedDate)) return j.completedDate;
+      if (j.date && validDateStr(j.date)) return j.date;
+      if (j.scheduledDate && validDateStr(j.scheduledDate)) return j.scheduledDate;
+      return j.date || '';
+    }
+
+    function jobSortKey(j) {
+      return (j.scheduledDate && validDateStr(j.scheduledDate)) ? j.scheduledDate : (j.date || '');
+    }
+
+    function isFounder(u) { return u && u.role === ROLES.FOUNDER; }
+    function isAdmin(u) { return u && (u.role === ROLES.ADMIN || u.role === ROLES.FOUNDER); }
+    function canManageUsers(u) { return isAdmin(u) && hasPermission(u, 'manageUsers'); }
+    function canEditRoles(u) { return isFounder(u); }
+    function userCanExport(u) { return isAdmin(u) && hasPermission(u, 'exportData'); }
+
+    let lastDeleted = null;
+
+    function getToday() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const dy = String(d.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + dy;
+    }
+
+    function readJSON(key, defVal) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return defVal;
+        const parsed = JSON.parse(raw);
+        return parsed ?? defVal;
+      } catch {
+        return defVal;
+      }
+    }
+
+    function writeJSON(key, val) {
+      localStorage.setItem(key, JSON.stringify(val));
+    }
+
+    function parseAmount(v) {
+      const n = Number(v);
+      if (Number.isNaN(n) || n < 0) return null;
+      return Math.round(n * 100) / 100;
+    }
+
+    function validDateStr(s) {
+      if (!s || !/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(s)) return false;
+      return !Number.isNaN(Date.parse(s));
+    }
+
+    function dateInRange(d, from, to) {
+      if (!validDateStr(d)) return false;
+      const t = Date.parse(d);
+      if (from && validDateStr(from) && t < Date.parse(from)) return false;
+      if (to && validDateStr(to) && t > Date.parse(to)) return false;
+      return true;
+    }
+
+    function formatCurrency(a) {
+      return '$' + a.toFixed(2);
+    }
+
+    function showGlobalOverlay(text) {
+      const o = document.getElementById('globalOverlay');
+      const t = document.getElementById('globalOverlayText');
+      if (text) t.textContent = text;
+      o.classList.add('show');
+      setTimeout(() => o.classList.remove('show'), 250);
+    }
+
+    function showToast(msg, undo = false) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').textContent = msg;
+      document.getElementById('toastUndoBtn').style.display = undo ? 'inline-flex' : 'none';
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // Custom confirm dialog (Promise-based)
+    function showConfirm(message) {
+      return new Promise(resolve => {
+        const overlay = document.getElementById('confirmOverlay');
+        const msgEl = document.getElementById('confirmMessage');
+        const okBtn = document.getElementById('confirmOkBtn');
+        const cancelBtn = document.getElementById('confirmCancelBtn');
+
+        if (!overlay || !msgEl || !okBtn || !cancelBtn) {
+          resolve(window.confirm(message));
+          return;
+        }
+
+        msgEl.textContent = message;
+        overlay.classList.add('show');
+
+        function cleanup(result) {
+          overlay.classList.remove('show');
+          okBtn.removeEventListener('click', onOk);
+          cancelBtn.removeEventListener('click', onCancel);
+          overlay.removeEventListener('click', onOverlay);
+          resolve(result);
+        }
+
+        function onOk(e) {
+          e.stopPropagation();
+          cleanup(true);
+        }
+        function onCancel(e) {
+          e.stopPropagation();
+          cleanup(false);
+        }
+        function onOverlay(e) {
+          if (e.target === overlay) cleanup(false);
+        }
+
+        okBtn.addEventListener('click', onOk);
+        cancelBtn.addEventListener('click', onCancel);
+        overlay.addEventListener('click', onOverlay);
+      });
+    }
+
+    function getPrefs() {
+      return readJSON(STORAGE_KEYS.prefs, {
+        theme: 'light',
+        lastTab: 'homeTab',
+        jobsView: 'all',
+        kanbanView: 'all',
+        monthlyGoal: 1500
+      });
+    }
+
+    function savePrefs(prefs) {
+      writeJSON(STORAGE_KEYS.prefs, prefs);
+    }
+
+    function applyThemeFromPrefs() {
+      const prefs = getPrefs();
+      const theme = prefs.theme === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      const label = document.getElementById('themeToggleLabel');
+      if (label) label.textContent = theme === 'dark' ? 'Light' : 'Dark';
+    }
+
+    function getQuickRange(which) {
+      if (!which || which === 'all') return { from: '', to: '' };
+
+      const todayStr = getToday();
+      const today = new Date(todayStr);
+      const to = todayStr;
+
+      if (which === 'week') {
+        const day = today.getDay();
+        const diffToMonday = (day === 0 ? -6 : 1 - day);
+        const fromDate = new Date(today);
+        fromDate.setDate(today.getDate() + diffToMonday);
+        const y = fromDate.getFullYear();
+        const m = String(fromDate.getMonth() + 1).padStart(2, '0');
+        const d = String(fromDate.getDate()).padStart(2, '0');
+        return { from: y + '-' + m + '-' + d, to };
+      }
+
+      if (which === 'month') {
+        const fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        const y = fromDate.getFullYear();
+        const m = String(fromDate.getMonth() + 1).padStart(2, '0');
+        const d = String(fromDate.getDate()).padStart(2, '0');
+        return { from: y + '-' + m + '-' + d, to };
+      }
+
+      if (which === 'year') {
+        const fromDate = new Date(today.getFullYear(), 0, 1);
+        const y = fromDate.getFullYear();
+        return { from: y + '-01-01', to };
+      }
+
+      if (which === 'season') {
+        const year = today.getFullYear();
+        const seasonStart = new Date(year, 2, 1);
+        const fromDate = seasonStart > today ? new Date(year - 1, 2, 1) : seasonStart;
+        const y = fromDate.getFullYear();
+        const m = String(fromDate.getMonth() + 1).padStart(2, '0');
+        const d = String(fromDate.getDate()).padStart(2, '0');
+        return { from: y + '-' + m + '-' + d, to };
+      }
+
+      return { from: '', to: '' };
+    }
+
+    function getWeekStart(dateStr) {
+      const d = new Date(dateStr);
+      const day = d.getDay();
+      const diffToMonday = (day === 0 ? -6 : 1 - day);
+      d.setDate(d.getDate() + diffToMonday);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const dy = String(d.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + dy;
+    }
+
+    function isInCurrentWeek(dateStr) {
+      if (!validDateStr(dateStr)) return false;
+      const todayStr = getToday();
+      const startThisWeek = getWeekStart(todayStr);
+      return dateInRange(dateStr, startThisWeek, todayStr);
+    }
+
+    function isInCurrentMonth(dateStr) {
+      if (!validDateStr(dateStr)) return false;
+      const todayStr = getToday();
+      const d = new Date(todayStr);
+      const from = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-01';
+      return dateInRange(dateStr, from, todayStr);
+    }
+
+    function ensureMetaAndMigrate() {
+      let meta = readJSON(STORAGE_KEYS.meta, { version: 0 });
+      if (!meta || typeof meta.version !== 'number') meta = { version: 0 };
+
+      if (meta.version < 3) {
+        let users = readJSON(STORAGE_KEYS.users, []);
+        users = users.map(u => ({
+          username: u.username,
+          password: u.password,
+          role: u.role || ROLES.EMPLOYEE,
+          name: u.name || u.username
+        }));
+        writeJSON(STORAGE_KEYS.users, users);
+
+        let jobs = readJSON(STORAGE_KEYS.jobs, []);
+        jobs = jobs.map(j => ({
+          id: j.id || Date.now(),
+          name: j.name || '',
+          size: j.size || 'medium',
+          who: j.who || 'unknown',
+          whoName: j.whoName || j.who || 'unknown',
+          payment: typeof j.payment === 'number' ? j.payment : 0,
+          date: j.date || getToday(),
+          notes: j.notes || '',
+          status: j.status || 'planned',
+          priority: j.priority || 'medium',
+          tags: Array.isArray(j.tags)
+            ? j.tags
+            : (typeof j.tags === 'string'
+              ? j.tags.split(',').map(t => t.trim()).filter(Boolean)
+              : []),
+          attachmentUrl: j.attachmentUrl || '',
+          createdAt: j.createdAt || j.date || getToday(),
+          updatedAt: j.updatedAt || j.date || getToday(),
+          lastEditedBy: j.lastEditedBy || j.who || 'unknown',
+          lastEditedByName: j.lastEditedByName || j.whoName || j.who || 'unknown'
+        }));
+        writeJSON(STORAGE_KEYS.jobs, jobs);
+
+        let expenses = readJSON(STORAGE_KEYS.expenses, []);
+        expenses = expenses.map(e => ({
+          id: e.id || Date.now(),
+          description: e.description || '',
+          amount: typeof e.amount === 'number' ? e.amount : 0,
+          date: e.date || getToday(),
+          status: e.status === 'approved' ? 'approved' : 'pending',
+          submittedBy: e.submittedBy || 'unknown',
+          submittedByName: e.submittedByName || e.submittedBy || 'unknown'
+        }));
+        writeJSON(STORAGE_KEYS.expenses, expenses);
+
+        meta.version = 3;
+        writeJSON(STORAGE_KEYS.meta, meta);
+      }
+
+      meta = readJSON(STORAGE_KEYS.meta, { version: 3 });
+        if (localStorage.getItem(STORAGE_KEYS.customers) === null) {
+          writeJSON(STORAGE_KEYS.customers, []);
+        }
+        if (localStorage.getItem(STORAGE_KEYS.auditLog) === null) {
+          writeJSON(STORAGE_KEYS.auditLog, []);
+        }
+
+        if (meta.version < 4) {
+        let jobs = readJSON(STORAGE_KEYS.jobs, []);
+        jobs = jobs.map(function (j) {
+          var st = j.status || 'planned';
+          var completed = j.completedDate;
+          if (!completed && (st === 'done' || st === 'paid')) completed = j.date || '';
+          return {
+            id: j.id || Date.now(),
+            name: j.name || '',
+            size: j.size || 'medium',
+            who: j.who || 'unknown',
+            whoName: j.whoName || j.who || 'unknown',
+            payment: typeof j.payment === 'number' ? j.payment : 0,
+            tipAmount: typeof j.tipAmount === 'number' ? j.tipAmount : 0,
+            date: j.date || getToday(),
+            scheduledDate: j.scheduledDate || j.date || getToday(),
+            scheduledWindow: j.scheduledWindow || '',
+            completedDate: completed || '',
+            notes: j.notes || '',
+            status: st,
+            priority: j.priority || 'medium',
+            tags: Array.isArray(j.tags)
+              ? j.tags
+              : (typeof j.tags === 'string'
+                ? j.tags.split(',').map(function (t) { return t.trim(); }).filter(Boolean)
+                : []),
+            attachmentUrl: j.attachmentUrl || '',
+            customerId: j.customerId || null,
+            neighborhood: j.neighborhood || '',
+            zipCode: j.zipCode || '',
+            checklist: j.checklist && typeof j.checklist === 'object' ? {
+              mow: !!j.checklist.mow,
+              trim: !!j.checklist.trim,
+              edge: !!j.checklist.edge,
+              blow: !!j.checklist.blow
+            } : { mow: true, trim: true, edge: true, blow: true },
+            createdAt: j.createdAt || j.date || getToday(),
+            updatedAt: j.updatedAt || j.date || getToday(),
+            lastEditedBy: j.lastEditedBy || j.who || 'unknown',
+            lastEditedByName: j.lastEditedByName || j.whoName || j.who || 'unknown'
+          };
+        });
+        writeJSON(STORAGE_KEYS.jobs, jobs);
+
+        let expenses = readJSON(STORAGE_KEYS.expenses, []);
+        expenses = expenses.map(function (e) {
+          var st = e.status === 'approved' ? 'approved' : (e.status === 'rejected' ? 'rejected' : 'pending');
+          return {
+            id: e.id || Date.now(),
+            description: e.description || '',
+            amount: typeof e.amount === 'number' ? e.amount : 0,
+            date: e.date || getToday(),
+            status: st,
+            category: e.category || 'other',
+            paymentMethod: e.paymentMethod || 'other',
+            vendor: e.vendor || '',
+            approvalComment: e.approvalComment || '',
+            reviewedBy: e.reviewedBy || '',
+            reviewedAt: e.reviewedAt || '',
+            submittedBy: e.submittedBy || 'unknown',
+            submittedByName: e.submittedByName || e.submittedBy || 'unknown'
+          };
+        });
+        writeJSON(STORAGE_KEYS.expenses, expenses);
+
+        meta.version = 4;
+        writeJSON(STORAGE_KEYS.meta, meta);
+      }
+    }
+
+    function ensureAdminUser() {
+      let users = readJSON(STORAGE_KEYS.users, []);
+      let founder = users.find(u => u.username === 'LLCSFounder');
+      if (!founder) {
+        founder = {
+          username: 'LLCSFounder',
+          password: 'LLCSFounderLog4576',
+          role: ROLES.FOUNDER,
+          name: 'Logan M.'
+        };
+        users.push(founder);
+      } else {
+        founder.password = 'LLCSFounderLog4576';
+        founder.role = ROLES.FOUNDER;
+        founder.name = 'Logan M.';
+      }
+      writeJSON(STORAGE_KEYS.users, users);
+    }
+
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.session);
+        if (!raw) return null;
+        const u = JSON.parse(raw);
+        if (!u || !u.username || !u.role) return null;
+        return u;
+      } catch {
+        return null;
+      }
+    }
+
+    function setCurrentUser(u) {
+      localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(u));
+    }
+
+    function clearSession() {
+      localStorage.removeItem(STORAGE_KEYS.session);
+    }
+
+    const loginPage = document.getElementById('loginPage');
+    const dashboard = document.getElementById('dashboard');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+    const currentUserLabel = document.getElementById('currentUserLabel');
+    const currentNameLabel = document.getElementById('currentNameLabel');
+    const currentRoleLabel = document.getElementById('currentRoleLabel');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const navToggle = document.getElementById('navToggle');
+    const adminNav = document.getElementById('adminNav');
+    const homeAdminCard = document.getElementById('homeAdminCard');
+    const homeGoAdminBtn = document.getElementById('homeGoAdminBtn');
+
+    const tabs = {
+      homeTab: document.getElementById('homeTab'),
+      expensesTab: document.getElementById('expensesTab'),
+      jobsTab: document.getElementById('jobsTab'),
+      kanbanTab: document.getElementById('kanbanTab'),
+      customersTab: document.getElementById('customersTab'),
+      chartsTab: document.getElementById('chartsTab'),
+      adminTab: document.getElementById('adminTab')
+    };
+    const navLinks = document.querySelectorAll('.nav-link[data-tab]');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const prefs = getPrefs();
+        const nextTheme = prefs.theme === 'dark' ? 'light' : 'dark';
+        prefs.theme = nextTheme;
+        savePrefs(prefs);
+        applyThemeFromPrefs();
+      });
+    }
+
+    function showLogin() {
+      loginPage.style.display = 'flex';
+      dashboard.style.display = 'none';
+    }
+
+    function showDashboard() {
+      loginPage.style.display = 'none';
+      dashboard.style.display = 'flex';
+    }
+
+    function setActiveTab(id) {
+      Object.keys(tabs).forEach(t => {
+        tabs[t].classList.toggle('active', t === id);
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.dataset.tab === id);
+      });
+      const prefs = getPrefs();
+      prefs.lastTab = id;
+      savePrefs(prefs);
+    }
+
+    function closeMobileNav() {
+      if (navToggle) navToggle.checked = false;
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const tabId = link.dataset.tab;
+        const u = getCurrentUser();
+        if (tabId === 'adminTab' && !isAdmin(u)) {
+          alert('Admin/Founder only.');
+          return;
+        }
+        if (tabId === 'customersTab' && u && !hasPermission(u, 'viewCustomers')) {
+          alert('You do not have access to Customers.');
+          return;
+        }
+        if (tabId === 'chartsTab' && u && !hasPermission(u, 'viewCharts')) {
+          alert('You do not have access to Charts.');
+          return;
+        }
+        if (tabId === 'jobsTab' && u && !hasPermission(u, 'viewJobs')) {
+          alert('You do not have access to Jobs.');
+          return;
+        }
+        if (tabId === 'expensesTab' && u && !hasPermission(u, 'viewExpenses')) {
+          alert('You do not have access to Expenses.');
+          return;
+        }
+        if (tabId === 'kanbanTab' && u && !hasPermission(u, 'viewKanban')) {
+          alert('You do not have access to this view.');
+          return;
+        }
+        setActiveTab(tabId);
+        closeMobileNav();
+        if (tabId === 'kanbanTab') refreshKanban();
+        if (tabId === 'chartsTab') refreshCharts();
+        if (tabId === 'customersTab') refreshCustomersTable();
+        if (tabId === 'adminTab') {
+          refreshMoney();
+          refreshUsersTable();
+          renderRolePermissionsEditor();
+          renderAuditLogPanel();
+        }
+      });
+    });
+
+    homeGoAdminBtn.addEventListener('click', () => {
+      const u = getCurrentUser();
+      if (!isAdmin(u)) {
+        alert('Admin/Founder only.');
+        return;
+      }
+      setActiveTab('adminTab');
+      refreshMoney();
+      refreshUsersTable();
+    });
+
+    function renderRolePermissionsEditor() {
+      const host = document.getElementById('rolePermissionsEditor');
+      if (!host) return;
+      const u = getCurrentUser();
+      if (!isAdmin(u)) {
+        host.innerHTML = '';
+        return;
+      }
+      const canEditMatrix = isFounder(u);
+      const map = getRolePermissionsMap();
+      const permKeys = Object.keys(DEFAULT_ROLE_PERMISSIONS[ROLES.EMPLOYEE]);
+      let html = '<div class="table-container"><table style="width:100%;font-size:0.78rem;"><thead><tr><th>Permission</th>';
+      [ROLES.FOUNDER, ROLES.ADMIN, ROLES.EMPLOYEE].forEach(function (r) {
+        html += '<th>' + r + '</th>';
+      });
+      html += '</tr></thead><tbody>';
+      permKeys.forEach(function (key) {
+        html += '<tr><td style="text-align:left;">' + key + '</td>';
+        [ROLES.FOUNDER, ROLES.ADMIN, ROLES.EMPLOYEE].forEach(function (role) {
+          if (role === ROLES.FOUNDER) {
+            html += '<td style="color:#9ca3af;">—</td>';
+          } else {
+            var checked = map[role][key] ? ' checked' : '';
+            var dis = canEditMatrix ? '' : ' disabled';
+            html += '<td><input type="checkbox" data-perm-role="' + role + '" data-perm-key="' + key + '"' + checked + dis + '></td>';
+          }
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+      html += '<p class="card-subtitle" style="margin-top:0.45rem;">Founder always has full access. Toggle Admin / Employee only.</p>';
+      host.innerHTML = html;
+      host.querySelectorAll('input[data-perm-role]').forEach(function (inp) {
+        inp.addEventListener('change', function () {
+          if (!canEditMatrix) return;
+          var m = getRolePermissionsMap();
+          m[inp.dataset.permRole][inp.dataset.permKey] = inp.checked;
+          saveRolePermissionsMap(m);
+          appendAuditLog('permissions', 'Role permission: ' + inp.dataset.permRole + ' · ' + inp.dataset.permKey, inp.checked ? 'on' : 'off');
+          applyNavPermissions(getCurrentUser());
+        });
+      });
+    }
+
+    function populateJobCustomerSelect() {
+      const sel = document.getElementById('jobCustomerId');
+      if (!sel) return;
+      const customers = readJSON(STORAGE_KEYS.customers, []);
+      const cur = sel.value;
+      sel.innerHTML = '<option value="">— No customer —</option>' +
+        customers.map(function (c) {
+          return '<option value="' + String(c.id) + '">' + (c.name || 'Customer') + '</option>';
+        }).join('');
+      if (cur) sel.value = cur;
+    }
+
+    function refreshHomeScheduleCard() {
+      const card = document.getElementById('homeScheduleCard');
+      const list = document.getElementById('homeScheduleList');
+      const sub = document.getElementById('homeScheduleSubtitle');
+      if (!card || !list) return;
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const t = getToday();
+      const todayJobs = jobs.filter(function (j) { return (j.scheduledDate || j.date) === t; });
+      card.style.display = 'block';
+      if (sub) sub.textContent = todayJobs.length ? ('You have ' + todayJobs.length + ' job(s) scheduled for today.') : 'No jobs scheduled for today.';
+      if (!todayJobs.length) {
+        list.innerHTML = '<div style="color:#9ca3af;font-size:0.82rem;">Add a job with a scheduled date, or open the Jobs tab.</div>';
+        return;
+      }
+      list.innerHTML = todayJobs.map(function (j) {
+        return '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;padding:0.35rem 0;border-bottom:1px solid #1f2937;">' +
+          '<span><strong>' + (j.name || '') + '</strong> <span style="color:#9ca3af;">' + (j.scheduledWindow || '') + '</span></span>' +
+          '<button type="button" class="btn small secondary home-schedule-jump" data-jid="' + String(j.id) + '">Jobs</button></div>';
+      }).join('');
+      list.querySelectorAll('.home-schedule-jump').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setActiveTab('jobsTab');
+          closeMobileNav();
+          var id = btn.dataset.jid;
+          setTimeout(function () {
+            var row = document.querySelector('tr[data-job-id="' + id + '"]');
+            if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }); toggleJobDetails(id); }
+          }, 50);
+        });
+      });
+    }
+
+    function updateHeaderUser(u) {
+      currentUserLabel.textContent = u.username;
+      currentNameLabel.textContent = '· ' + (u.name || u.username);
+      let role = 'Employee';
+      if (u.role === ROLES.FOUNDER) role = 'Founder';
+      else if (u.role === ROLES.ADMIN) role = 'Admin';
+      currentRoleLabel.textContent = role;
+
+      if (isAdmin(u)) {
+        adminNav.style.display = 'inline-flex';
+        homeAdminCard.style.display = 'block';
+      } else {
+        adminNav.style.display = 'none';
+        homeAdminCard.style.display = 'none';
+      }
+
+      applyNavPermissions(u);
+
+      const canExp = userCanExport(u);
+      ['exportJobsCsvBtn', 'exportExpensesCsvBtn', 'exportMoneyCsvBtn', 'exportAllDataBtn', 'exportAllDataBtnAdmin']
+        .forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = canExp ? 'inline-flex' : 'none';
+        });
+
+      populateJobCustomerSelect();
+      refreshCustomersTable();
+      renderRolePermissionsEditor();
+      renderAuditLogPanel();
+      updateBadgesAndHomeBanner();
+    }
+
+    logoutBtn.addEventListener('click', () => {
+      clearSession();
+      showLogin();
+    });
+
+    function handleLogin() {
+      const username = (document.getElementById('username').value || '').trim();
+      const password = (document.getElementById('password').value || '').trim();
+      if (!username || !password) {
+        loginError.textContent = 'Enter both username and password.';
+        loginError.classList.add('show');
+        return;
+      }
+
+      ensureAdminUser();
+      const users = readJSON(STORAGE_KEYS.users, []);
+      let found = users.find(u => u.username === username && u.password === password);
+
+      if (!found && username === 'LLCSFounder' && password === 'LLCSTemp123') {
+        found = {
+          username: 'LLCSFounder',
+          password: 'LLCSFounderLog4576',
+          role: ROLES.FOUNDER,
+          name: 'Logan M.'
+        };
+        const idx = users.findIndex(u => u.username === 'LLCSFounder');
+        if (idx >= 0) users[idx] = found; else users.push(found);
+        writeJSON(STORAGE_KEYS.users, users);
+      }
+
+      if (!found) {
+        loginError.textContent = 'Invalid login details.';
+        loginError.classList.add('show');
+        return;
+      }
+
+      loginError.classList.remove('show');
+      setCurrentUser(found);
+      updateHeaderUser(found);
+      showDashboard();
+
+      const prefs = getPrefs();
+      const startTab = prefs.lastTab && prefs.lastTab in tabs ? prefs.lastTab : 'homeTab';
+      setActiveTab(startTab);
+
+      refreshAllUI();
+      refreshUsersTable();
+      showToast('Welcome back, ' + (found.name || found.username));
+    }
+
+    loginBtn.addEventListener('click', handleLogin);
+
+    // USERS
+    const createUserBtn = document.getElementById('createUserBtn');
+    const createUserError = document.getElementById('createUserError');
+    const usersBody = document.getElementById('usersBody');
+
+    createUserBtn.addEventListener('click', () => {
+      const u = getCurrentUser();
+      if (!canManageUsers(u)) {
+        alert('Admin/Founder only.');
+        return;
+      }
+      const name = (document.getElementById('newName').value || '').trim();
+      const username = (document.getElementById('newUsername').value || '').trim();
+      const password = (document.getElementById('newPassword').value || '').trim();
+      if (!name || !username || !password) {
+        createUserError.textContent = 'All fields are required.';
+        createUserError.classList.add('show');
+        return;
+      }
+      ensureAdminUser();
+      let users = readJSON(STORAGE_KEYS.users, []);
+      if (users.some(x => x.username === username)) {
+        createUserError.textContent = 'That username is already taken.';
+        createUserError.classList.add('show');
+        return;
+      }
+      users.push({ username, password, role: ROLES.EMPLOYEE, name });
+      writeJSON(STORAGE_KEYS.users, users);
+      createUserError.classList.remove('show');
+      ['newName', 'newUsername', 'newPassword'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      refreshUsersTable();
+      appendAuditLog('user_created', 'User created: ' + username, name);
+      showToast('User created');
+    });
+
+    function refreshUsersTable() {
+      const cur = getCurrentUser();
+      usersBody.innerHTML = '';
+      if (!canManageUsers(cur)) return;
+      const users = readJSON(STORAGE_KEYS.users, []);
+      users.forEach(u => {
+        const tr = document.createElement('tr');
+
+        const uTd = document.createElement('td');
+        uTd.textContent = u.username;
+
+        const nTd = document.createElement('td');
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.value = u.name || u.username;
+        nameInput.style.width = '120px';
+        nameInput.addEventListener('change', () => {
+          updateUserField(u.username, 'name', nameInput.value.trim());
+        });
+        nTd.appendChild(nameInput);
+
+        const roleTd = document.createElement('td');
+        if (canEditRoles(cur) && u.username !== cur.username) {
+          const sel = document.createElement('select');
+          [
+            { v: ROLES.EMPLOYEE, l: 'Employee' },
+            { v: ROLES.ADMIN, l: 'Admin' },
+            { v: ROLES.FOUNDER, l: 'Founder' }
+          ].forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r.v;
+            opt.textContent = r.l;
+            if (u.role === r.v) opt.selected = true;
+            sel.appendChild(opt);
+          });
+          sel.addEventListener('change', () => {
+            updateUserField(u.username, 'role', sel.value);
+          });
+          roleTd.appendChild(sel);
+        } else {
+          roleTd.textContent =
+            u.role === ROLES.FOUNDER ? 'Founder' :
+            u.role === ROLES.ADMIN ? 'Admin' : 'Employee';
+        }
+
+        const aTd = document.createElement('td');
+        if (canManageUsers(cur) && u.username !== cur.username) {
+          const del = document.createElement('button');
+          del.className = 'btn small danger';
+          del.textContent = 'Delete';
+          del.addEventListener('click', async () => {
+            const ok = await showConfirm('Delete user "' + u.username + '"? This will remove their account from the dashboard.');
+            if (!ok) return;
+            deleteUser(u.username);
+            showToast('User deleted');
+          });
+          aTd.appendChild(del);
+        } else {
+          aTd.textContent = '-';
+        }
+
+        tr.appendChild(uTd);
+        tr.appendChild(nTd);
+        tr.appendChild(roleTd);
+        tr.appendChild(aTd);
+        usersBody.appendChild(tr);
+      });
+    }
+
+    function updateUserField(username, key, value) {
+      const users = readJSON(STORAGE_KEYS.users, []);
+      const idx = users.findIndex(u => u.username === username);
+      if (idx < 0) return;
+      users[idx][key] = value;
+      writeJSON(STORAGE_KEYS.users, users);
+      appendAuditLog('user_updated', 'User ' + username + ': ' + key, String(value));
+      refreshUsersTable();
+      showToast('User updated');
+    }
+
+    function deleteUser(username) {
+      let users = readJSON(STORAGE_KEYS.users, []);
+      users = users.filter(u => u.username !== username);
+      writeJSON(STORAGE_KEYS.users, users);
+      appendAuditLog('user_deleted', 'User deleted: ' + username, '');
+      refreshUsersTable();
+    }
+
+    // EXPENSES
+    const addExpenseBtn = document.getElementById('addExpenseBtn');
+    const expenseDesc = document.getElementById('expenseDesc');
+    const expenseAmount = document.getElementById('expenseAmount');
+    const expenseDate = document.getElementById('expenseDate');
+    const expensesBody = document.getElementById('expensesBody');
+    const expenseSearch = document.getElementById('expenseSearch');
+    const expenseStatusFilter = document.getElementById('expenseStatusFilter');
+    const expenseFromDate = document.getElementById('expenseFromDate');
+    const expenseToDate = document.getElementById('expenseToDate');
+    const expenseQuickRange = document.getElementById('expenseQuickRange');
+    const expenseFilterApply = document.getElementById('expenseFilterApply');
+    const expenseFilterClear = document.getElementById('expenseFilterClear');
+    const exportExpensesCsvBtn = document.getElementById('exportExpensesCsvBtn');
+    expenseDate.value = getToday();
+
+    addExpenseBtn.addEventListener('click', () => {
+      const desc = (expenseDesc.value || '').trim();
+      const amt = parseAmount(expenseAmount.value);
+      const date = expenseDate.value;
+      if (!desc || amt === null || !validDateStr(date)) {
+        alert('Fill description, valid amount and date.');
+        return;
+      }
+      const u = getCurrentUser();
+      const submittedBy = u ? u.username : 'unknown';
+      const submittedByName = u ? (u.name || u.username) : 'unknown';
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+      expenses.push({
+        id: Date.now(),
+        description: desc,
+        amount: amt,
+        date,
+        status: 'pending',
+        category: (document.getElementById('expenseCategory').value || 'other'),
+        paymentMethod: (document.getElementById('expensePaymentMethod').value || 'other'),
+        vendor: (document.getElementById('expenseVendor').value || '').trim(),
+        approvalComment: '',
+        reviewedBy: '',
+        reviewedAt: '',
+        submittedBy,
+        submittedByName
+      });
+      writeJSON(STORAGE_KEYS.expenses, expenses);
+      expenseDesc.value = '';
+      expenseAmount.value = '';
+      expenseDate.value = getToday();
+      document.getElementById('expenseVendor').value = '';
+      showGlobalOverlay('Saving expense...');
+      appendAuditLog('expense_created', 'Expense submitted: ' + desc, formatCurrency(amt));
+      refreshExpenses();
+      refreshMoney();
+      refreshCharts();
+      showToast('Expense added');
+    });
+
+    function getFilteredExpensesRaw() {
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+      const s = (expenseSearch.value || '').toLowerCase();
+      const status = expenseStatusFilter.value;
+      const from = expenseFromDate.value || '';
+      const to = expenseToDate.value || '';
+      return expenses.filter(e => {
+        if (status !== 'all' && e.status !== status) return false;
+        if (!dateInRange(e.date, from, to)) return false;
+        const txt = (e.description + ' ' + (e.submittedByName || '') + ' ' + (e.vendor || '') + ' ' + (e.category || '')).toLowerCase();
+        if (s && !txt.includes(s)) return false;
+        return true;
+      });
+    }
+
+    function reviewExpense(id) {
+      const u = getCurrentUser();
+      if (!isAdmin(u) || !hasPermission(u, 'approveExpenses')) {
+        alert('You cannot review expenses.');
+        return;
+      }
+      const ex = readJSON(STORAGE_KEYS.expenses, []);
+      const idx = ex.findIndex(e => e.id === id);
+      if (idx < 0) return;
+      const cur = ex[idx];
+      const action = (prompt('Type approve, reject, or pending:', cur.status === 'approved' ? 'pending' : 'approve') || '').trim().toLowerCase();
+      if (!action) return;
+      if (!['approve', 'approved', 'reject', 'rejected', 'pending'].includes(action)) {
+        alert('Use approve, reject, or pending.');
+        return;
+      }
+      const comment = (prompt('Note to the submitter (reason for decision):', cur.approvalComment || '') || '').trim();
+      let st = cur.status;
+      if (action === 'approve' || action === 'approved') st = 'approved';
+      else if (action === 'reject' || action === 'rejected') st = 'rejected';
+      else if (action === 'pending') st = 'pending';
+      else return;
+      ex[idx].status = st;
+      ex[idx].approvalComment = comment;
+      ex[idx].reviewedBy = u.username;
+      ex[idx].reviewedAt = new Date().toISOString();
+      writeJSON(STORAGE_KEYS.expenses, ex);
+      appendAuditLog('expense_review', 'Expense ' + st + ': ' + cur.description, comment || '(no note)');
+      refreshExpenses();
+      refreshMoney();
+      refreshCharts();
+      showToast('Expense updated');
+    }
+
+    function refreshExpenses() {
+      const u = getCurrentUser();
+      const canApprove = isAdmin(u) && hasPermission(u, 'approveExpenses');
+      const canDel = isAdmin(u) && hasPermission(u, 'deleteRecords');
+      const rows = getFilteredExpensesRaw();
+      expensesBody.innerHTML = '';
+      rows.forEach(e => {
+        const tr = document.createElement('tr');
+
+        const d = document.createElement('td');
+        d.textContent = e.description;
+
+        const a = document.createElement('td');
+        a.textContent = formatCurrency(e.amount);
+
+        const dt = document.createElement('td');
+        dt.textContent = e.date;
+
+        const st = document.createElement('td');
+        if (e.status === 'approved') {
+          st.textContent = 'Approved';
+          st.className = 'status-approved-text';
+        } else if (e.status === 'rejected') {
+          st.textContent = 'Rejected';
+          st.style.color = '#f97373';
+          st.style.fontWeight = '600';
+        } else {
+          st.textContent = 'Pending';
+          st.className = 'status-pending-text';
+        }
+
+        const sb = document.createElement('td');
+        sb.textContent = e.submittedByName || e.submittedBy || '';
+
+        const cat = document.createElement('td');
+        cat.textContent = e.category || '—';
+        const pm = document.createElement('td');
+        pm.textContent = e.paymentMethod || '—';
+        const ven = document.createElement('td');
+        ven.textContent = e.vendor || '—';
+        const note = document.createElement('td');
+        note.style.maxWidth = '140px';
+        note.style.whiteSpace = 'pre-wrap';
+        note.style.fontSize = '0.78rem';
+        note.textContent = e.approvalComment || '—';
+
+        const act = document.createElement('td');
+        if (canApprove || canDel) {
+          if (canApprove) {
+            const ap = document.createElement('button');
+            ap.className = 'btn small secondary';
+            ap.textContent = 'Review';
+            ap.style.marginRight = '4px';
+            ap.addEventListener('click', () => reviewExpense(e.id));
+            act.appendChild(ap);
+          }
+          if (canDel) {
+            const del = document.createElement('button');
+            del.className = 'btn small danger';
+            del.textContent = 'Delete';
+            del.addEventListener('click', async () => {
+              const ok = await showConfirm('Delete this expense? This cannot be undone.');
+              if (!ok) return;
+              lastDeleted = { type: 'expense', item: e };
+              deleteExpense(e.id);
+              showToast('Expense deleted', true);
+            });
+            act.appendChild(del);
+          }
+        } else {
+          act.textContent = '-';
+        }
+
+        tr.appendChild(d);
+        tr.appendChild(a);
+        tr.appendChild(dt);
+        tr.appendChild(st);
+        tr.appendChild(sb);
+        tr.appendChild(cat);
+        tr.appendChild(pm);
+        tr.appendChild(ven);
+        tr.appendChild(note);
+        tr.appendChild(act);
+        expensesBody.appendChild(tr);
+      });
+      updateBadgesAndHomeBanner();
+    }
+
+    function deleteExpense(id) {
+      let ex = readJSON(STORAGE_KEYS.expenses, []);
+      const victim = ex.find(e => e.id === id);
+      ex = ex.filter(e => e.id !== id);
+      writeJSON(STORAGE_KEYS.expenses, ex);
+      if (victim) appendAuditLog('expense_deleted', 'Expense deleted: ' + victim.description, String(id));
+      refreshExpenses();
+      refreshMoney();
+      refreshCharts();
+    }
+
+    expenseFilterApply.addEventListener('click', refreshExpenses);
+
+    expenseFilterClear.addEventListener('click', () => {
+      expenseSearch.value = '';
+      expenseStatusFilter.value = 'all';
+      expenseQuickRange.value = 'all';
+      expenseFromDate.value = '';
+      expenseToDate.value = '';
+      refreshExpenses();
+    });
+
+    expenseQuickRange.addEventListener('change', () => {
+      const { from, to } = getQuickRange(expenseQuickRange.value);
+      expenseFromDate.value = from;
+      expenseToDate.value = to;
+      refreshExpenses();
+    });
+
+    exportExpensesCsvBtn.addEventListener('click', () => {
+      const ex = readJSON(STORAGE_KEYS.expenses, []);
+      const rows = [['Description', 'Amount', 'Date', 'Status', 'Category', 'PaymentMethod', 'Vendor', 'ReviewNote', 'Submitted by']];
+      ex.forEach(e => {
+        rows.push([
+          e.description,
+          e.amount,
+          e.date,
+          e.status,
+          e.category || '',
+          e.paymentMethod || '',
+          e.vendor || '',
+          e.approvalComment || '',
+          e.submittedByName || e.submittedBy || ''
+        ]);
+      });
+      downloadCsv(rows, 'expenses.csv');
+    });
+
+    // JOBS
+    const addJobBtn = document.getElementById('addJobBtn');
+    const jobName = document.getElementById('jobName');
+    const jobSize = document.getElementById('jobSize');
+    const jobPayment = document.getElementById('jobPayment');
+    const jobNotes = document.getElementById('jobNotes');
+    const jobStatus = document.getElementById('jobStatus');
+    const jobPriority = document.getElementById('jobPriority');
+    const jobTags = document.getElementById('jobTags');
+    const jobAttachment = document.getElementById('jobAttachment');
+    const jobsBody = document.getElementById('jobsBody');
+    const jobSearch = document.getElementById('jobSearch');
+    const jobStatusFilter = document.getElementById('jobStatusFilter');
+    const jobPriorityFilter = document.getElementById('jobPriorityFilter');
+    const jobViewFilter = document.getElementById('jobViewFilter');
+    const jobFromDate = document.getElementById('jobFromDate');
+    const jobToDate = document.getElementById('jobToDate');
+    const jobQuickRange = document.getElementById('jobQuickRange');
+    const jobFilterApply = document.getElementById('jobFilterApply');
+    const jobFilterClear = document.getElementById('jobFilterClear');
+    const exportJobsCsvBtn = document.getElementById('exportJobsCsvBtn');
+
+    (function initJobsViewFromPrefs() {
+      const prefs = getPrefs();
+      if (prefs.jobsView && jobViewFilter) {
+        jobViewFilter.value = prefs.jobsView;
+      }
+    })();
+
+    addJobBtn.addEventListener('click', () => {
+      const name = (jobName.value || '').trim();
+      const size = jobSize.value;
+      const payment = parseAmount(jobPayment.value);
+      const tipAmt = parseAmount(document.getElementById('jobTipAmount').value || '0');
+      const notes = (jobNotes.value || '').trim();
+      const status = jobStatus.value;
+      const priority = jobPriority.value;
+      const tagsStr = (jobTags.value || '').trim();
+      const attachmentUrl = (jobAttachment.value || '').trim();
+      const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+      const scheduledDate = document.getElementById('jobScheduledDate').value;
+      const scheduledWindow = (document.getElementById('jobScheduledWindow').value || '').trim();
+      const completedDate = document.getElementById('jobCompletedDate').value || '';
+      const neighborhood = (document.getElementById('jobNeighborhood').value || '').trim();
+      const zipCode = (document.getElementById('jobZipCode').value || '').trim();
+      const customerIdRaw = document.getElementById('jobCustomerId').value;
+      const customerId = customerIdRaw ? (isNaN(Number(customerIdRaw)) ? customerIdRaw : Number(customerIdRaw)) : null;
+      const checklist = {
+        mow: !!document.getElementById('jobChkMow').checked,
+        trim: !!document.getElementById('jobChkTrim').checked,
+        edge: !!document.getElementById('jobChkEdge').checked,
+        blow: !!document.getElementById('jobChkBlow').checked
+      };
+      if (!name || !size || payment === null || tipAmt === null || !status || !priority || !validDateStr(scheduledDate)) {
+        alert('Fill job name, size, base payment, status, priority, and scheduled date.');
+        return;
+      }
+      const u = getCurrentUser();
+      const who = u ? u.username : 'unknown';
+      const whoName = u ? (u.name || u.username) : 'unknown';
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const now = getToday();
+      const bookDate = scheduledDate;
+      jobs.push({
+        id: Date.now(),
+        name,
+        size,
+        who,
+        whoName,
+        payment,
+        tipAmount: tipAmt,
+        date: bookDate,
+        scheduledDate: scheduledDate,
+        scheduledWindow: scheduledWindow,
+        completedDate: completedDate,
+        neighborhood: neighborhood,
+        zipCode: zipCode,
+        customerId: customerId,
+        checklist: checklist,
+        notes,
+        status,
+        priority,
+        tags,
+        attachmentUrl,
+        createdAt: now,
+        updatedAt: now,
+        lastEditedBy: who,
+        lastEditedByName: whoName
+      });
+      writeJSON(STORAGE_KEYS.jobs, jobs);
+      jobName.value = '';
+      jobSize.value = '';
+      jobPayment.value = '';
+      document.getElementById('jobTipAmount').value = '';
+      jobNotes.value = '';
+      jobStatus.value = 'planned';
+      jobPriority.value = 'medium';
+      jobTags.value = '';
+      jobAttachment.value = '';
+      document.getElementById('jobScheduledDate').value = getToday();
+      document.getElementById('jobScheduledWindow').value = '';
+      document.getElementById('jobCompletedDate').value = '';
+      document.getElementById('jobNeighborhood').value = '';
+      document.getElementById('jobZipCode').value = '';
+      document.getElementById('jobCustomerId').value = '';
+      document.getElementById('jobChkMow').checked = true;
+      document.getElementById('jobChkTrim').checked = true;
+      document.getElementById('jobChkEdge').checked = true;
+      document.getElementById('jobChkBlow').checked = true;
+      showGlobalOverlay('Saving job...');
+      appendAuditLog('job_created', 'Job created: ' + name, scheduledDate);
+      refreshJobs();
+      refreshKanban();
+      refreshMoney();
+      refreshCharts();
+      refreshHomeScheduleCard();
+      showToast('Job added');
+    });
+
+    document.getElementById('jobCustomerId').addEventListener('change', function () {
+      const id = this.value;
+      if (!id) return;
+      const customers = readJSON(STORAGE_KEYS.customers, []);
+      const c = customers.find(x => String(x.id) === String(id));
+      if (!c) return;
+      document.getElementById('jobNeighborhood').value = c.neighborhood || '';
+      document.getElementById('jobZipCode').value = c.zip || '';
+    });
+
+    function refreshCustomersTable() {
+      const u = getCurrentUser();
+      const body = document.getElementById('customersBody');
+      if (!body) return;
+      const customers = readJSON(STORAGE_KEYS.customers, []);
+      body.innerHTML = '';
+      const canManage = u && hasPermission(u, 'manageCustomers');
+      customers.forEach(function (c) {
+        const tr = document.createElement('tr');
+        [c.name || '', c.phone || '', c.address || '', ((c.neighborhood || '') + ' / ' + (c.zip || '')).trim(), c.notes || ''].forEach(function (text) {
+          const td = document.createElement('td');
+          td.textContent = text;
+          tr.appendChild(td);
+        });
+        const actTd = document.createElement('td');
+        if (canManage) {
+          const del = document.createElement('button');
+          del.className = 'btn small danger';
+          del.textContent = 'Delete';
+          del.addEventListener('click', async function () {
+            const ok = await showConfirm('Delete customer "' + c.name + '"?');
+            if (!ok) return;
+            let list = readJSON(STORAGE_KEYS.customers, []);
+            list = list.filter(function (x) { return x.id !== c.id; });
+            writeJSON(STORAGE_KEYS.customers, list);
+            let jobList = readJSON(STORAGE_KEYS.jobs, []);
+            jobList.forEach(function (j) { if (String(j.customerId) === String(c.id)) j.customerId = null; });
+            writeJSON(STORAGE_KEYS.jobs, jobList);
+            appendAuditLog('customer_deleted', 'Customer removed: ' + c.name, String(c.id));
+            refreshCustomersTable();
+            populateJobCustomerSelect();
+            refreshJobs();
+          });
+          actTd.appendChild(del);
+        } else {
+          actTd.textContent = '—';
+        }
+        tr.appendChild(actTd);
+        body.appendChild(tr);
+      });
+    }
+
+    document.getElementById('addCustomerBtn').addEventListener('click', function () {
+      const u = getCurrentUser();
+      if (!u || !hasPermission(u, 'manageCustomers')) {
+        alert('You cannot manage customers.');
+        return;
+      }
+      const name = (document.getElementById('customerName').value || '').trim();
+      if (!name) return;
+      const row = {
+        id: Date.now(),
+        name: name,
+        phone: (document.getElementById('customerPhone').value || '').trim(),
+        address: (document.getElementById('customerAddress').value || '').trim(),
+        neighborhood: (document.getElementById('customerNeighborhood').value || '').trim(),
+        zip: (document.getElementById('customerZip').value || '').trim(),
+        notes: (document.getElementById('customerNotesField').value || '').trim()
+      };
+      const customers = readJSON(STORAGE_KEYS.customers, []);
+      customers.push(row);
+      writeJSON(STORAGE_KEYS.customers, customers);
+      appendAuditLog('customer_created', 'Customer added: ' + name, row.zip || '');
+      document.getElementById('customerForm').reset();
+      refreshCustomersTable();
+      populateJobCustomerSelect();
+      showToast('Customer saved');
+    });
+
+    const clearAuditBtn = document.getElementById('clearAuditLogBtn');
+    if (clearAuditBtn) {
+      clearAuditBtn.addEventListener('click', async function () {
+        const u = getCurrentUser();
+        if (!isFounder(u)) {
+          alert('Only the founder can clear the audit log.');
+          return;
+        }
+        const ok = await showConfirm('Clear the entire audit log? This cannot be undone.');
+        if (!ok) return;
+        writeJSON(STORAGE_KEYS.auditLog, []);
+        renderAuditLogPanel();
+        showToast('Audit log cleared');
+      });
+    }
+
+    function getFilteredJobs() {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const u = getCurrentUser();
+      const s = (jobSearch.value || '').toLowerCase();
+      const st = jobStatusFilter.value;
+      const pr = jobPriorityFilter.value;
+      const view = jobViewFilter.value;
+      const from = jobFromDate.value || '';
+      const to = jobToDate.value || '';
+      return jobs.filter(j => {
+        if (st !== 'all' && j.status !== st) return false;
+        if (pr !== 'all' && j.priority !== pr) return false;
+        if (view === 'mine' && u && j.who !== u.username) return false;
+        if (!dateInRange(j.date, from, to)) return false;
+        const txt = (j.name + ' ' + (j.notes || '') + ' ' + (j.whoName || '') + ' ' + (j.neighborhood || '') + ' ' + (j.zipCode || '') + ' ' + (j.tags || []).join(' ')).toLowerCase();
+        if (s && !txt.includes(s)) return false;
+        return true;
+      });
+    }
+
+    function statusLabel(s) {
+      if (s === 'in_progress') return 'In progress';
+      if (s === 'done') return 'Done';
+      if (s === 'paid') return 'Paid';
+      return 'Planned';
+    }
+
+    function priorityLabel(p) {
+      if (p === 'high') return 'High';
+      if (p === 'low') return 'Low';
+      return 'Medium';
+    }
+
+    function statusChipClass(s) {
+      if (s === 'in_progress') return 'status-chip status-in-progress';
+      if (s === 'done') return 'status-chip status-done';
+      if (s === 'paid') return 'status-chip status-paid';
+      return 'status-chip status-planned';
+    }
+
+    function priorityBadgeClass(p) {
+      if (p === 'high') return 'badge badge-priority-high';
+      if (p === 'low') return 'badge badge-priority-low';
+      return 'badge badge-priority-medium';
+    }
+
+    function renderJobsGrouped(rows) {
+      const u = getCurrentUser();
+      const isAdm = isAdmin(u);
+      const canDel = isAdmin(u) && hasPermission(u, 'deleteRecords');
+      const groups = {};
+      rows.forEach(j => {
+        const key = j.whoName || j.who || 'unknown';
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(j);
+      });
+      jobsBody.innerHTML = '';
+      Object.keys(groups).sort().forEach(name => {
+        const list = groups[name].sort((a, b) => {
+          const ka = jobSortKey(a);
+          const kb = jobSortKey(b);
+          return ka < kb ? -1 : (ka > kb ? 1 : 0);
+        });
+
+        const gh = document.createElement('tr');
+        gh.className = 'group-header';
+        const gtd = document.createElement('td');
+        gtd.colSpan = 13;
+        const lbl = document.createElement('span');
+        lbl.textContent = '▼ ' + name + ' (' + list.length + ' jobs)';
+        gtd.appendChild(lbl);
+        gh.appendChild(gtd);
+        jobsBody.appendChild(gh);
+
+        let collapsed = false;
+        gh.addEventListener('click', () => {
+          collapsed = !collapsed;
+          lbl.textContent = (collapsed ? '▶ ' : '▼ ') + name + ' (' + list.length + ' jobs)';
+          list.forEach(j => {
+            const r = document.querySelector('tr[data-job-id="' + j.id + '"]');
+            const d = document.querySelector('tr[data-job-detail-id="' + j.id + '"]');
+            if (r) r.style.display = collapsed ? 'none' : '';
+            if (d) d.style.display = collapsed ? 'none' : '';
+          });
+        });
+
+        list.forEach(job => {
+          const tr = document.createElement('tr');
+          tr.dataset.jobId = job.id;
+
+          function editable(key, val, type) {
+            const td = document.createElement('td');
+            if (isAdm && key !== 'who' && key !== 'whoName') {
+              if (key === 'status' || key === 'priority') {
+                const sel = document.createElement('select');
+                const opts = key === 'status'
+                  ? ['planned', 'in_progress', 'done', 'paid']
+                  : ['low', 'medium', 'high'];
+                opts.forEach(o => {
+                  const opt = document.createElement('option');
+                  opt.value = o;
+                  opt.textContent = key === 'status' ? statusLabel(o) : priorityLabel(o);
+                  if (o === val) opt.selected = true;
+                  sel.appendChild(opt);
+                });
+                sel.addEventListener('change', () => {
+                  updateJobField(job.id, key, sel.value, 'text');
+                });
+                td.appendChild(sel);
+              } else if (key === 'tags') {
+                const inp = document.createElement('input');
+                inp.type = 'text';
+                inp.value = Array.isArray(val) ? val.join(', ') : '';
+                inp.style.width = '140px';
+                inp.addEventListener('change', () => {
+                  const tags = inp.value.split(',').map(t => t.trim()).filter(Boolean);
+                  updateJobField(job.id, key, tags, 'tags');
+                });
+                td.appendChild(inp);
+              } else if (key === 'attachmentUrl') {
+                const inp = document.createElement('input');
+                inp.type = 'url';
+                inp.style.width = '140px';
+                inp.value = val || '';
+                inp.addEventListener('change', () => {
+                  updateJobField(job.id, key, inp.value, 'text');
+                });
+                td.appendChild(inp);
+              } else if (key === 'payment' || key === 'tipAmount') {
+                const inp = document.createElement('input');
+                inp.type = 'number';
+                inp.style.width = '72px';
+                inp.value = val;
+                inp.addEventListener('change', () => {
+                  updateJobField(job.id, key, inp.value, 'number');
+                });
+                td.appendChild(inp);
+              } else if (key === 'scheduledDate') {
+                const inp = document.createElement('input');
+                inp.type = 'date';
+                inp.value = val || '';
+                inp.addEventListener('change', () => {
+                  updateJobField(job.id, key, inp.value, 'text');
+                });
+                td.appendChild(inp);
+              } else {
+                const inp = document.createElement('input');
+                inp.type = 'text';
+                inp.style.width = '120px';
+                inp.value = val;
+                inp.addEventListener('change', () => {
+                  updateJobField(job.id, key, inp.value, 'text');
+                });
+                td.appendChild(inp);
+              }
+            } else {
+              if (key === 'status') {
+                const s = document.createElement('span');
+                s.className = statusChipClass(val);
+                s.innerHTML = '<span class="status-chip-dot"></span>' + statusLabel(val);
+                td.appendChild(s);
+              } else if (key === 'priority') {
+                const s = document.createElement('span');
+                s.className = priorityBadgeClass(val);
+                s.textContent = priorityLabel(val);
+                td.appendChild(s);
+              } else if (key === 'tags') {
+                td.textContent = Array.isArray(val) ? val.join(', ') : '';
+              } else if (key === 'attachmentUrl') {
+                if (val) {
+                  const a = document.createElement('a');
+                  a.href = val;
+                  a.target = '_blank';
+                  a.textContent = 'Open';
+                  td.appendChild(a);
+                } else {
+                  td.textContent = '-';
+                }
+              } else if (key === 'tipAmount') {
+                td.textContent = formatCurrency(typeof val === 'number' ? val : 0);
+              } else if (key === 'scheduledDate') {
+                td.textContent = val || '—';
+              } else {
+                td.textContent = val;
+              }
+            }
+            return td;
+          }
+
+          tr.appendChild(editable('name', job.name, 'text'));
+          tr.appendChild(editable('status', job.status, 'text'));
+          tr.appendChild(editable('priority', job.priority, 'text'));
+          tr.appendChild(editable('size', job.size, 'text'));
+          tr.appendChild(editable('payment', job.payment, 'number'));
+          tr.appendChild(editable('tipAmount', typeof job.tipAmount === 'number' ? job.tipAmount : 0, 'number'));
+
+          const totTd = document.createElement('td');
+          totTd.textContent = formatCurrency(jobTotalPayment(job));
+          tr.appendChild(totTd);
+
+          tr.appendChild(editable('scheduledDate', job.scheduledDate || job.date || '', 'text'));
+
+          const dt = document.createElement('td');
+          dt.textContent = job.date;
+          tr.appendChild(dt);
+
+          const who = document.createElement('td');
+          who.textContent = job.whoName || job.who;
+          tr.appendChild(who);
+
+          tr.appendChild(editable('tags', job.tags || [], 'tags'));
+          tr.appendChild(editable('attachmentUrl', job.attachmentUrl || '', 'text'));
+
+          const act = document.createElement('td');
+          if (isAdm && canDel) {
+            const del = document.createElement('button');
+            del.className = 'btn small danger';
+            del.textContent = 'Delete';
+            del.addEventListener('click', async ev => {
+              ev.stopPropagation();
+              const ok = await showConfirm('Delete this job? This cannot be undone.');
+              if (!ok) return;
+              lastDeleted = { type: 'job', item: job };
+              deleteJob(job.id);
+              showToast('Job deleted', true);
+            });
+            act.appendChild(del);
+          } else {
+            act.textContent = '-';
+          }
+          tr.appendChild(act);
+
+          tr.addEventListener('click', ev => {
+            if (['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA', 'A'].includes(ev.target.tagName)) return;
+            toggleJobDetails(job.id);
+          });
+
+          jobsBody.appendChild(tr);
+
+          const dtr = document.createElement('tr');
+          dtr.dataset.jobDetailId = job.id;
+          dtr.style.display = 'none';
+          const dtd = document.createElement('td');
+          dtd.colSpan = 13;
+          dtd.className = 'row-details';
+          const inner = document.createElement('div');
+          inner.className = 'row-details-inner';
+          const customers = readJSON(STORAGE_KEYS.customers, []);
+          const cust = customers.find(c => String(c.id) === String(job.customerId));
+          let custBlock = '';
+          if (cust) {
+            custBlock = '<div><strong>Customer:</strong> ' + (cust.name || '') + ' · ' + (cust.phone || '') + '</div>' +
+              '<div style="color:#9ca3af;">' + (cust.address || '') + '</div>';
+          } else if (job.customerId) {
+            custBlock = '<div><strong>Customer:</strong> (record missing)</div>';
+          }
+          inner.innerHTML = custBlock +
+            '<div><strong>Area:</strong> ' + (job.neighborhood || '—') + ' · ZIP ' + (job.zipCode || '—') + '</div>' +
+            '<div><strong>Scheduled:</strong> ' + (job.scheduledDate || '—') + ' ' + (job.scheduledWindow || '') + '</div>' +
+            '<div><strong>Completed:</strong> ' + (job.completedDate || '—') + '</div>' +
+            '<div><strong>Notes:</strong> ' + (job.notes || '(none)') + '</div>' +
+            '<div><strong>Tags:</strong> ' + ((job.tags && job.tags.length) ? job.tags.join(', ') : '(none)') + '</div>' +
+            '<div><strong>Attachment:</strong> ' + (job.attachmentUrl ? ('<a href="' + job.attachmentUrl + '" target="_blank">Open link</a>') : '(none)') + '</div>' +
+            '<div><strong>Created:</strong> ' + (job.createdAt || job.date) + ' by ' + (job.whoName || job.who || '') + '</div>' +
+            '<div><strong>Updated:</strong> ' + (job.updatedAt || job.date) + ' by ' + (job.lastEditedByName || job.lastEditedBy || '') + '</div>';
+          const chkWrap = document.createElement('div');
+          chkWrap.style.marginTop = '0.4rem';
+          chkWrap.appendChild(document.createTextNode('Checklist: '));
+          ['mow', 'trim', 'edge', 'blow'].forEach(function (k) {
+            const lab = document.createElement('label');
+            lab.style.marginRight = '0.65rem';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = !!(job.checklist && job.checklist[k]);
+            cb.addEventListener('change', function () {
+              const jobs = readJSON(STORAGE_KEYS.jobs, []);
+              const idx = jobs.findIndex(j => j.id === job.id);
+              if (idx < 0) return;
+              if (!jobs[idx].checklist) jobs[idx].checklist = { mow: true, trim: true, edge: true, blow: true };
+              jobs[idx].checklist[k] = cb.checked;
+              const u2 = getCurrentUser();
+              jobs[idx].updatedAt = getToday();
+              jobs[idx].lastEditedBy = u2 ? u2.username : jobs[idx].lastEditedBy;
+              jobs[idx].lastEditedByName = u2 ? (u2.name || u2.username) : jobs[idx].lastEditedByName;
+              writeJSON(STORAGE_KEYS.jobs, jobs);
+              appendAuditLog('job_checklist', job.name + ' · ' + k, cb.checked ? 'checked' : 'unchecked');
+              refreshJobs();
+              refreshKanban();
+              refreshMoney();
+              refreshCharts();
+            });
+            lab.appendChild(cb);
+            lab.appendChild(document.createTextNode(' ' + k));
+            chkWrap.appendChild(lab);
+          });
+          inner.appendChild(chkWrap);
+          dtd.appendChild(inner);
+          dtr.appendChild(dtd);
+          jobsBody.appendChild(dtr);
+        });
+      });
+      updateBadgesAndHomeBanner();
+    }
+
+    function toggleJobDetails(id) {
+      const r = document.querySelector('tr[data-job-detail-id="' + id + '"]');
+      if (!r) return;
+      r.style.display = (r.style.display === 'none' || !r.style.display) ? '' : 'none';
+    }
+
+    function refreshJobs() {
+      renderJobsGrouped(getFilteredJobs());
+    }
+
+    function updateJobField(id, key, val, type) {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const idx = jobs.findIndex(j => j.id === id);
+      if (idx < 0) return;
+      if (type === 'number') {
+        const n = parseAmount(val);
+        if (n === null) {
+          alert('Invalid number.');
+          refreshJobs();
+          return;
+        }
+        jobs[idx][key] = n;
+      } else if (type === 'tags') {
+        jobs[idx][key] = Array.isArray(val) ? val : [];
+      } else {
+        jobs[idx][key] = (val || '').trim();
+      }
+      const u = getCurrentUser();
+      jobs[idx].updatedAt = getToday();
+      jobs[idx].lastEditedBy = u ? u.username : (jobs[idx].lastEditedBy || 'unknown');
+      jobs[idx].lastEditedByName = u ? (u.name || u.username) : (jobs[idx].lastEditedByName || jobs[idx].lastEditedBy || 'unknown');
+      if (key === 'scheduledDate' && validDateStr(jobs[idx].scheduledDate)) {
+        jobs[idx].date = jobs[idx].scheduledDate;
+      }
+      writeJSON(STORAGE_KEYS.jobs, jobs);
+      appendAuditLog('job_edit', 'Updated job field: ' + key, (jobs[idx].name || '') + ' → ' + String(val).slice(0, 80));
+      refreshJobs();
+      refreshKanban();
+      refreshMoney();
+      refreshCharts();
+      refreshHomeScheduleCard();
+    }
+
+    function deleteJob(id) {
+      let jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const victim = jobs.find(j => j.id === id);
+      jobs = jobs.filter(j => j.id !== id);
+      writeJSON(STORAGE_KEYS.jobs, jobs);
+      if (victim) appendAuditLog('job_deleted', 'Job deleted: ' + (victim.name || ''), String(id));
+      refreshJobs();
+      refreshKanban();
+      refreshMoney();
+      refreshCharts();
+      refreshHomeScheduleCard();
+    }
+
+    jobFilterApply.addEventListener('click', () => {
+      refreshJobs();
+      refreshKanban();
+    });
+
+    jobFilterClear.addEventListener('click', () => {
+      jobSearch.value = '';
+      jobStatusFilter.value = 'all';
+      jobPriorityFilter.value = 'all';
+      jobViewFilter.value = 'all';
+      jobQuickRange.value = 'all';
+      jobFromDate.value = '';
+      jobToDate.value = '';
+      refreshJobs();
+      refreshKanban();
+    });
+
+    if (jobViewFilter) {
+      jobViewFilter.addEventListener('change', () => {
+        const prefs = getPrefs();
+        prefs.jobsView = jobViewFilter.value || 'all';
+        savePrefs(prefs);
+      });
+    }
+
+    jobQuickRange.addEventListener('change', () => {
+      const { from, to } = getQuickRange(jobQuickRange.value);
+      jobFromDate.value = from;
+      jobToDate.value = to;
+      refreshJobs();
+      refreshKanban();
+    });
+
+    exportJobsCsvBtn.addEventListener('click', () => {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const rows = [['Name', 'Status', 'Priority', 'Size', 'BasePay', 'Tip', 'Total', 'Scheduled', 'Window', 'Completed', 'Neighborhood', 'Zip', 'CustomerId', 'Date', 'Worker', 'Tags', 'Attachment', 'CreatedAt', 'UpdatedAt', 'LastEditedBy']];
+      jobs.forEach(j => {
+        rows.push([
+          j.name,
+          j.status,
+          j.priority,
+          j.size,
+          j.payment,
+          j.tipAmount || 0,
+          jobTotalPayment(j),
+          j.scheduledDate || '',
+          j.scheduledWindow || '',
+          j.completedDate || '',
+          j.neighborhood || '',
+          j.zipCode || '',
+          j.customerId || '',
+          j.date,
+          j.whoName || j.who,
+          (j.tags || []).join('|'),
+          j.attachmentUrl || '',
+          j.createdAt || '',
+          j.updatedAt || '',
+          j.lastEditedByName || j.lastEditedBy || ''
+        ]);
+      });
+      downloadCsv(rows, 'jobs.csv');
+    });
+
+    // KANBAN
+    const kanbanBoard = document.getElementById('kanbanBoard');
+    const kanbanViewRadios = document.getElementsByName('kanbanView');
+
+    (function initKanbanViewFromPrefs() {
+      const prefs = getPrefs();
+      const target = prefs.kanbanView || 'all';
+      kanbanViewRadios.forEach(r => {
+        r.checked = (r.value === target);
+      });
+    })();
+
+    function getKanbanView() {
+      let v = 'all';
+      kanbanViewRadios.forEach(r => {
+        if (r.checked) v = r.value;
+      });
+      const prefs = getPrefs();
+      prefs.kanbanView = v;
+      savePrefs(prefs);
+      return v;
+    }
+
+    function refreshKanban() {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const u = getCurrentUser();
+      const view = getKanbanView();
+      const filtered = jobs.filter(j => (view === 'mine' && u) ? j.who === u.username : true);
+      const cols = { planned: [], in_progress: [], done: [], paid: [] };
+      filtered.forEach(j => {
+        const k = cols[j.status] ? j.status : 'planned';
+        cols[k].push(j);
+      });
+      const order = ['planned', 'in_progress', 'done', 'paid'];
+      kanbanBoard.innerHTML = '';
+      order.forEach(s => {
+        const col = document.createElement('div');
+        col.className = 'kanban-column';
+        const h = document.createElement('div');
+        h.className = 'kanban-column-header';
+        h.innerHTML = '<span>' + statusLabel(s) + '</span><span style="font-size:0.75rem;color:#9ca3af;">' + cols[s].length + '</span>';
+        col.appendChild(h);
+        const list = document.createElement('div');
+        list.className = 'kanban-list';
+        cols[s].sort((a, b) => {
+          const ka = jobSortKey(a);
+          const kb = jobSortKey(b);
+          return ka < kb ? -1 : (ka > kb ? 1 : 0);
+        }).forEach(j => {
+          const card = document.createElement('div');
+          card.className = 'kanban-card';
+          const ttl = document.createElement('div');
+          ttl.className = 'kanban-title';
+          ttl.textContent = j.name;
+          card.appendChild(ttl);
+          const meta = document.createElement('div');
+          meta.className = 'kanban-meta';
+          const pr = document.createElement('span');
+          pr.className = priorityBadgeClass(j.priority);
+          pr.textContent = priorityLabel(j.priority);
+          meta.appendChild(pr);
+          const sz = document.createElement('span');
+          sz.className = 'badge badge-status-planned';
+          sz.textContent = j.size;
+          meta.appendChild(sz);
+          if (j.tags && j.tags.length) {
+            const tag = document.createElement('span');
+            tag.className = 'tag-pill';
+            tag.textContent = j.tags[0];
+            meta.appendChild(tag);
+          }
+          card.appendChild(meta);
+          const f = document.createElement('div');
+          f.className = 'kanban-footer';
+          f.innerHTML = '<span>' + (j.whoName || j.who) + '</span><span>' + formatCurrency(jobTotalPayment(j)) + '</span>';
+          card.appendChild(f);
+          card.addEventListener('click', () => {
+            const ns = prompt('Move "' + j.name + '" to status (planned,in_progress,done,paid):', j.status);
+            if (!ns) return;
+            if (!['planned', 'in_progress', 'done', 'paid'].includes(ns)) {
+              alert('Invalid status.');
+              return;
+            }
+            updateJobField(j.id, 'status', ns, 'text');
+          });
+          list.appendChild(card);
+        });
+        col.appendChild(list);
+        kanbanBoard.appendChild(col);
+      });
+    }
+
+    kanbanViewRadios.forEach(r => r.addEventListener('change', refreshKanban));
+
+    // CSV util
+    function downloadCsv(rows, filename) {
+      const esc = v => {
+        if (v === null || v === undefined) return '';
+        const s = String(v).replace(/"/g, '""');
+        if (/[",\n]/.test(s)) return '"' + s + '"';
+        return s;
+      };
+      const csv = rows.map(r => r.map(esc).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // CHARTS
+    const chartsFromDate = document.getElementById('chartsFromDate');
+    const chartsToDate = document.getElementById('chartsToDate');
+    const chartsTimeframe = document.getElementById('chartsTimeframe');
+    const applyChartsFilterBtn = document.getElementById('applyChartsFilterBtn');
+    const chartsMonthlyGoalInput = document.getElementById('chartsMonthlyGoal');
+    const saveChartsGoalBtn = document.getElementById('saveChartsGoalBtn');
+    const chartsGoalSummary = document.getElementById('chartsGoalSummary');
+
+    function loadChartsGoalFromPrefs() {
+      const prefs = getPrefs();
+      if (chartsMonthlyGoalInput) {
+        chartsMonthlyGoalInput.value = prefs.monthlyGoal || 0;
+      }
+    }
+
+    function saveChartsGoalToPrefs() {
+      const raw = chartsMonthlyGoalInput ? Number(chartsMonthlyGoalInput.value || '0') : 0;
+      const goal = Number.isNaN(raw) || raw < 0 ? 0 : Math.round(raw);
+      const prefs = getPrefs();
+      prefs.monthlyGoal = goal;
+      savePrefs(prefs);
+      showToast('Charts goal updated');
+      refreshCharts();
+    }
+
+    if (saveChartsGoalBtn) {
+      saveChartsGoalBtn.addEventListener('click', saveChartsGoalToPrefs);
+    }
+
+    function getChartsFilterRange() {
+      let from = chartsFromDate.value || '';
+      let to = chartsToDate.value || '';
+      const tf = chartsTimeframe.value || 'all';
+      const today = getToday();
+      const todayMs = Date.parse(today);
+      if (tf !== 'all') {
+        let days = tf === 'week' ? 7 : (tf === 'month' ? 30 : 365);
+        const fromMs = todayMs - days * 24 * 60 * 60 * 1000;
+        const d = new Date(fromMs);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const dy = String(d.getDate()).padStart(2, '0');
+        const tfFrom = y + '-' + m + '-' + dy;
+        if (!from || Date.parse(from) < fromMs) from = tfFrom;
+        if (!to) to = today;
+      }
+      return { from, to };
+    }
+
+    function simpleBarChart(canvasId, loaderId, tooltipId, getData, type) {
+      const c = document.getElementById(canvasId);
+      const t = document.getElementById(tooltipId);
+      const l = document.getElementById(loaderId);
+      if (!c || !t || !l) return;
+      const ctx = c.getContext('2d');
+      const isBalanceChart = (canvasId === 'balanceChart');
+
+      function drawAnimated() {
+        const _cd = getData();
+        const labels = _cd.labels;
+        const values = _cd.values;
+        const tooltipExtra = _cd.tooltipExtra;
+        const rect = c.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        c.width = rect.width * dpr;
+        c.height = rect.height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, rect.width, rect.height);
+
+        const w = rect.width;
+        const h = rect.height;
+        const margin = { top: 20, right: 10, bottom: 40, left: 45 };
+        const cw = w - margin.left - margin.right;
+        const ch = h - margin.top - margin.bottom;
+
+        const max = values.length ? Math.max(...values.map(v => Math.abs(v)), 1) : 1;
+        const count = values.length;
+        const barW = count ? cw / (count * 1.6) : 0;
+        const gap = barW * 0.6;
+
+        const pts = [];
+        let start = null;
+        const duration = 450;
+
+        function frame(timestamp) {
+          if (!start) start = timestamp;
+          const progress = Math.min((timestamp - start) / duration, 1);
+
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, rect.width, rect.height);
+          ctx.save();
+          ctx.translate(margin.left, margin.top);
+
+          ctx.strokeStyle = '#1e3a8a';
+          ctx.beginPath();
+          ctx.moveTo(0, ch);
+          ctx.lineTo(cw, ch);
+          ctx.stroke();
+
+          if (!values.length) {
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = '12px system-ui';
+            ctx.fillText('No data', cw / 2 - 20, ch / 2);
+            ctx.restore();
+            return;
+          }
+
+          pts.length = 0;
+          values.forEach((v, i) => {
+            const x = i * (barW + gap) + gap / 2;
+            const fullHeight = (Math.abs(v) / max) * (ch - 10);
+            const bh = fullHeight * progress;
+            const y = ch - bh;
+
+            if (isBalanceChart) {
+              ctx.fillStyle = v >= 0 ? '#16a34a' : '#dc2626';
+            } else {
+              ctx.fillStyle = i % 2 ? '#16a34a' : '#22c55e';
+            }
+
+            ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(x, y, barW, bh, 6);
+            else ctx.fillRect(x, y, barW, bh);
+            ctx.fill();
+
+            ctx.fillStyle = '#e5e7eb';
+            ctx.font = '9px system-ui';
+            ctx.save();
+            ctx.translate(x + barW / 2, ch + 12);
+            ctx.rotate(-Math.PI / 4);
+            ctx.textAlign = 'right';
+            ctx.fillText(labels[i], 0, 0);
+            ctx.restore();
+
+            pts.push({
+              x: margin.left + x + barW / 2,
+              y: margin.top + y,
+              r: Math.max(6, Math.min(barW / 2, 10)),
+              label: labels[i],
+              value: v,
+              tt: tooltipExtra && tooltipExtra[i] != null ? tooltipExtra[i] : null
+            });
+          });
+
+          ctx.restore();
+
+          if (progress < 1) {
+            window.requestAnimationFrame(frame);
+          }
+        }
+
+        window.requestAnimationFrame(frame);
+
+        c.onmousemove = e => {
+          const r = c.getBoundingClientRect();
+          const x = e.clientX - r.left;
+          const y = e.clientY - r.top;
+          let hit = null;
+          pts.forEach(p => {
+            const dx = x - p.x;
+            const dy = y - p.y;
+            if (Math.sqrt(dx * dx + dy * dy) <= p.r) hit = p;
+          });
+          if (hit) {
+            t.style.left = hit.x + 'px';
+            t.style.top = hit.y + 'px';
+
+            let text;
+            if (hit.tt) {
+              text = hit.tt;
+            } else if (type === 'workers') {
+              text = hit.label + ' – ' + hit.value + ' jobs';
+            } else if (type === 'revenue') {
+              text = hit.label + ' – ' + formatCurrency(hit.value) + ' earned';
+            } else if (type === 'status') {
+              text = hit.label + ' – ' + hit.value + ' jobs';
+            } else if (type === 'size') {
+              text = hit.label + ' – ' + formatCurrency(hit.value) + ' total';
+            } else if (type === 'userRevenue') {
+              text = hit.label + ' – ' + formatCurrency(hit.value) + ' total';
+            } else if (type === 'balance') {
+              const prefix = hit.value >= 0 ? 'ahead by ' : 'behind by ';
+              text = hit.label + ' – ' + prefix + formatCurrency(Math.abs(hit.value));
+            } else {
+              text = hit.label + ' – ' + hit.value;
+            }
+
+            t.textContent = text;
+            t.style.display = 'block';
+          } else {
+            t.style.display = 'none';
+          }
+        };
+        c.onmouseleave = () => {
+          t.style.display = 'none';
+        };
+      }
+
+      window.addEventListener('resize', drawAnimated);
+      l.classList.add('show');
+      setTimeout(() => {
+        drawAnimated();
+        l.classList.remove('show');
+      }, 80);
+    }
+
+    function monthKeyFromDateStr(ds) {
+      if (!validDateStr(ds)) return '';
+      return ds.slice(0, 7);
+    }
+
+    function refreshCharts() {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const expenses = readJSON(STORAGE_KEYS.expenses, []).filter(e => e.status === 'approved');
+      const { from, to } = getChartsFilterRange();
+      const fj = jobs.filter(j => dateInRange(j.date, from, to));
+      const fjRev = jobs.filter(j => dateInRange(jobRevenueDate(j), from, to));
+      const fe = expenses.filter(e => dateInRange(e.date, from, to));
+
+      const prefs = getPrefs();
+      const goal = prefs.monthlyGoal || 0;
+      const todayStr = getToday();
+      const d = new Date(todayStr);
+      const monthStart = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-01';
+      const jobsThisMonth = jobs.filter(j => dateInRange(jobRevenueDate(j), monthStart, todayStr));
+      const revenueThisMonth = jobsThisMonth.reduce((sum, j) => sum + jobTotalPayment(j), 0);
+
+      if (chartsGoalSummary) {
+        if (goal <= 0) {
+          chartsGoalSummary.textContent = 'No monthly goal set yet. Set a goal to track progress.';
+          chartsGoalSummary.style.color = '#9ca3af';
+        } else {
+          const pct = Math.round((revenueThisMonth / goal) * 100);
+          const remaining = Math.max(goal - revenueThisMonth, 0);
+          chartsGoalSummary.textContent =
+            'This month so far: ' + formatCurrency(revenueThisMonth) +
+            ' / ' + formatCurrency(goal) +
+            ' (' + pct + '%). ' +
+            (remaining > 0 ? ('You need ' + formatCurrency(remaining) + ' more to hit your goal.') : 'You already hit your goal this month!');
+          chartsGoalSummary.style.color = remaining > 0 ? '#fbbf24' : '#22c55e';
+        }
+      }
+
+      simpleBarChart('workersChart', 'workersChartLoader', 'workersChartTooltip', () => {
+        const counts = {};
+        fj.forEach(j => {
+          const n = j.whoName || j.who;
+          counts[n] = (counts[n] || 0) + 1;
+        });
+        const labels = Object.keys(counts);
+        const values = labels.map(l => counts[l]);
+        return { labels, values };
+      }, 'workers');
+
+      simpleBarChart('revenueChart', 'revenueChartLoader', 'revenueChartTooltip', () => {
+        const totals = {};
+        fjRev.forEach(j => {
+          const rd = jobRevenueDate(j);
+          totals[rd] = (totals[rd] || 0) + jobTotalPayment(j);
+        });
+        const labels = Object.keys(totals).sort();
+        const values = labels.map(l => totals[l]);
+        return { labels, values };
+      }, 'revenue');
+
+      simpleBarChart('statusChart', 'statusChartLoader', 'statusChartTooltip', () => {
+        const sts = ['planned', 'in_progress', 'done', 'paid'];
+        const c = { planned: 0, in_progress: 0, done: 0, paid: 0 };
+        fj.forEach(j => {
+          c[j.status] = (c[j.status] || 0) + 1;
+        });
+        const labels = sts.map(statusLabel);
+        const values = sts.map(s => c[s] || 0);
+        return { labels, values };
+      }, 'status');
+
+      simpleBarChart('sizeChart', 'sizeChartLoader', 'sizeChartTooltip', () => {
+        const sizes = ['small', 'medium', 'large'];
+        const c = { small: 0, medium: 0, large: 0 };
+        fjRev.forEach(j => {
+          c[j.size] = (c[j.size] || 0) + jobTotalPayment(j);
+        });
+        const labels = sizes;
+        const values = labels.map(s => c[s] || 0);
+        return { labels, values };
+      }, 'size');
+
+      simpleBarChart('userChart', 'userChartLoader', 'userChartTooltip', () => {
+        const c = {};
+        fjRev.forEach(j => {
+          const n = j.whoName || j.who;
+          c[n] = (c[n] || 0) + jobTotalPayment(j);
+        });
+        const labels = Object.keys(c);
+        const values = labels.map(l => c[l]);
+        return { labels, values };
+      }, 'userRevenue');
+
+      simpleBarChart('balanceChart', 'balanceChartLoader', 'balanceChartTooltip', () => {
+        const incomeBy = {};
+        fjRev.forEach(j => {
+          const rd = jobRevenueDate(j);
+          incomeBy[rd] = (incomeBy[rd] || 0) + jobTotalPayment(j);
+        });
+        const expBy = {};
+        fe.forEach(e => {
+          expBy[e.date] = (expBy[e.date] || 0) + (e.amount || 0);
+        });
+        const allDates = Array.from(new Set([...Object.keys(incomeBy), ...Object.keys(expBy)])).sort();
+        const labels = allDates;
+        const values = allDates.map(d => (incomeBy[d] || 0) - (expBy[d] || 0));
+        return { labels, values };
+      }, 'balance');
+
+      simpleBarChart('profitMonthChart', 'profitMonthChartLoader', 'profitMonthChartTooltip', () => {
+        const incomeByMonth = {};
+        fjRev.forEach(j => {
+          const mk = monthKeyFromDateStr(jobRevenueDate(j));
+          if (!mk) return;
+          incomeByMonth[mk] = (incomeByMonth[mk] || 0) + jobTotalPayment(j);
+        });
+        const expByMonth = {};
+        fe.forEach(e => {
+          const mk = monthKeyFromDateStr(e.date);
+          if (!mk) return;
+          expByMonth[mk] = (expByMonth[mk] || 0) + (e.amount || 0);
+        });
+        const months = Array.from(new Set([...Object.keys(incomeByMonth), ...Object.keys(expByMonth)])).sort();
+        const values = months.map(m => (incomeByMonth[m] || 0) - (expByMonth[m] || 0));
+        const tooltipExtra = months.map(m =>
+          m + ' — income ' + formatCurrency(incomeByMonth[m] || 0) +
+          ', expenses ' + formatCurrency(expByMonth[m] || 0) +
+          ', net ' + formatCurrency((incomeByMonth[m] || 0) - (expByMonth[m] || 0))
+        );
+        return { labels: months, values, tooltipExtra };
+      }, 'balance');
+
+      const areaModeEl = document.getElementById('chartsAreaMode');
+      const areaMode = areaModeEl ? areaModeEl.value : 'neighborhood';
+      simpleBarChart('areaAvgChart', 'areaAvgChartLoader', 'areaAvgChartTooltip', () => {
+        const bucket = {};
+        fjRev.forEach(j => {
+          const k = areaMode === 'zip' ? (j.zipCode || 'Unknown') : (j.neighborhood || 'Unknown');
+          if (!bucket[k]) bucket[k] = { sum: 0, n: 0 };
+          bucket[k].sum += jobTotalPayment(j);
+          bucket[k].n += 1;
+        });
+        const labels = Object.keys(bucket);
+        const values = labels.map(l => (bucket[l].n ? bucket[l].sum / bucket[l].n : 0));
+        const tooltipExtra = labels.map(l =>
+          l + ' — ' + bucket[l].n + ' jobs · total ' + formatCurrency(bucket[l].sum) + ' · avg ' + formatCurrency(bucket[l].n ? bucket[l].sum / bucket[l].n : 0)
+        );
+        return { labels, values, tooltipExtra };
+      }, 'userRevenue');
+
+      simpleBarChart('sizeTrendChart', 'sizeTrendChartLoader', 'sizeTrendChartTooltip', () => {
+        const byM = {};
+        fj.forEach(j => {
+          const mk = monthKeyFromDateStr(j.scheduledDate || j.date);
+          if (!mk) return;
+          if (!byM[mk]) byM[mk] = { small: 0, medium: 0, large: 0 };
+          const sz = ['small', 'medium', 'large'].includes(j.size) ? j.size : 'medium';
+          byM[mk][sz] = (byM[mk][sz] || 0) + 1;
+        });
+        const months = Object.keys(byM).sort();
+        const values = months.map(m => {
+          const o = byM[m];
+          return Math.max(o.small || 0, o.medium || 0, o.large || 0);
+        });
+        const tooltipExtra = months.map(m => {
+          const o = byM[m];
+          return m + ' — small ' + (o.small || 0) + ', medium ' + (o.medium || 0) + ', large ' + (o.large || 0);
+        });
+        return { labels: months, values, tooltipExtra };
+      }, 'status');
+    }
+
+    applyChartsFilterBtn.addEventListener('click', refreshCharts);
+    const chartsAreaModeEl = document.getElementById('chartsAreaMode');
+    if (chartsAreaModeEl) chartsAreaModeEl.addEventListener('change', refreshCharts);
+
+    function initChartFullscreen() {
+      const cards = document.querySelectorAll('.chart-card');
+      cards.forEach(card => {
+        const canvas = card.querySelector('canvas.chart-canvas');
+        if (!canvas) return;
+        card.style.cursor = 'zoom-in';
+
+        card.addEventListener('click', e => {
+          if (['BUTTON', 'SELECT', 'OPTION', 'INPUT', 'LABEL'].includes(e.target.tagName)) return;
+          const isFull = card.classList.toggle('fullscreen');
+          card.style.cursor = isFull ? 'zoom-out' : 'zoom-in';
+          setTimeout(() => refreshCharts(), 80);
+        });
+      });
+    }
+
+    // MONEY
+    const incomeTotal = document.getElementById('incomeTotal');
+    const expensesTotalSpan = document.getElementById('expensesTotal');
+    const netTotal = document.getElementById('netTotal');
+    const moneyFromDate = document.getElementById('moneyFromDate');
+    const moneyToDate = document.getElementById('moneyToDate');
+    const applyMoneyFilterBtn = document.getElementById('applyMoneyFilterBtn');
+    const moneyFilterClear = document.getElementById('moneyFilterClear');
+    const moneyBody = document.getElementById('moneyBody');
+    const exportMoneyCsvBtn = document.getElementById('exportMoneyCsvBtn');
+
+    function buildMoneyRows() {
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const ex = readJSON(STORAGE_KEYS.expenses, []).filter(e => e.status === 'approved');
+      const from = moneyFromDate.value || '';
+      const to = moneyToDate.value || '';
+      const rows = [];
+      jobs.forEach(j => {
+        const rd = jobRevenueDate(j);
+        if (dateInRange(rd, from, to)) {
+          rows.push({
+            date: rd,
+            type: 'Income',
+            description: j.name,
+            amount: jobTotalPayment(j),
+            who: j.whoName || j.who || ''
+          });
+        }
+      });
+      ex.forEach(e => {
+        if (dateInRange(e.date, from, to)) {
+          rows.push({
+            date: e.date,
+            type: 'Expense',
+            description: e.description,
+            amount: -(e.amount || 0),
+            who: e.submittedByName || e.submittedBy || ''
+          });
+        }
+      });
+      rows.sort((a, b) => a.date < b.date ? -1 : (a.date > b.date ? 1 : 0));
+      return rows;
+    }
+
+    function renderMoneyRows(rows) {
+      moneyBody.innerHTML = '';
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        const dt = document.createElement('td');
+        dt.textContent = r.date;
+        const ty = document.createElement('td');
+        ty.textContent = r.type;
+        const ds = document.createElement('td');
+        ds.textContent = r.description;
+        const am = document.createElement('td');
+        am.textContent = formatCurrency(Math.abs(r.amount));
+        am.style.color = r.type === 'Income' ? '#22c55e' : '#ef4444';
+        const who = document.createElement('td');
+        who.textContent = r.who;
+        tr.appendChild(dt);
+        tr.appendChild(ty);
+        tr.appendChild(ds);
+        tr.appendChild(am);
+        tr.appendChild(who);
+        moneyBody.appendChild(tr);
+      });
+    }
+
+    function refreshMoney() {
+      const rows = buildMoneyRows();
+      renderMoneyRows(rows);
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const ex = readJSON(STORAGE_KEYS.expenses, []).filter(e => e.status === 'approved');
+      const from = moneyFromDate.value || '';
+      const to = moneyToDate.value || '';
+      let income = 0;
+      let exp = 0;
+      jobs.forEach(j => {
+        const rd = jobRevenueDate(j);
+        if (dateInRange(rd, from, to)) income += jobTotalPayment(j);
+      });
+      ex.forEach(e => {
+        if (dateInRange(e.date, from, to)) exp += e.amount || 0;
+      });
+      const net = income - exp;
+      incomeTotal.textContent = formatCurrency(income);
+      expensesTotalSpan.textContent = formatCurrency(exp);
+      netTotal.textContent = formatCurrency(net);
+      netTotal.classList.remove('net-positive', 'net-negative');
+      if (net > 0) netTotal.classList.add('net-positive');
+      else if (net < 0) netTotal.classList.add('net-negative');
+      updateBadgesAndHomeBanner();
+    }
+
+    applyMoneyFilterBtn.addEventListener('click', refreshMoney);
+
+    moneyFilterClear.addEventListener('click', () => {
+      moneyFromDate.value = '';
+      moneyToDate.value = '';
+      refreshMoney();
+    });
+
+    exportMoneyCsvBtn.addEventListener('click', () => {
+      const rowsData = buildMoneyRows();
+      const rows = [['Date', 'Type', 'Description', 'Amount', 'Who']];
+      rowsData.forEach(r => {
+        rows.push([r.date, r.type, r.description, r.amount, r.who]);
+      });
+      downloadCsv(rows, 'money.csv');
+    });
+
+    function exportAllData() {
+      const data = {
+        users: readJSON(STORAGE_KEYS.users, []),
+        jobs: readJSON(STORAGE_KEYS.jobs, []),
+        expenses: readJSON(STORAGE_KEYS.expenses, []),
+        customers: readJSON(STORAGE_KEYS.customers, []),
+        rolePermissions: getRolePermissionsMap(),
+        auditLog: readJSON(STORAGE_KEYS.auditLog, []),
+        meta: readJSON(STORAGE_KEYS.meta, {})
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'llcs-dashboard-data.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('exportAllDataBtn').addEventListener('click', () => {
+      const u = getCurrentUser();
+      if (!userCanExport(u)) {
+        alert('Admin/Founder only.');
+        return;
+      }
+      exportAllData();
+    });
+
+    document.getElementById('exportAllDataBtnAdmin').addEventListener('click', () => {
+      const u = getCurrentUser();
+      if (!userCanExport(u)) {
+        alert('Admin/Founder only.');
+        return;
+      }
+      exportAllData();
+    });
+
+    // TABLE SORTING
+    function attachSorting(tableId, bodyId, getData, render) {
+      const table = document.getElementById(tableId);
+      if (!table) return;
+      const body = document.getElementById(bodyId);
+      if (!body) return;
+      const ths = table.querySelectorAll('thead th.sortable');
+      ths.forEach(th => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.key;
+          const cur = th.dataset.sort || 'desc';
+          const next = cur === 'asc' ? 'desc' : 'asc';
+          ths.forEach(h => { h.dataset.sort = 'desc'; });
+          th.dataset.sort = next;
+          const data = getData();
+          const sorted = data.slice().sort((a, b) => {
+            const av = a[key];
+            const bv = b[key];
+            if (typeof av === 'number' && typeof bv === 'number') {
+              return next === 'asc' ? av - bv : bv - av;
+            }
+            const as = String(av || '');
+            const bs = String(bv || '');
+            if (as < bs) return next === 'asc' ? -1 : 1;
+            if (as > bs) return next === 'asc' ? 1 : -1;
+            return 0;
+          });
+          render(sorted);
+        });
+      });
+    }
+
+    function initSorting() {
+      attachSorting('expensesTable', 'expensesBody', () => getFilteredExpensesRaw(), rows => {
+        const u = getCurrentUser();
+        const canApprove = isAdmin(u) && hasPermission(u, 'approveExpenses');
+        const canDel = isAdmin(u) && hasPermission(u, 'deleteRecords');
+        expensesBody.innerHTML = '';
+        rows.forEach(e => {
+          const tr = document.createElement('tr');
+          const d = document.createElement('td');
+          d.textContent = e.description;
+          const a = document.createElement('td');
+          a.textContent = formatCurrency(e.amount);
+          const dt = document.createElement('td');
+          dt.textContent = e.date;
+          const st = document.createElement('td');
+          if (e.status === 'approved') {
+            st.textContent = 'Approved';
+            st.className = 'status-approved-text';
+          } else if (e.status === 'rejected') {
+            st.textContent = 'Rejected';
+            st.style.color = '#f97373';
+            st.style.fontWeight = '600';
+          } else {
+            st.textContent = 'Pending';
+            st.className = 'status-pending-text';
+          }
+          const sb = document.createElement('td');
+          sb.textContent = e.submittedByName || e.submittedBy || '';
+          const cat = document.createElement('td');
+          cat.textContent = e.category || '—';
+          const pm = document.createElement('td');
+          pm.textContent = e.paymentMethod || '—';
+          const ven = document.createElement('td');
+          ven.textContent = e.vendor || '—';
+          const note = document.createElement('td');
+          note.style.maxWidth = '140px';
+          note.style.whiteSpace = 'pre-wrap';
+          note.style.fontSize = '0.78rem';
+          note.textContent = e.approvalComment || '—';
+          const act = document.createElement('td');
+          if (canApprove || canDel) {
+            if (canApprove) {
+              const ap = document.createElement('button');
+              ap.className = 'btn small secondary';
+              ap.textContent = 'Review';
+              ap.style.marginRight = '4px';
+              ap.addEventListener('click', () => reviewExpense(e.id));
+              act.appendChild(ap);
+            }
+            if (canDel) {
+              const del = document.createElement('button');
+              del.className = 'btn small danger';
+              del.textContent = 'Delete';
+              del.addEventListener('click', async () => {
+                const ok = await showConfirm('Delete this expense? This cannot be undone.');
+                if (!ok) return;
+                lastDeleted = { type: 'expense', item: e };
+                deleteExpense(e.id);
+                showToast('Expense deleted', true);
+              });
+              act.appendChild(del);
+            }
+          } else {
+            act.textContent = '-';
+          }
+          tr.appendChild(d);
+          tr.appendChild(a);
+          tr.appendChild(dt);
+          tr.appendChild(st);
+          tr.appendChild(sb);
+          tr.appendChild(cat);
+          tr.appendChild(pm);
+          tr.appendChild(ven);
+          tr.appendChild(note);
+          tr.appendChild(act);
+          expensesBody.appendChild(tr);
+        });
+        updateBadgesAndHomeBanner();
+      });
+
+      attachSorting('jobsTable', 'jobsBody', () => getFilteredJobs(), rows => {
+        renderJobsGrouped(rows);
+      });
+
+      attachSorting('moneyTable', 'moneyBody', () => buildMoneyRows(), rows => {
+        renderMoneyRows(rows);
+      });
+    }
+
+    document.getElementById('toastUndoBtn').addEventListener('click', () => {
+      if (!lastDeleted) return;
+      if (lastDeleted.type === 'job') {
+        const jobs = readJSON(STORAGE_KEYS.jobs, []);
+        jobs.push(lastDeleted.item);
+        writeJSON(STORAGE_KEYS.jobs, jobs);
+        refreshJobs();
+        refreshKanban();
+        refreshMoney();
+        refreshCharts();
+        showToast('Job restored');
+      } else if (lastDeleted.type === 'expense') {
+        const ex = readJSON(STORAGE_KEYS.expenses, []);
+        ex.push(lastDeleted.item);
+        writeJSON(STORAGE_KEYS.expenses, ex);
+        refreshExpenses();
+        refreshMoney();
+        refreshCharts();
+        showToast('Expense restored');
+      }
+      lastDeleted = null;
+    });
+
+    function updateBadgesAndHomeBanner() {
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const current = getCurrentUser();
+
+      const pendingExpenses = expenses.filter(e => e.status === 'pending').length;
+      const activeJobs = jobs.filter(j => j.status === 'planned' || j.status === 'in_progress').length;
+
+      const expensesBadge = document.getElementById('expensesBadge');
+      const jobsBadge = document.getElementById('jobsBadge');
+      const homePendingCard = document.getElementById('homePendingCard');
+      const homePendingText = document.getElementById('homePendingText');
+
+      if (expensesBadge) {
+        if (pendingExpenses > 0) {
+          expensesBadge.textContent = '(' + pendingExpenses + ')';
+          expensesBadge.style.display = 'inline';
+        } else {
+          expensesBadge.style.display = 'none';
+        }
+      }
+
+      if (jobsBadge) {
+        if (activeJobs > 0) {
+          jobsBadge.textContent = '(' + activeJobs + ')';
+          jobsBadge.style.display = 'inline';
+        } else {
+          jobsBadge.style.display = 'none';
+        }
+      }
+
+      if (homePendingCard && homePendingText) {
+        if (isAdmin(current) && pendingExpenses > 0) {
+          homePendingText.textContent =
+            'You have ' + pendingExpenses + ' expense' + (pendingExpenses === 1 ? '' : 's') + ' waiting for approval.';
+          homePendingCard.style.display = 'block';
+        } else {
+          homePendingCard.style.display = 'none';
+        }
+      }
+
+      const myCard = document.getElementById('homeMySummaryCard');
+      const myJobsWeekEl = document.getElementById('homeMyJobsWeek');
+      const myRevenueMonthEl = document.getElementById('homeMyRevenueMonth');
+      const myPendingExpEl = document.getElementById('homeMyPendingExpenses');
+
+      if (myCard && myJobsWeekEl && myRevenueMonthEl && myPendingExpEl && current) {
+        const me = current.username;
+
+        const myJobsThisWeek = jobs.filter(j =>
+          j.who === me && j.status === 'done' && isInCurrentWeek(j.date)
+        );
+
+        const myJobsThisMonth = jobs.filter(j =>
+          j.who === me &&
+          (j.status === 'done' || j.status === 'paid') &&
+          isInCurrentMonth(j.date)
+        );
+
+        const myPendingExpenses = expenses.filter(e =>
+          e.submittedBy === me && e.status === 'pending'
+        );
+
+        myJobsWeekEl.textContent = myJobsThisWeek.length;
+        const rev = myJobsThisMonth.reduce((sum, j) => sum + jobTotalPayment(j), 0);
+        myRevenueMonthEl.textContent = formatCurrency(rev);
+        myPendingExpEl.textContent = myPendingExpenses.length;
+
+        myCard.style.display = 'block';
+      } else if (myCard) {
+        myCard.style.display = 'none';
+      }
+
+      refreshHomeScheduleCard();
+    }
+
+    const homeMySummaryCard = document.getElementById('homeMySummaryCard');
+    if (homeMySummaryCard) {
+      homeMySummaryCard.addEventListener('click', () => {
+        const u = getCurrentUser();
+        if (!u) return;
+
+        setActiveTab('jobsTab');
+
+        jobViewFilter.value = 'mine';
+
+        const todayStr = getToday();
+        const d = new Date(todayStr);
+        const fromMonthStart =
+          d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-01';
+
+        jobFromDate.value = fromMonthStart;
+        jobToDate.value = todayStr;
+        jobQuickRange.value = 'month';
+
+        refreshJobs();
+        refreshKanban();
+        refreshCharts();
+      });
+    }
+
+    function refreshAllUI() {
+      refreshExpenses();
+      refreshJobs();
+      refreshKanban();
+      refreshCharts();
+      refreshMoney();
+      updateBadgesAndHomeBanner();
+    }
+
+    window.addEventListener('load', () => {
+      ensureMetaAndMigrate();
+      ensureAdminUser();
+      applyThemeFromPrefs();
+      loadChartsGoalFromPrefs();
+
+      const jobSchedEl = document.getElementById('jobScheduledDate');
+      if (jobSchedEl) jobSchedEl.value = getToday();
+
+      const u = getCurrentUser();
+      const prefs = getPrefs();
+      const lastTab = prefs.lastTab || 'homeTab';
+
+      if (u) {
+        updateHeaderUser(u);
+        showDashboard();
+        setActiveTab(lastTab in tabs ? lastTab : 'homeTab');
+        refreshAllUI();
+        refreshUsersTable();
+      } else {
+        showLogin();
+      }
+      initSorting();
+      initChartFullscreen();
+    });
+  </script>
+</body>
+</html>
