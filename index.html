@@ -491,7 +491,15 @@
       border: 1px solid rgba(15, 23, 42, 0.8);
     }
     .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
-    .chart-title { font-size: 0.9rem; font-weight: 600; color: #bfdbfe; }
+    .chart-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+    .chart-subtext {
+      font-size: 0.76rem;
+      color: #9ca3af;
+    }
     .chart-card-fullscreen-badge {
       font-size: 0.75rem;
       color: #9ca3af;
@@ -588,7 +596,6 @@
     }
     .global-overlay-text { margin-top: 0.6rem; font-size: 0.9rem; color: #e5e7eb; text-align: center; }
 
-    /* smoother inline controls in tables */
     .table-container input[type="text"],
     .table-container input[type="number"],
     .table-container input[type="url"],
@@ -618,7 +625,6 @@
       border-color: rgba(37, 99, 235, 0.7);
     }
 
-    /* nicer custom arrow for all selects */
     select {
       -webkit-appearance: none;
       -moz-appearance: none;
@@ -722,7 +728,7 @@
             Jobs <span id="jobsBadge" style="margin-left:4px;font-size:0.75rem;display:none;"></span>
           </a>
         </li>
-        <li><a href="#" class="nav-link" data-tab="kanbanTab" id="kanbanNav">Jobs Columned</a></li>
+        <li><a href="#" class="nav-link" data-tab="kanbanTab" id="kanbanNav">Jobs columned</a></li>
         <li><a href="#" class="nav-link" data-tab="chartsTab" id="chartsNav">Charts</a></li>
         <li><a href="#" class="nav-link" data-tab="adminTab" id="adminNav" style="display:none;">Admin</a></li>
       </ul>
@@ -732,30 +738,30 @@
       <!-- HOME TAB -->
       <section class="tab" id="homeTab">
         <div class="card">
-          <div class="card-header">Welcome to LLCS Dashboard</div>
+          <div class="card-header">Welcome to LLCS dashboard</div>
           <div class="card-subtitle">
-            Track jobs, expenses, and money for Logan’s Lawncare Services in one place.
+            Keep track of jobs, expenses, and money for Logan’s Lawncare Services in one place.
           </div>
           <p style="font-size:0.86rem;color:#d1d5db;margin-bottom:0.5rem;">
-            Use the tabs above to move between features:
+            Use the navigation to move between sections:
           </p>
           <ul style="font-size:0.84rem;color:#e5e7eb;margin-left:1rem;margin-bottom:0.6rem;list-style:disc;">
-            <li><strong>Expenses</strong>: submit and review expenses.</li>
-            <li><strong>Jobs</strong>: add jobs, payments, and notes.</li>
-            <li><strong>Jobs Columned</strong>: Kanban view by status.</li>
-            <li><strong>Charts</strong>: visual stats for jobs and money.</li>
-            <li><strong>Admin</strong>: accounts, money, and data export (admins only).</li>
+            <li><strong>Expenses</strong>: Submit and approve expenses.</li>
+            <li><strong>Jobs</strong>: Add work, payments, and notes.</li>
+            <li><strong>Jobs columned</strong>: Kanban view by status.</li>
+            <li><strong>Charts</strong>: See patterns in your work and money.</li>
+            <li><strong>Admin</strong>: Manage accounts, totals, and exports.</li>
           </ul>
           <p style="font-size:0.82rem;color:#9ca3af;">
-            Data is stored in your browser’s local storage on this GitHub Pages site.
+            All data is stored locally in this browser for your LLCS GitHub Pages site.
           </p>
         </div>
 
         <div class="card" id="homeAdminCard" style="display:none;">
           <div class="card-header">Founder / Admin quick tools</div>
-          <div class="card-subtitle">Shortcuts to admin features.</div>
+          <div class="card-subtitle">Shortcuts to common admin actions.</div>
           <div class="form-actions">
-            <button type="button" class="btn secondary small" id="homeGoAdminBtn">Open Admin page</button>
+            <button type="button" class="btn secondary small" id="homeGoAdminBtn">Open admin page</button>
             <button type="button" class="btn small" id="exportAllDataBtn">Export all data (JSON)</button>
           </div>
         </div>
@@ -763,25 +769,25 @@
         <div class="card" id="homePendingCard" style="display:none;">
           <div class="card-header">Pending approvals</div>
           <div class="card-subtitle" id="homePendingText">
-            You have pending expenses to approve.
+            You have pending expenses to review.
           </div>
         </div>
 
         <!-- My summary card -->
         <div class="card" id="homeMySummaryCard" style="display:none; cursor:pointer;">
-          <div class="card-header">My summary</div>
-          <div class="card-subtitle">Click to open “my jobs this month”.</div>
+          <div class="card-header">Your snapshot</div>
+          <div class="card-subtitle">Tap to jump to this month’s jobs.</div>
           <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.4rem;font-size:0.85rem;">
             <div style="flex:1 1 120px;min-width:120px;">
               <div style="color:#9ca3af;">Jobs done this week</div>
               <div id="homeMyJobsWeek" style="font-weight:600;font-size:1.1rem;">0</div>
             </div>
             <div style="flex:1 1 120px;min-width:120px;">
-              <div style="color:#9ca3af;">Revenue (my jobs this month)</div>
+              <div style="color:#9ca3af;">Revenue this month (your jobs)</div>
               <div id="homeMyRevenueMonth" style="font-weight:600;font-size:1.1rem;">$0.00</div>
             </div>
             <div style="flex:1 1 120px;min-width:120px;">
-              <div style="color:#9ca3af;">Pending expenses I submitted</div>
+              <div style="color:#9ca3af;">Your pending expenses</div>
               <div id="homeMyPendingExpenses" style="font-weight:600;font-size:1.1rem;">0</div>
             </div>
           </div>
@@ -794,7 +800,7 @@
           <div class="filter-bar">
             <div class="filter-row">
               <span><strong>Expenses</strong> filters:</span>
-              <input type="text" id="expenseSearch" placeholder="Search description/name..." />
+              <input type="text" id="expenseSearch" placeholder="Search description or name" />
               <select id="expenseStatusFilter">
                 <option value="all">All statuses</option>
                 <option value="pending">Pending</option>
@@ -814,12 +820,12 @@
               <button type="button" class="btn small secondary" id="expenseFilterClear">Clear</button>
             </div>
           </div>
-          <div class="card-header">Add Expense</div>
-          <div class="card-subtitle">All users can submit expenses; admins approve.</div>
+          <div class="card-header">Add expense</div>
+          <div class="card-subtitle">Everyone can submit expenses. Admins approve them.</div>
           <form id="expenseForm" onsubmit="return false;">
             <div class="form-group">
-              <label for="expenseDesc">Description</label>
-              <input id="expenseDesc" type="text" required />
+              <label for="expenseDesc">What did you buy?</label>
+              <input id="expenseDesc" type="text" placeholder="Gas, trimmer line, repair..." required />
             </div>
             <div class="form-group-inline">
               <div class="form-group">
@@ -833,14 +839,14 @@
             </div>
             <div class="form-actions">
               <button type="button" class="btn" id="addExpenseBtn">Save expense</button>
-              <button type="button" class="btn secondary small" id="exportExpensesCsvBtn">Export CSV</button>
+              <button type="button" class="btn secondary small" id="exportExpensesCsvBtn">Export expenses CSV</button>
             </div>
           </form>
         </div>
 
         <div class="card">
-          <div class="card-header">Expenses List</div>
-          <div class="card-subtitle">Pending and approved expenses.</div>
+          <div class="card-header">Expenses list</div>
+          <div class="card-subtitle">See what’s pending and what’s already approved.</div>
           <div class="table-container">
             <table id="expensesTable">
               <thead>
@@ -849,7 +855,7 @@
                   <th class="sortable" data-sort="desc" data-key="amount">Amount</th>
                   <th class="sortable" data-sort="desc" data-key="date">Date</th>
                   <th class="sortable" data-sort="desc" data-key="status">Status</th>
-                  <th class="sortable" data-sort="desc" data-key="submittedByName">Submitted By</th>
+                  <th class="sortable" data-sort="desc" data-key="submittedByName">Submitted by</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -865,9 +871,9 @@
           <div class="filter-bar">
             <div class="filter-row">
               <span><strong>Jobs</strong> filters:</span>
-              <input type="text" id="jobSearch" placeholder="Search job/tags/name..." />
+              <input type="text" id="jobSearch" placeholder="Search job name, tags, or worker" />
               <select id="jobStatusFilter">
-                <option value="all">All status</option>
+                <option value="all">All statuses</option>
                 <option value="planned">Planned</option>
                 <option value="in_progress">In progress</option>
                 <option value="done">Done</option>
@@ -881,7 +887,7 @@
               </select>
               <select id="jobViewFilter">
                 <option value="all">All jobs</option>
-                <option value="mine">My jobs</option>
+                <option value="mine">My jobs only</option>
               </select>
               <span>Date:</span>
               <select id="jobQuickRange">
@@ -897,12 +903,12 @@
               <button type="button" class="btn small secondary" id="jobFilterClear">Clear</button>
             </div>
           </div>
-          <div class="card-header">Add Job</div>
-          <div class="card-subtitle">Creator and display name are from your account.</div>
+          <div class="card-header">Add job</div>
+          <div class="card-subtitle">Your account sets the worker name and creator.</div>
           <form id="jobForm" onsubmit="return false;">
             <div class="form-group">
               <label for="jobName">Job name</label>
-              <input id="jobName" type="text" required />
+              <input id="jobName" type="text" placeholder="Front yard mow, leaf cleanup..." required />
             </div>
             <div class="form-group-inline">
               <div class="form-group">
@@ -939,27 +945,27 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="jobTags">Tags (comma separated)</label>
-              <input id="jobTags" type="text" placeholder="design,urgent,client-x" />
+              <label for="jobTags">Tags (optional)</label>
+              <input id="jobTags" type="text" placeholder="front-yard, weekly, new-customer" />
             </div>
             <div class="form-group">
               <label for="jobAttachment">Attachment URL (optional)</label>
-              <input id="jobAttachment" type="url" placeholder="https://..." />
+              <input id="jobAttachment" type="url" placeholder="Link to photo or doc (https://...)" />
             </div>
             <div class="form-group">
-              <label for="jobNotes">Notes</label>
-              <textarea id="jobNotes" placeholder="Optional notes or details"></textarea>
+              <label for="jobNotes">Notes (optional)</label>
+              <textarea id="jobNotes" placeholder="Gate code, special requests, etc."></textarea>
             </div>
             <div class="form-actions">
               <button type="button" class="btn" id="addJobBtn">Save job</button>
-              <button type="button" class="btn secondary small" id="exportJobsCsvBtn">Export Jobs CSV</button>
+              <button type="button" class="btn secondary small" id="exportJobsCsvBtn">Export jobs CSV</button>
             </div>
           </form>
         </div>
 
         <div class="card">
-          <div class="card-header">Jobs List</div>
-          <div class="card-subtitle">Grouped by worker (display name). Admin can edit all jobs.</div>
+          <div class="card-header">Jobs list</div>
+          <div class="card-subtitle">Jobs are grouped by worker name. Admins can edit any job inline.</div>
           <div class="table-container">
             <table id="jobsTable">
               <thead>
@@ -970,10 +976,10 @@
                   <th class="sortable" data-sort="desc" data-key="size">Size</th>
                   <th class="sortable" data-sort="desc" data-key="payment">Payment</th>
                   <th class="sortable" data-sort="desc" data-key="date">Date</th>
-                  <th>Who</th>
+                  <th>Worker</th>
                   <th>Tags</th>
                   <th>Attachment</th>
-                  <th>Action</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="jobsBody"></tbody>
@@ -987,12 +993,12 @@
         <div class="card">
           <div class="kanban-bar">
             <div>
-              <span class="card-header">Jobs Columned</span>
-              <span class="card-subtitle">Status columns (planned → paid), showing worker display names.</span>
+              <span class="card-header">Jobs columned</span>
+              <span class="card-subtitle">See jobs move from planned → paid.</span>
             </div>
             <div class="kanban-toggle">
               <label><input type="radio" name="kanbanView" value="all" checked /> All jobs</label>
-              <label><input type="radio" name="kanbanView" value="mine" /> My jobs</label>
+              <label><input type="radio" name="kanbanView" value="mine" /> My jobs only</label>
             </div>
           </div>
           <div class="kanban-board" id="kanbanBoard"></div>
@@ -1002,7 +1008,7 @@
       <!-- CHARTS TAB -->
       <section class="tab" id="chartsTab">
         <div class="card">
-          <div class="card-header">Filters & goals</div>
+          <div class="card-header">Charts & goals</div>
 
           <div class="filter-row" style="margin-bottom:0.4rem;">
             <span>Monthly revenue goal:</span>
@@ -1012,10 +1018,10 @@
           </div>
 
           <div class="filter-row">
-            <span>Date range:</span>
+            <span>Chart date range:</span>
             <input type="date" id="chartsFromDate" />
             <input type="date" id="chartsToDate" />
-            <span>Timeframe:</span>
+            <span>Quick range:</span>
             <select id="chartsTimeframe">
               <option value="all">All</option>
               <option value="week">Last 7 days</option>
@@ -1029,7 +1035,10 @@
         <div class="charts-grid">
           <div class="chart-card">
             <div class="chart-header">
-              <div class="chart-title">Top workers by job count</div>
+              <div>
+                <div class="chart-title">Who completes the most jobs?</div>
+                <div class="chart-subtext">Count of jobs completed per worker.</div>
+              </div>
               <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
             </div>
             <div class="chart-wrapper">
@@ -1041,7 +1050,10 @@
 
           <div class="chart-card">
             <div class="chart-header">
-              <div class="chart-title">Daily revenue</div>
+              <div>
+                <div class="chart-title">How much do you earn each day?</div>
+                <div class="chart-subtext">Total job revenue by date.</div>
+              </div>
               <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
             </div>
             <div class="chart-wrapper">
@@ -1053,7 +1065,10 @@
 
           <div class="chart-card">
             <div class="chart-header">
-              <div class="chart-title">Income vs expenses (net)</div>
+              <div>
+                <div class="chart-title">Are you ahead or behind?</div>
+                <div class="chart-subtext">Daily income minus approved expenses.</div>
+              </div>
               <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
             </div>
             <div class="chart-wrapper">
@@ -1065,7 +1080,10 @@
 
           <div class="chart-card">
             <div class="chart-header">
-              <div class="chart-title">Jobs by status</div>
+              <div>
+                <div class="chart-title">Where are your jobs stuck?</div>
+                <div class="chart-subtext">Number of jobs in each status.</div>
+              </div>
               <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
             </div>
             <div class="chart-wrapper">
@@ -1077,7 +1095,10 @@
 
           <div class="chart-card">
             <div class="chart-header">
-              <div class="chart-title">Revenue by job size</div>
+              <div>
+                <div class="chart-title">Which job sizes pay the most?</div>
+                <div class="chart-subtext">Total revenue by job size.</div>
+              </div>
               <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
             </div>
             <div class="chart-wrapper">
@@ -1089,7 +1110,10 @@
 
           <div class="chart-card">
             <div class="chart-header">
-              <div class="chart-title">Earnings by worker</div>
+              <div>
+                <div class="chart-title">Who brings in the most revenue?</div>
+                <div class="chart-subtext">Total earnings per worker.</div>
+              </div>
               <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
             </div>
             <div class="chart-wrapper">
@@ -1110,7 +1134,7 @@
 
         <div class="card">
           <div class="card-header">Accounts</div>
-          <div class="card-subtitle">Create, edit, or remove accounts. Founder can change roles.</div>
+          <div class="card-subtitle">Create new workers or adjust names and roles.</div>
           <form id="createUserForm" onsubmit="return false;">
             <div class="form-group">
               <label for="newName">Display name</label>
@@ -1157,17 +1181,17 @@
             <div class="total-card"><h4>Net</h4><div class="amount" id="netTotal">$0.00</div></div>
           </div>
           <div class="filter-row">
-            <span>Date range:</span>
+            <span>Money date range:</span>
             <input type="date" id="moneyFromDate" />
             <input type="date" id="moneyToDate" />
             <button type="button" class="btn small secondary" id="applyMoneyFilterBtn">Apply</button>
             <button type="button" class="btn small secondary" id="moneyFilterClear">Clear</button>
-            <button type="button" class="btn small secondary" id="exportMoneyCsvBtn">Export Money CSV</button>
+            <button type="button" class="btn small secondary" id="exportMoneyCsvBtn">Export money CSV</button>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-header">All transactions</div>
+          <div class="card-header">All money movements</div>
           <div class="card-subtitle">Jobs (income) and approved expenses (outgoing).</div>
           <div class="table-container">
             <table id="moneyTable">
@@ -1187,7 +1211,7 @@
 
         <div class="card">
           <div class="card-header">Data export</div>
-          <div class="card-subtitle">Download full LLCS data as JSON.</div>
+          <div class="card-subtitle">Download all LLCS dashboard data as JSON.</div>
           <button type="button" class="btn" id="exportAllDataBtnAdmin">Export all data (JSON)</button>
         </div>
       </section>
@@ -1608,7 +1632,7 @@
       const username = (document.getElementById('username').value || '').trim();
       const password = (document.getElementById('password').value || '').trim();
       if (!username || !password) {
-        loginError.textContent = 'Please enter username and password.';
+        loginError.textContent = 'Enter both username and password.';
         loginError.classList.add('show');
         return;
       }
@@ -1630,7 +1654,7 @@
       }
 
       if (!found) {
-        loginError.textContent = 'Invalid login.';
+        loginError.textContent = 'Invalid login details.';
         loginError.classList.add('show');
         return;
       }
@@ -1673,7 +1697,7 @@
       ensureAdminUser();
       let users = readJSON(STORAGE_KEYS.users, []);
       if (users.some(x => x.username === username)) {
-        createUserError.textContent = 'Username already exists.';
+        createUserError.textContent = 'That username is already taken.';
         createUserError.classList.add('show');
         return;
       }
@@ -1684,7 +1708,7 @@
         document.getElementById(id).value = '';
       });
       refreshUsersTable();
-      showToast('Employee account created');
+      showToast('User created');
     });
 
     function refreshUsersTable() {
@@ -1936,7 +1960,7 @@
 
     exportExpensesCsvBtn.addEventListener('click', () => {
       const ex = readJSON(STORAGE_KEYS.expenses, []);
-      const rows = [['Description', 'Amount', 'Date', 'Status', 'Submitted By']];
+      const rows = [['Description', 'Amount', 'Date', 'Status', 'Submitted by']];
       ex.forEach(e => {
         rows.push([
           e.description,
@@ -1990,7 +2014,7 @@
       const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
       const date = getToday();
       if (!name || !size || payment === null || !status || !priority) {
-        alert('Fill job name, size, payment, status, priority.');
+        alert('Fill job name, size, payment, status, and priority.');
         return;
       }
       const u = getCurrentUser();
@@ -2353,7 +2377,7 @@
 
     exportJobsCsvBtn.addEventListener('click', () => {
       const jobs = readJSON(STORAGE_KEYS.jobs, []);
-      const rows = [['Name', 'Status', 'Priority', 'Size', 'Payment', 'Date', 'Who', 'Tags', 'Attachment', 'CreatedAt', 'UpdatedAt', 'LastEditedBy']];
+      const rows = [['Name', 'Status', 'Priority', 'Size', 'Payment', 'Date', 'Worker', 'Tags', 'Attachment', 'CreatedAt', 'UpdatedAt', 'LastEditedBy']];
       jobs.forEach(j => {
         rows.push([
           j.name,
@@ -2539,8 +2563,9 @@
       const l = document.getElementById(loaderId);
       if (!c || !t || !l) return;
       const ctx = c.getContext('2d');
+      const isBalanceChart = (canvasId === 'balanceChart');
 
-      function draw() {
+      function drawAnimated() {
         const { labels, values } = getData();
         const rect = c.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
@@ -2554,61 +2579,83 @@
         const margin = { top: 20, right: 10, bottom: 40, left: 45 };
         const cw = w - margin.left - margin.right;
         const ch = h - margin.top - margin.bottom;
-        ctx.translate(margin.left, margin.top);
 
-        ctx.strokeStyle = '#1e3a8a';
-        ctx.beginPath();
-        ctx.moveTo(0, ch);
-        ctx.lineTo(cw, ch);
-        ctx.stroke();
-
-        if (!values.length) {
-          ctx.fillStyle = '#9ca3af';
-          ctx.font = '12px system-ui';
-          ctx.fillText('No data', cw / 2 - 20, ch / 2);
-          return;
-        }
-
-        const max = Math.max(...values.map(v => Math.abs(v)), 1);
+        const max = values.length ? Math.max(...values.map(v => Math.abs(v)), 1) : 1;
         const count = values.length;
-        const barW = cw / (count * 1.6);
+        const barW = count ? cw / (count * 1.6) : 0;
         const gap = barW * 0.6;
+
         const pts = [];
-        const isBalanceChart = (canvasId === 'balanceChart');
+        let start = null;
+        const duration = 450;
 
-        values.forEach((v, i) => {
-          const x = i * (barW + gap) + gap / 2;
-          const bh = (Math.abs(v) / max) * (ch - 10);
-          const y = ch - bh;
+        function frame(timestamp) {
+          if (!start) start = timestamp;
+          const progress = Math.min((timestamp - start) / duration, 1);
 
-          if (isBalanceChart) {
-            ctx.fillStyle = v >= 0 ? '#16a34a' : '#dc2626';
-          } else {
-            ctx.fillStyle = i % 2 ? '#16a34a' : '#22c55e';
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, rect.width, rect.height);
+          ctx.save();
+          ctx.translate(margin.left, margin.top);
+
+          ctx.strokeStyle = '#1e3a8a';
+          ctx.beginPath();
+          ctx.moveTo(0, ch);
+          ctx.lineTo(cw, ch);
+          ctx.stroke();
+
+          if (!values.length) {
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = '12px system-ui';
+            ctx.fillText('No data', cw / 2 - 20, ch / 2);
+            ctx.restore();
+            return;
           }
 
-          ctx.beginPath();
-          if (ctx.roundRect) ctx.roundRect(x, y, barW, bh, 6);
-          else ctx.fillRect(x, y, barW, bh);
-          ctx.fill();
+          pts.length = 0;
+          values.forEach((v, i) => {
+            const x = i * (barW + gap) + gap / 2;
+            const fullHeight = (Math.abs(v) / max) * (ch - 10);
+            const bh = fullHeight * progress;
+            const y = ch - bh;
 
-          ctx.fillStyle = '#e5e7eb';
-          ctx.font = '9px system-ui';
-          ctx.save();
-          ctx.translate(x + barW / 2, ch + 12);
-          ctx.rotate(-Math.PI / 4);
-          ctx.textAlign = 'right';
-          ctx.fillText(labels[i], 0, 0);
+            if (isBalanceChart) {
+              ctx.fillStyle = v >= 0 ? '#16a34a' : '#dc2626';
+            } else {
+              ctx.fillStyle = i % 2 ? '#16a34a' : '#22c55e';
+            }
+
+            ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(x, y, barW, bh, 6);
+            else ctx.fillRect(x, y, barW, bh);
+            ctx.fill();
+
+            ctx.fillStyle = '#e5e7eb';
+            ctx.font = '9px system-ui';
+            ctx.save();
+            ctx.translate(x + barW / 2, ch + 12);
+            ctx.rotate(-Math.PI / 4);
+            ctx.textAlign = 'right';
+            ctx.fillText(labels[i], 0, 0);
+            ctx.restore();
+
+            pts.push({
+              x: margin.left + x + barW / 2,
+              y: margin.top + y,
+              r: Math.max(6, Math.min(barW / 2, 10)),
+              label: labels[i],
+              value: v
+            });
+          });
+
           ctx.restore();
 
-          pts.push({
-            x: margin.left + x + barW / 2,
-            y: margin.top + y,
-            r: Math.max(6, Math.min(barW / 2, 10)),
-            label: labels[i],
-            value: v
-          });
-        });
+          if (progress < 1) {
+            window.requestAnimationFrame(frame);
+          }
+        }
+
+        window.requestAnimationFrame(frame);
 
         c.onmousemove = e => {
           const r = c.getBoundingClientRect();
@@ -2635,10 +2682,10 @@
         };
       }
 
-      window.addEventListener('resize', draw);
+      window.addEventListener('resize', drawAnimated);
       l.classList.add('show');
       setTimeout(() => {
-        draw();
+        drawAnimated();
         l.classList.remove('show');
       }, 80);
     }
@@ -2650,7 +2697,6 @@
       const fj = jobs.filter(j => dateInRange(j.date, from, to));
       const fe = expenses.filter(e => dateInRange(e.date, from, to));
 
-      // goal vs this month
       const prefs = getPrefs();
       const goal = prefs.monthlyGoal || 0;
       const todayStr = getToday();
@@ -2661,16 +2707,16 @@
 
       if (chartsGoalSummary) {
         if (goal <= 0) {
-          chartsGoalSummary.textContent = 'No monthly goal set yet.';
+          chartsGoalSummary.textContent = 'No monthly goal set yet. Set a goal to track progress.';
           chartsGoalSummary.style.color = '#9ca3af';
         } else {
           const pct = Math.round((revenueThisMonth / goal) * 100);
           const remaining = Math.max(goal - revenueThisMonth, 0);
           chartsGoalSummary.textContent =
-            'This month: ' + formatCurrency(revenueThisMonth) +
+            'This month so far: ' + formatCurrency(revenueThisMonth) +
             ' / ' + formatCurrency(goal) +
             ' (' + pct + '%). ' +
-            (remaining > 0 ? ('Need ' + formatCurrency(remaining) + ' to hit goal.') : 'Goal reached!');
+            (remaining > 0 ? ('You need ' + formatCurrency(remaining) + ' more to hit your goal.') : 'You already hit your goal this month!');
           chartsGoalSummary.style.color = remaining > 0 ? '#fbbf24' : '#22c55e';
         }
       }
@@ -3061,7 +3107,7 @@
       if (homePendingCard && homePendingText) {
         if (isAdmin(current) && pendingExpenses > 0) {
           homePendingText.textContent =
-            'You have ' + pendingExpenses + ' pending expense' + (pendingExpenses === 1 ? '' : 's') + ' to approve.';
+            'You have ' + pendingExpenses + ' expense' + (pendingExpenses === 1 ? '' : 's') + ' waiting for approval.';
           homePendingCard.style.display = 'block';
         } else {
           homePendingCard.style.display = 'none';
