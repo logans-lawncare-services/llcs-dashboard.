@@ -23,10 +23,29 @@
       --shadow-hover: 0 6px 18px rgba(15, 23, 42, 0.16);
       --fade-in: 0.25s ease-out;
     }
+
+    /* Dark theme overrides */
+    :root[data-theme="dark"] {
+      --primary: #4ade80;
+      --primary-dark: #16a34a;
+      --primary-light: #22c55e;
+      --accent-blue: #60a5fa;
+      --accent-gray: #9ca3af;
+      --accent-orange: #f97316;
+      --accent-red: #f97373;
+      --text: #e5e7eb;
+      --bg: #020617;
+      --card: #020617;
+      --border: #1f2933;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.55);
+      --shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.7);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: radial-gradient(circle at top left, #e9f7ef 0, #f5f7fa 40%, #eef3ff 100%);
+      background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
       max-height: 100vh;
@@ -559,6 +578,7 @@
   </style>
 </head>
 <body>
+  <!-- LOGIN PAGE -->
   <div class="login" id="loginPage">
     <div class="login-card">
       <h2>LLCS Business Dashboard</h2>
@@ -580,12 +600,18 @@
     </div>
   </div>
 
+  <!-- DASHBOARD -->
   <div class="dashboard" id="dashboard">
     <header class="header">
       <div class="logo">
         <img src="https://i.postimg.cc/3RJNmCnN/Untitled-removebg-preview.png" alt="LLCS Logo" class="logo-img" />
         LLCS Business Dashboard
       </div>
+
+      <button type="button" class="btn small secondary" id="themeToggleBtn" style="margin-right:0.5rem;">
+        <span id="themeToggleLabel">Dark</span> mode
+      </button>
+
       <div class="user-info">
         <span id="currentUserLabel">User</span>
         <span id="currentNameLabel" style="font-weight:500;"></span>
@@ -595,13 +621,23 @@
     </header>
 
     <input type="checkbox" id="navToggle" class="nav-toggle" />
-    <label for="navToggle" class="hamburger"><span></span><span></span><span></span></label>
+    <label for="navToggle" class="hamburger">
+      <span></span><span></span><span></span>
+    </label>
 
     <nav class="nav" id="navBar">
       <ul class="nav-menu">
         <li><a href="#" class="nav-link" data-tab="homeTab" id="homeNav">Home</a></li>
-        <li><a href="#" class="nav-link" data-tab="expensesTab" id="expensesNav">Expenses</a></li>
-        <li><a href="#" class="nav-link" data-tab="jobsTab" id="jobsNav">Jobs</a></li>
+        <li>
+          <a href="#" class="nav-link" data-tab="expensesTab" id="expensesNav">
+            Expenses <span id="expensesBadge" style="margin-left:4px;font-size:0.75rem;display:none;"></span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-tab="jobsTab" id="jobsNav">
+            Jobs <span id="jobsBadge" style="margin-left:4px;font-size:0.75rem;display:none;"></span>
+          </a>
+        </li>
         <li><a href="#" class="nav-link" data-tab="kanbanTab" id="kanbanNav">Jobs Columned</a></li>
         <li><a href="#" class="nav-link" data-tab="chartsTab" id="chartsNav">Charts</a></li>
         <li><a href="#" class="nav-link" data-tab="adminTab" id="adminNav" style="display:none;">Admin</a></li>
@@ -609,11 +645,12 @@
     </nav>
 
     <main class="main">
+      <!-- HOME TAB -->
       <section class="tab" id="homeTab">
         <div class="card">
           <div class="card-header">Welcome to LLCS Dashboard</div>
           <div class="card-subtitle">
-            Track jobs, expenses, and money for Logan’s Lawncare Services.
+            Track jobs, expenses, and money for Logan’s Lawncare Services in one place.
           </div>
           <p style="font-size:0.86rem;color:#374151;margin-bottom:0.5rem;">
             Use the tabs above to move between features:
@@ -638,8 +675,16 @@
             <button type="button" class="btn small" id="exportAllDataBtn">Export all data (JSON)</button>
           </div>
         </div>
+
+        <div class="card" id="homePendingCard" style="display:none;">
+          <div class="card-header">Pending approvals</div>
+          <div class="card-subtitle" id="homePendingText">
+            You have pending expenses to approve.
+          </div>
+        </div>
       </section>
 
+      <!-- EXPENSES TAB -->
       <section class="tab" id="expensesTab">
         <div class="card">
           <div class="filter-bar">
@@ -703,6 +748,7 @@
         </div>
       </section>
 
+      <!-- JOBS TAB -->
       <section class="tab" id="jobsTab">
         <div class="card">
           <div class="filter-bar">
@@ -815,6 +861,7 @@
         </div>
       </section>
 
+      <!-- KANBAN TAB -->
       <section class="tab" id="kanbanTab">
         <div class="card">
           <div class="kanban-bar">
@@ -831,6 +878,7 @@
         </div>
       </section>
 
+      <!-- CHARTS TAB -->
       <section class="tab" id="chartsTab">
         <div class="card">
           <div class="card-header">Filters</div>
@@ -906,6 +954,7 @@
         </div>
       </section>
 
+      <!-- ADMIN TAB -->
       <section class="tab" id="adminTab">
         <div class="card">
           <div class="card-header">Admin overview</div>
@@ -998,6 +1047,7 @@
     </main>
   </div>
 
+  <!-- OVERLAY & TOAST -->
   <div class="global-overlay" id="globalOverlay">
     <div>
       <div class="global-spinner"></div>
@@ -1016,7 +1066,8 @@
       expenses: 'bd_expenses',
       jobs: 'bd_jobs',
       session: 'bd_currentUser',
-      meta: 'bd_meta'
+      meta: 'bd_meta',
+      prefs: 'bd_prefs'
     };
     const DEFAULT_META = { version: 3 };
     const ROLES = { FOUNDER: 'founder', ADMIN: 'admin', EMPLOYEE: 'employee' };
@@ -1062,6 +1113,25 @@
       document.getElementById('toastUndoBtn').style.display=undo?'inline-flex':'none';
       toast.classList.add('show');
       clearTimeout(showToast._t); showToast._t=setTimeout(()=>toast.classList.remove('show'),3500);
+    }
+
+    function getPrefs() {
+      return readJSON(STORAGE_KEYS.prefs, {
+        theme: 'light',
+        lastTab: 'homeTab',
+        jobsView: 'all',
+        kanbanView: 'all'
+      });
+    }
+    function savePrefs(prefs) {
+      writeJSON(STORAGE_KEYS.prefs, prefs);
+    }
+    function applyThemeFromPrefs() {
+      const prefs = getPrefs();
+      const theme = prefs.theme === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      const label = document.getElementById('themeToggleLabel');
+      if (label) label.textContent = theme === 'dark' ? 'Light' : 'Dark';
     }
 
     function ensureMetaAndMigrate(){
@@ -1166,22 +1236,38 @@
       adminTab:document.getElementById('adminTab')
     };
     const navLinks=document.querySelectorAll('.nav-link[data-tab]');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const prefs = getPrefs();
+        const nextTheme = prefs.theme === 'dark' ? 'light' : 'dark';
+        prefs.theme = nextTheme;
+        savePrefs(prefs);
+        applyThemeFromPrefs();
+      });
+    }
 
     function showLogin(){ loginPage.style.display='flex'; dashboard.style.display='none'; }
     function showDashboard(){ loginPage.style.display='none'; dashboard.style.display='flex'; }
     function setActiveTab(id){
-      Object.keys(tabs).forEach(t=>tabs[t].classList.toggle('active',t===id));
-      navLinks.forEach(a=>a.classList.toggle('active',a.dataset.tab===id));
+      Object.keys(tabs).forEach(t=>tabs[t].classList.toggle('active', t === id));
+      navLinks.forEach(a=>a.classList.toggle('active', a.dataset.tab === id));
+      const prefs = getPrefs();
+      prefs.lastTab = id;
+      savePrefs(prefs);
     }
-    function closeMobileNav(){ if(navToggle) navToggle.checked=false; }
-
-    navLinks.forEach(link=>{
+    function closeMobileNav(){ if(navToggle) navToggle.checked=false; }    navLinks.forEach(link=>{
       link.addEventListener('click',e=>{
         e.preventDefault();
         const tabId=link.dataset.tab;
         const u=getCurrentUser();
-        if(tabId==='adminTab' && !isAdmin(u)){ alert('Admin/Founder only.'); return; }
-        setActiveTab(tabId); closeMobileNav();
+        if(tabId==='adminTab' && !isAdmin(u)){
+          alert('Admin/Founder only.');
+          return;
+        }
+        setActiveTab(tabId); 
+        closeMobileNav();
         if(tabId==='kanbanTab') refreshKanban();
         if(tabId==='chartsTab') refreshCharts();
         if(tabId==='adminTab'){ refreshMoney(); refreshUsersTable(); }
@@ -1190,8 +1276,26 @@
     homeGoAdminBtn.addEventListener('click',()=>{
       const u=getCurrentUser();
       if(!isAdmin(u)){ alert('Admin/Founder only.'); return; }
-      setActiveTab('adminTab'); refreshMoney(); refreshUsersTable();
+      setActiveTab('adminTab');
+      refreshMoney(); 
+      refreshUsersTable();
     });
+
+    function updateHeaderUser(u){
+      currentUserLabel.textContent=u.username;
+      currentNameLabel.textContent='· '+(u.name||u.username);
+      let role='Employee'; if(u.role===ROLES.FOUNDER) role='Founder'; else if(u.role===ROLES.ADMIN) role='Admin';
+      currentRoleLabel.textContent=role;
+      if(isAdmin(u)){ adminNav.style.display='inline-flex'; homeAdminCard.style.display='block'; }
+      else { adminNav.style.display='none'; homeAdminCard.style.display='none'; }
+
+      const canExp=userCanExport(u);
+      ['exportJobsCsvBtn','exportExpensesCsvBtn','exportMoneyCsvBtn','exportAllDataBtn','exportAllDataBtnAdmin']
+        .forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=canExp?'inline-flex':'none';});
+      updateBadgesAndHomeBanner();
+    }
+
+    logoutBtn.addEventListener('click',()=>{ clearSession(); showLogin(); });
 
     function handleLogin(){
       const username=(document.getElementById('username').value||'').trim();
@@ -1218,26 +1322,16 @@
       setCurrentUser(found);
       updateHeaderUser(found);
       showDashboard();
-      setActiveTab('homeTab');
+
+      const prefs = getPrefs();
+      const startTab = prefs.lastTab && prefs.lastTab in tabs ? prefs.lastTab : 'homeTab';
+      setActiveTab(startTab);
+
       refreshAllUI();
       refreshUsersTable();
       showToast('Welcome back, '+(found.name||found.username));
     }
     loginBtn.addEventListener('click',handleLogin);
-
-    function updateHeaderUser(u){
-      currentUserLabel.textContent=u.username;
-      currentNameLabel.textContent='· '+(u.name||u.username);
-      let role='Employee'; if(u.role===ROLES.FOUNDER) role='Founder'; else if(u.role===ROLES.ADMIN) role='Admin';
-      currentRoleLabel.textContent=role;
-      if(isAdmin(u)){ adminNav.style.display='inline-flex'; homeAdminCard.style.display='block'; }
-      else { adminNav.style.display='none'; homeAdminCard.style.display='none'; }
-
-      const canExp=userCanExport(u);
-      ['exportJobsCsvBtn','exportExpensesCsvBtn','exportMoneyCsvBtn','exportAllDataBtn','exportAllDataBtnAdmin']
-        .forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=canExp?'inline-flex':'none';});
-    }
-    logoutBtn.addEventListener('click',()=>{ clearSession(); showLogin(); });
 
     const createUserBtn=document.getElementById('createUserBtn');
     const createUserError=document.getElementById('createUserError');
@@ -1335,7 +1429,9 @@
       expenses.push({id:Date.now(),description:desc,amount:amt,date,status:'pending',submittedBy,submittedByName});
       writeJSON(STORAGE_KEYS.expenses,expenses);
       expenseDesc.value='';expenseAmount.value='';expenseDate.value=getToday();
-      showGlobalOverlay('Saving expense...'); refreshExpenses(); refreshMoney(); refreshCharts(); showToast('Expense added');
+      showGlobalOverlay('Saving expense...'); 
+      refreshExpenses(); refreshMoney(); refreshCharts(); 
+      showToast('Expense added');
     });
 
     function getFilteredExpensesRaw(){
@@ -1351,6 +1447,7 @@
         return true;
       });
     }
+
     function refreshExpenses(){
       const u=getCurrentUser(); const isAdm=isAdmin(u);
       const rows=getFilteredExpensesRaw();
@@ -1374,12 +1471,14 @@
         tr.appendChild(d);tr.appendChild(a);tr.appendChild(dt);tr.appendChild(st);tr.appendChild(sb);tr.appendChild(act);
         expensesBody.appendChild(tr);
       });
+      updateBadgesAndHomeBanner();
     }
     function toggleExpenseStatus(id){
       const ex=readJSON(STORAGE_KEYS.expenses,[]);
       const idx=ex.findIndex(e=>e.id===id); if(idx<0) return;
       ex[idx].status=ex[idx].status==='approved'?'pending':'approved';
-      writeJSON(STORAGE_KEYS.expenses,ex); refreshExpenses(); refreshMoney(); refreshCharts();
+      writeJSON(STORAGE_KEYS.expenses,ex); 
+      refreshExpenses(); refreshMoney(); refreshCharts();
     }
     function deleteExpense(id){
       let ex=readJSON(STORAGE_KEYS.expenses,[]);
@@ -1413,6 +1512,13 @@
     const jobFilterClear=document.getElementById('jobFilterClear');
     const exportJobsCsvBtn=document.getElementById('exportJobsCsvBtn');
 
+    (function initJobsViewFromPrefs() {
+      const prefs = getPrefs();
+      if (prefs.jobsView && jobViewFilter) {
+        jobViewFilter.value = prefs.jobsView;
+      }
+    })();
+
     addJobBtn.addEventListener('click',()=>{
       const name=(jobName.value||'').trim();
       const size=jobSize.value;
@@ -1433,7 +1539,9 @@
       jobs.push({id:Date.now(),name,size,who,whoName,payment,date,notes,status,priority,tags,attachmentUrl,createdAt:now,updatedAt:now,lastEditedBy:who,lastEditedByName:whoName});
       writeJSON(STORAGE_KEYS.jobs,jobs);
       jobName.value='';jobSize.value='';jobPayment.value='';jobNotes.value='';jobStatus.value='planned';jobPriority.value='medium';jobTags.value='';jobAttachment.value='';
-      showGlobalOverlay('Saving job...'); refreshJobs(); refreshKanban(); refreshMoney(); refreshCharts(); showToast('Job added');
+      showGlobalOverlay('Saving job...'); 
+      refreshJobs(); refreshKanban(); refreshMoney(); refreshCharts(); 
+      showToast('Job added');
     });
 
     function getFilteredJobs(){
@@ -1576,12 +1684,15 @@
           dtd.appendChild(inner); dtr.appendChild(dtd); jobsBody.appendChild(dtr);
         });
       });
+      updateBadgesAndHomeBanner();
     }
+
     function toggleJobDetails(id){
       const r=document.querySelector('tr[data-job-detail-id="'+id+'"]');
       if(!r) return; r.style.display=r.style.display==='none'?'':'none';
     }
     function refreshJobs(){ renderJobsGrouped(getFilteredJobs()); }
+
     function updateJobField(id,key,val,type){
       const jobs=readJSON(STORAGE_KEYS.jobs,[]);
       const idx=jobs.findIndex(j=>j.id===id); if(idx<0) return;
@@ -1597,13 +1708,23 @@
       writeJSON(STORAGE_KEYS.jobs,jobs);
       refreshJobs(); refreshKanban(); refreshMoney(); refreshCharts();
     }
+
     function deleteJob(id){
       let jobs=readJSON(STORAGE_KEYS.jobs,[]);
       jobs=jobs.filter(j=>j.id!==id); writeJSON(STORAGE_KEYS.jobs,jobs);
       refreshJobs(); refreshKanban(); refreshMoney(); refreshCharts();
     }
+
     jobFilterApply.addEventListener('click',()=>{refreshJobs();refreshKanban();});
     jobFilterClear.addEventListener('click',()=>{jobSearch.value='';jobStatusFilter.value='all';jobPriorityFilter.value='all';jobViewFilter.value='all';refreshJobs();refreshKanban();});
+    if (jobViewFilter) {
+      jobViewFilter.addEventListener('change', () => {
+        const prefs = getPrefs();
+        prefs.jobsView = jobViewFilter.value || 'all';
+        savePrefs(prefs);
+      });
+    }
+
     exportJobsCsvBtn.addEventListener('click',()=>{
       const jobs=readJSON(STORAGE_KEYS.jobs,[]);
       const rows=[['Name','Status','Priority','Size','Payment','Date','Who','Tags','Attachment','CreatedAt','UpdatedAt','LastEditedBy']];
@@ -1613,7 +1734,24 @@
 
     const kanbanBoard=document.getElementById('kanbanBoard');
     const kanbanViewRadios=document.getElementsByName('kanbanView');
-    function getKanbanView(){ let v='all'; kanbanViewRadios.forEach(r=>{if(r.checked) v=r.value;}); return v; }
+
+    (function initKanbanViewFromPrefs() {
+      const prefs = getPrefs();
+      const target = prefs.kanbanView || 'all';
+      kanbanViewRadios.forEach(r => {
+        r.checked = (r.value === target);
+      });
+    })();
+
+    function getKanbanView(){
+      let v='all';
+      kanbanViewRadios.forEach(r=>{if(r.checked) v=r.value;});
+      const prefs = getPrefs();
+      prefs.kanbanView = v;
+      savePrefs(prefs);
+      return v;
+    }
+
     function refreshKanban(){
       const jobs=readJSON(STORAGE_KEYS.jobs,[]);
       const u=getCurrentUser();
@@ -1818,6 +1956,7 @@
       netTotal.classList.remove('net-positive','net-negative');
       if(net>0) netTotal.classList.add('net-positive');
       else if(net<0) netTotal.classList.add('net-negative');
+      updateBadgesAndHomeBanner();
     }
     applyMoneyFilterBtn.addEventListener('click',refreshMoney);
     moneyFilterClear.addEventListener('click',()=>{moneyFromDate.value='';moneyToDate.value='';refreshMoney();});
@@ -1891,6 +2030,7 @@
           tr.appendChild(d);tr.appendChild(a);tr.appendChild(dt);tr.appendChild(st);tr.appendChild(sb);tr.appendChild(act);
           expensesBody.appendChild(tr);
         });
+        updateBadgesAndHomeBanner();
       });
       attachSorting('jobsTable','jobsBody',()=>getFilteredJobs(),rows=>renderJobsGrouped(rows));
       attachSorting('moneyTable','moneyBody',()=>buildMoneyRows(),rows=>renderMoneyRows(rows));
@@ -1908,14 +2048,75 @@
       lastDeleted=null;
     });
 
-    function refreshAllUI(){ refreshExpenses(); refreshJobs(); refreshKanban(); refreshCharts(); refreshMoney(); }
+    function updateBadgesAndHomeBanner() {
+      const expenses = readJSON(STORAGE_KEYS.expenses, []);
+      const jobs = readJSON(STORAGE_KEYS.jobs, []);
+      const current = getCurrentUser();
+
+      const pendingExpenses = expenses.filter(e => e.status !== 'approved').length;
+      const activeJobs = jobs.filter(j => j.status === 'planned' || j.status === 'in_progress').length;
+
+      const expensesBadge = document.getElementById('expensesBadge');
+      const jobsBadge = document.getElementById('jobsBadge');
+      const homePendingCard = document.getElementById('homePendingCard');
+      const homePendingText = document.getElementById('homePendingText');
+
+      if (expensesBadge) {
+        if (pendingExpenses > 0) {
+          expensesBadge.textContent = '(' + pendingExpenses + ')';
+          expensesBadge.style.display = 'inline';
+        } else {
+          expensesBadge.style.display = 'none';
+        }
+      }
+
+      if (jobsBadge) {
+        if (activeJobs > 0) {
+          jobsBadge.textContent = '(' + activeJobs + ')';
+          jobsBadge.style.display = 'inline';
+        } else {
+          jobsBadge.style.display = 'none';
+        }
+      }
+
+      if (homePendingCard && homePendingText) {
+        if (isAdmin(current) && pendingExpenses > 0) {
+          homePendingText.textContent =
+            'You have ' + pendingExpenses + ' pending expense' + (pendingExpenses === 1 ? '' : 's') + ' to approve.';
+          homePendingCard.style.display = 'block';
+        } else {
+          homePendingCard.style.display = 'none';
+        }
+      }
+    }
+
+    function refreshAllUI(){
+      refreshExpenses();
+      refreshJobs();
+      refreshKanban();
+      refreshCharts();
+      refreshMoney();
+      updateBadgesAndHomeBanner();
+    }
 
     window.addEventListener('load',()=>{
       ensureMetaAndMigrate();
       ensureAdminUser();
+      applyThemeFromPrefs();
+
       const u=getCurrentUser();
-      if(u){ updateHeaderUser(u); showDashboard(); setActiveTab('homeTab'); refreshAllUI(); refreshUsersTable(); }
-      else showLogin();
+      const prefs = getPrefs();
+      const lastTab = prefs.lastTab || 'homeTab';
+
+      if(u){
+        updateHeaderUser(u);
+        showDashboard();
+        setActiveTab(lastTab in tabs ? lastTab : 'homeTab');
+        refreshAllUI();
+        refreshUsersTable();
+      } else {
+        showLogin();
+      }
       initSorting();
     });
   </script>
