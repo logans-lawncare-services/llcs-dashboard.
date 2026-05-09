@@ -484,7 +484,6 @@
 
     .charts-grid { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
 
-    /* Chart card hover pop */
     .chart-card {
       background-color: var(--card-elevated);
       border-radius: 16px;
@@ -1233,7 +1232,7 @@
     </main>
   </div>
 
-  <!-- OVERLAY & TOAST -->
+  <!-- GLOBAL SMALL OVERLAY (saving) -->
   <div class="global-overlay" id="globalOverlay">
     <div>
       <div class="global-spinner"></div>
@@ -1241,6 +1240,23 @@
     </div>
   </div>
 
+  <!-- CUSTOM CONFIRM OVERLAY -->
+  <div class="global-overlay" id="confirmOverlay">
+    <div style="max-width:320px;width:100%;background:#020617;border-radius:16px;padding:0.9rem 1rem;box-shadow:0 12px 40px rgba(0,0,0,0.9);border:1px solid rgba(248,113,113,0.6);">
+      <div style="font-size:0.95rem;font-weight:600;margin-bottom:0.35rem;color:#fecaca;">
+        Are you sure?
+      </div>
+      <div id="confirmMessage" style="font-size:0.85rem;color:#e5e7eb;margin-bottom:0.75rem;">
+        This action cannot be undone.
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:0.4rem;">
+        <button type="button" class="btn small secondary" id="confirmCancelBtn">Cancel</button>
+        <button type="button" class="btn small danger" id="confirmOkBtn">Yes, do it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
   <div class="toast" id="toast">
     <span id="toastMessage">Action completed</span>
     <button type="button" class="btn secondary small" id="toastUndoBtn" style="display:none;">Undo</button>
@@ -1327,6 +1343,48 @@
       toast.classList.add('show');
       clearTimeout(showToast._t);
       showToast._t = setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // Custom confirm dialog (Promise-based)
+    function showConfirm(message) {
+      return new Promise(resolve => {
+        const overlay = document.getElementById('confirmOverlay');
+        const msgEl = document.getElementById('confirmMessage');
+        const okBtn = document.getElementById('confirmOkBtn');
+        const cancelBtn = document.getElementById('confirmCancelBtn');
+
+        if (!overlay || !msgEl || !okBtn || !cancelBtn) {
+          resolve(window.confirm(message));
+          return;
+        }
+
+        msgEl.textContent = message;
+        overlay.classList.add('show');
+
+        function cleanup(result) {
+          overlay.classList.remove('show');
+          okBtn.removeEventListener('click', onOk);
+          cancelBtn.removeEventListener('click', onCancel);
+          overlay.removeEventListener('click', onOverlay);
+          resolve(result);
+        }
+
+        function onOk(e) {
+          e.stopPropagation();
+          cleanup(true);
+        }
+        function onCancel(e) {
+          e.stopPropagation();
+          cleanup(false);
+        }
+        function onOverlay(e) {
+          if (e.target === overlay) cleanup(false);
+        }
+
+        okBtn.addEventListener('click', onOk);
+        cancelBtn.addEventListener('click', onCancel);
+        overlay.addEventListener('click', onOverlay);
+      });
     }
 
     function getPrefs() {
@@ -1684,7 +1742,7 @@
 
     loginBtn.addEventListener('click', handleLogin);
 
-    // USERS / ADMIN
+    // USERS
     const createUserBtn = document.getElementById('createUserBtn');
     const createUserError = document.getElementById('createUserError');
     const usersBody = document.getElementById('usersBody');
@@ -1770,10 +1828,11 @@
           const del = document.createElement('button');
           del.className = 'btn small danger';
           del.textContent = 'Delete';
-          del.addEventListener('click', () => {
-            if (confirm('Delete user "' + u.username + '"?')) {
-              deleteUser(u.username);
-            }
+          del.addEventListener('click', async () => {
+            const ok = await showConfirm('Delete user "' + u.username + '"? This will remove their account from the dashboard.');
+            if (!ok) return;
+            deleteUser(u.username);
+            showToast('User deleted');
           });
           aTd.appendChild(del);
         } else {
@@ -1803,7 +1862,6 @@
       users = users.filter(u => u.username !== username);
       writeJSON(STORAGE_KEYS.users, users);
       refreshUsersTable();
-      showToast('User deleted');
     }
 
     // EXPENSES
@@ -1904,12 +1962,12 @@
           const del = document.createElement('button');
           del.className = 'btn small danger';
           del.textContent = 'Delete';
-          del.addEventListener('click', () => {
-            if (confirm('Delete this expense?')) {
-              lastDeleted = { type: 'expense', item: e };
-              deleteExpense(e.id);
-              showToast('Expense deleted', true);
-            }
+          del.addEventListener('click', async () => {
+            const ok = await showConfirm('Delete this expense? This cannot be undone.');
+            if (!ok) return;
+            lastDeleted = { type: 'expense', item: e };
+            deleteExpense(e.id);
+            showToast('Expense deleted', true);
           });
 
           act.appendChild(ap);
@@ -2260,13 +2318,13 @@
             const del = document.createElement('button');
             del.className = 'btn small danger';
             del.textContent = 'Delete';
-            del.addEventListener('click', ev => {
+            del.addEventListener('click', async ev => {
               ev.stopPropagation();
-              if (confirm('Delete this job?')) {
-                lastDeleted = { type: 'job', item: job };
-                deleteJob(job.id);
-                showToast('Job deleted', true);
-              }
+              const ok = await showConfirm('Delete this job? This cannot be undone.');
+              if (!ok) return;
+              lastDeleted = { type: 'job', item: job };
+              deleteJob(job.id);
+              showToast('Job deleted', true);
             });
             act.appendChild(del);
           } else {
@@ -2566,7 +2624,6 @@
       return { from, to };
     }
 
-    // One chart function for all bar charts
     function simpleBarChart(canvasId, loaderId, tooltipId, getData, type) {
       const c = document.getElementById(canvasId);
       const t = document.getElementById(tooltipId);
@@ -2718,9 +2775,6 @@
       }, 80);
     }
 
-    const chartsFromDateEl = chartsFromDate;
-    const chartsToDateEl = chartsToDate;
-
     function refreshCharts() {
       const jobs = readJSON(STORAGE_KEYS.jobs, []);
       const expenses = readJSON(STORAGE_KEYS.expenses, []).filter(e => e.status === 'approved');
@@ -2840,7 +2894,7 @@
       });
     }
 
-    // MONEY TAB
+    // MONEY
     const incomeTotal = document.getElementById('incomeTotal');
     const expensesTotalSpan = document.getElementById('expensesTotal');
     const netTotal = document.getElementById('netTotal');
@@ -3046,12 +3100,12 @@
             const del = document.createElement('button');
             del.className = 'btn small danger';
             del.textContent = 'Delete';
-            del.addEventListener('click', () => {
-              if (confirm('Delete this expense?')) {
-                lastDeleted = { type: 'expense', item: e };
-                deleteExpense(e.id);
-                showToast('Expense deleted', true);
-              }
+            del.addEventListener('click', async () => {
+              const ok = await showConfirm('Delete this expense? This cannot be undone.');
+              if (!ok) return;
+              lastDeleted = { type: 'expense', item: e };
+              deleteExpense(e.id);
+              showToast('Expense deleted', true);
             });
 
             act.appendChild(ap);
@@ -3209,8 +3263,6 @@
       refreshMoney();
       updateBadgesAndHomeBanner();
     }
-
-    applyChartsFilterBtn.addEventListener('click', refreshCharts);
 
     window.addEventListener('load', () => {
       ensureMetaAndMigrate();
