@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="https://i.postimg.cc/3RJNmCnN/Untitled-removebg-preview.png" />
   <style>
     :root {
-      /* Core palette tuned slightly darker/greyer */
+      /* Green brand colors stay the same */
       --primary: #66b96a;
       --primary-dark: #3b8d41;
       --primary-light: #aee2b2;
@@ -17,21 +17,21 @@
       --accent-orange: #e67e22;
       --accent-red: #e74c3c;
 
-      /* Background + surfaces: less pure white */
-      --bg: #eef1f5;           /* page background (light grey) [web:307][web:308] */
-      --card: #f4f5f7;         /* cards / tables (off‑white grey) [web:307][web:312] */
-      --card-elevated: #f8f9fb;
+      /* SEMI‑DARK BLUE / BLUE‑GREY THEME [web:325][web:328] */
+      --bg: #0b1728;            /* page background */
+      --card: #142239;          /* base surface (tables, strips) */
+      --card-elevated: #1b2940; /* raised cards */
 
-      --text: #1f2933;
-      --border: #cbd2e1;
+      --text: #e5e7eb;
+      --border: #233554;
 
-      --shadow: 0 4px 12px rgba(15, 23, 42, 0.10);
-      --shadow-soft: 0 2px 6px rgba(15, 23, 42, 0.08);
-      --shadow-hover: 0 6px 18px rgba(15, 23, 42, 0.14);
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.55);
+      --shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.7);
       --fade-in: 0.25s ease-out;
     }
 
-    /* Dark theme overrides – use dark grays, not pure black/white [web:308] */
+    /* Dark theme = deeper navy version [web:328] */
     :root[data-theme="dark"] {
       --primary: #4ade80;
       --primary-dark: #16a34a;
@@ -42,16 +42,16 @@
       --accent-orange: #f97316;
       --accent-red: #f97373;
 
-      --bg: #020617;
-      --card: #020617;          /* main surface matches dark bg but we’ll tint specific areas below */
-      --card-elevated: #020617;
+      --bg: #020616;
+      --card: #050a17;
+      --card-elevated: #0b1220;
 
       --text: #e5e7eb;
-      --border: #1f2933;
+      --border: #1f2937;
 
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.60);
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
       --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.55);
-      --shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.70);
+      --shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.75);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -78,23 +78,23 @@
     .login-card {
       width: 100%;
       max-width: 420px;
-      background-color: var(--card);
+      background-color: var(--card-elevated);
       border-radius: 18px;
       box-shadow: var(--shadow);
       padding: 1.8rem 1.6rem 1.4rem;
       animation: fadeIn var(--fade-in);
-      border: 1px solid rgba(102, 185, 106, 0.12);
+      border: 1px solid rgba(102, 185, 106, 0.25);
     }
     .login-card h2 {
       text-align: center;
       margin-bottom: 0.3rem;
-      color: var(--primary-dark);
+      color: var(--primary-light);
       letter-spacing: 0.03em;
     }
     .login-subtitle {
       text-align: center;
       font-size: 0.8rem;
-      color: #6b7280;
+      color: #9ca3af;
       margin-bottom: 0.9rem;
     }
     .form-group { margin-bottom: 0.75rem; }
@@ -102,7 +102,7 @@
       display: block;
       font-size: 0.85rem;
       margin-bottom: 0.28rem;
-      color: #4b5563;
+      color: #cbd5f5;
     }
     .form-group input,
     .form-group select,
@@ -112,7 +112,8 @@
       border-radius: 999px;
       border: 1px solid var(--border);
       font-size: 0.92rem;
-      background-color: #f3f4f6;          /* softer grey than pure white [web:308][web:312] */
+      background-color: #111827;     /* dark input surface */
+      color: var(--text);
       transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, transform 0.08s ease;
     }
     .form-group textarea {
@@ -120,13 +121,17 @@
       min-height: 60px;
       resize: vertical;
     }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #6b7280;
+    }
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: rgba(102, 185, 106, 0.6);
-      box-shadow: 0 0 0 2px rgba(102, 185, 106, 0.2);
-      background-color: #ffffff0d;       /* subtle brighten on focus in light & dark */
+      border-color: rgba(102, 185, 106, 0.7);
+      box-shadow: 0 0 0 2px rgba(102, 185, 106, 0.35);
+      background-color: #020617;
       transform: translateY(-1px);
     }
     .form-group-inline { display: flex; gap: 0.6rem; }
@@ -153,13 +158,13 @@
       gap: 0.35rem;
       box-shadow: var(--shadow-soft);
     }
-    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); filter: brightness(1.03); }
-    .btn:active { transform: translateY(0); box-shadow: var(--shadow-soft); filter: brightness(0.97); }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); filter: brightness(1.08); }
+    .btn:active { transform: translateY(0); box-shadow: var(--shadow-soft); filter: brightness(0.96); }
     .btn.small { padding: 0.32rem 0.9rem; font-size: 0.8rem; }
     .btn.secondary {
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--primary-dark);
-      border: 1px solid rgba(102, 185, 106, 0.4);
+      background: rgba(15, 23, 42, 0.7);
+      color: var(--primary-light);
+      border: 1px solid rgba(102, 185, 106, 0.5);
       box-shadow: none;
     }
     .btn.secondary:hover { box-shadow: var(--shadow-soft); filter: none; }
@@ -173,21 +178,21 @@
       align-items: center;
       gap: 0.2rem;
     }
-    .badge-status-planned { background-color: #e5e7eb; color: #6b7280; }
-    .badge-status-in-progress { background-color: #e3efff; color: var(--accent-blue); }
-    .badge-status-done { background-color: #d1fae5; color: #15803d; }
-    .badge-status-paid { background-color: #bbf7d0; color: var(--primary-dark); }
-    .badge-priority-low { background-color: #e5e7eb; color: #6b7280; }
-    .badge-priority-medium { background-color: #fef3c7; color: #92400e; }
-    .badge-priority-high { background-color: #fee2e2; color: #b91c1c; }
+    .badge-status-planned { background-color: #1f2937; color: #e5e7eb; }
+    .badge-status-in-progress { background-color: #1d3557; color: #9bd3ff; }
+    .badge-status-done { background-color: #14532d; color: #bbf7d0; }
+    .badge-status-paid { background-color: #064e3b; color: #bbf7d0; }
+    .badge-priority-low { background-color: #1f2937; color: #e5e7eb; }
+    .badge-priority-medium { background-color: #78350f; color: #fed7aa; }
+    .badge-priority-high { background-color: #7f1d1d; color: #fecaca; }
 
     .alert {
       margin-top: 0.5rem;
       padding: 0.5rem 0.6rem;
       border-radius: 10px;
       font-size: 0.82rem;
-      background-color: #fef2f2;
-      color: #b91c1c;
+      background-color: #7f1d1d;
+      color: #fee2e2;
       display: none;
       border: 1px solid #fecaca;
     }
@@ -199,14 +204,14 @@
       max-height: 100vh;
     }
     .header {
-      background: linear-gradient(120deg, var(--primary-dark) 0%, var(--primary) 45%, #8bd497 100%);
+      background: linear-gradient(120deg, #1d4ed8 0%, #0f172a 45%, #22c55e 100%);
       color: #ffffff;
       padding: 0.6rem 0.9rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-shrink: 0;
-      box-shadow: 0 3px 14px rgba(15, 23, 42, 0.35);
+      box-shadow: 0 3px 14px rgba(0, 0, 0, 0.6);
       z-index: 10;
     }
     .logo {
@@ -231,7 +236,7 @@
       align-items: center;
       gap: 0.45rem;
       flex-wrap: wrap;
-      background-color: rgba(15, 23, 42, 0.18);
+      background-color: rgba(15, 23, 42, 0.6);
       padding: 0.25rem 0.6rem;
       border-radius: 999px;
     }
@@ -239,7 +244,7 @@
       font-size: 0.75rem;
       padding: 0.1rem 0.5rem;
       border-radius: 999px;
-      background-color: rgba(15, 23, 42, 0.15);
+      background-color: rgba(15, 23, 42, 0.7);
       color: #f9fafb;
     }
 
@@ -255,7 +260,7 @@
       align-items: center;
       width: 34px;
       height: 34px;
-      background-color: #111827;
+      background-color: #020617;
       border-radius: 999px;
       cursor: pointer;
       box-shadow: var(--shadow);
@@ -268,7 +273,7 @@
       transition: 0.3s;
     }
     .nav {
-      background-color: rgba(249, 250, 251, 0.96);
+      background-color: rgba(15, 23, 42, 0.96);
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
       backdrop-filter: blur(8px);
@@ -286,16 +291,16 @@
       padding: 0.35rem 0.9rem;
       border-radius: 999px;
       font-size: 0.84rem;
-      color: #4b5563;
+      color: #cbd5f5;
       text-decoration: none;
       transition: background-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
     }
     .nav-link:hover {
-      background-color: rgba(102, 185, 106, 0.12);
+      background-color: rgba(37, 99, 235, 0.25);
       transform: translateY(-1px);
-      color: var(--primary-dark);
+      color: #e5e7eb;
     }
-    .nav-link.active { background-color: var(--primary-dark); color: #ffffff; }
+    .nav-link.active { background-color: #2563eb; color: #ffffff; }
 
     .main {
       flex: 1;
@@ -312,17 +317,17 @@
       box-shadow: var(--shadow-soft);
       padding: 0.85rem 0.9rem;
       margin-bottom: 0.9rem;
-      border: 1px solid rgba(148, 163, 184, 0.28);
+      border: 1px solid rgba(15, 23, 42, 0.7);
     }
     .card-header {
       font-weight: 600;
       margin-bottom: 0.25rem;
-      color: var(--primary-dark);
+      color: #bfdbfe;
       font-size: 0.95rem;
     }
     .card-subtitle {
       font-size: 0.78rem;
-      color: #6b7280;
+      color: #9ca3af;
       margin-bottom: 0.5rem;
     }
 
@@ -332,9 +337,9 @@
       z-index: 3;
       margin: -0.85rem -0.9rem 0.7rem;
       padding: 0.45rem 0.9rem 0.55rem;
-      background-color: rgba(243, 244, 246, 0.97);
+      background-color: rgba(15, 23, 42, 0.96);
       backdrop-filter: blur(5px);
-      border-bottom: 1px solid rgba(209, 213, 219, 0.7);
+      border-bottom: 1px solid rgba(37, 99, 235, 0.5);
       border-radius: 18px 18px 0 0;
     }
     .filter-row {
@@ -343,6 +348,7 @@
       gap: 0.4rem;
       align-items: center;
       font-size: 0.8rem;
+      color: #e5e7eb;
     }
     .filter-row input[type="date"],
     .filter-row select,
@@ -351,33 +357,35 @@
       padding: 0.22rem 0.6rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background-color: #f3f4f6;
+      background-color: #020617;
+      color: var(--text);
     }
 
     .table-container {
       margin-top: 0.4rem;
       overflow-x: auto;
       border-radius: 14px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
-      background-color: #eef1f5;   /* tables on light grey instead of white [web:307][web:312] */
+      border: 1px solid rgba(15, 23, 42, 0.8);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      background-color: var(--card);
     }
     table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
       font-size: 0.86rem;
+      color: var(--text);
     }
     th, td {
       padding: 0.5rem 0.6rem;
       text-align: left;
-      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      border-bottom: 1px solid rgba(30, 64, 175, 0.6);
       white-space: nowrap;
       vertical-align: middle;
     }
     thead th {
-      background-color: #e5e7eb;
-      color: #4b5563;
+      background-color: #111827;
+      color: #e5e7eb;
       cursor: pointer;
       position: sticky;
       top: 0;
@@ -393,7 +401,7 @@
       transform: translateY(-50%);
       opacity: 0.55;
     }
-    tbody tr:hover { background-color: #e0f2f1; transform: translateY(-1px); }
+    tbody tr:hover { background-color: #1f2937; transform: translateY(-1px); }
 
     .status-chip {
       display: inline-flex;
@@ -404,21 +412,21 @@
       padding: 0.1rem 0.55rem;
     }
     .status-chip-dot { width: 7px; height: 7px; border-radius: 50%; }
-    .status-planned { background-color: #e5e7eb; color: #6b7280; }
-    .status-planned .status-chip-dot { background-color: #6b7280; }
-    .status-in-progress { background-color: #e3efff; color: var(--accent-blue); }
-    .status-in-progress .status-chip-dot { background-color: var(--accent-blue); }
-    .status-done { background-color: #d1fae5; color: #15803d; }
-    .status-done .status-chip-dot { background-color: #15803d; }
-    .status-paid { background-color: #bbf7d0; color: var(--primary-dark); }
-    .status-paid .status-chip-dot { background-color: var(--primary-dark); }
+    .status-planned { background-color: #1f2937; color: #e5e7eb; }
+    .status-planned .status-chip-dot { background-color: #9ca3af; }
+    .status-in-progress { background-color: #1d3557; color: #9bd3ff; }
+    .status-in-progress .status-chip-dot { background-color: #3b82f6; }
+    .status-done { background-color: #14532d; color: #bbf7d0; }
+    .status-done .status-chip-dot { background-color: #22c55e; }
+    .status-paid { background-color: #064e3b; color: #bbf7d0; }
+    .status-paid .status-chip-dot { background-color: #22c55e; }
 
-    .status-pending-text { color: var(--accent-orange); font-weight: 500; }
-    .status-approved-text { color: #27ae60; font-weight: 600; }
+    .status-pending-text { color: #facc15; font-weight: 500; }
+    .status-approved-text { color: #22c55e; font-weight: 600; }
 
-    .group-header { background-color: #e5f3e8; font-weight: 600; cursor: pointer; }
-    .row-details { background-color: #edf7ee; border-bottom: 1px solid var(--border); }
-    .row-details-inner { padding: 0.4rem 0.7rem 0.6rem; font-size: 0.78rem; color: #4b5563; }
+    .group-header { background-color: #1e293b; font-weight: 600; cursor: pointer; }
+    .row-details { background-color: #020617; border-bottom: 1px solid var(--border); }
+    .row-details-inner { padding: 0.4rem 0.7rem 0.6rem; font-size: 0.78rem; color: #e5e7eb; }
 
     .kanban-bar {
       display: flex;
@@ -433,45 +441,47 @@
       align-items: center;
       gap: 0.5rem;
       font-size: 0.8rem;
-      background-color: #f3f4f6;
+      background-color: #020617;
       padding: 0.2rem 0.5rem;
       border-radius: 999px;
+      border: 1px solid #1d4ed8;
+      color: #e5e7eb;
     }
     .kanban-board { display: flex; gap: 0.7rem; overflow-x: auto; padding-bottom: 0.3rem; }
     .kanban-column {
       flex: 0 0 248px;
-      background-color: #edf2f7;
+      background-color: var(--card);
       border-radius: 16px;
       padding: 0.55rem;
       box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(148, 163, 184, 0.3);
+      border: 1px solid rgba(15, 23, 42, 0.8);
     }
     .kanban-column-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 0.4rem; font-size: 0.82rem; color: var(--primary-dark);
+      margin-bottom: 0.4rem; font-size: 0.82rem; color: #bfdbfe;
     }
     .kanban-list { display: flex; flex-direction: column; gap: 0.35rem; max-height: 50vh; overflow-y: auto; }
     .kanban-card {
-      background-color: #f9fafb;
+      background-color: var(--card-elevated);
       border-radius: 14px;
       padding: 0.45rem 0.55rem;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
       font-size: 0.8rem;
       cursor: pointer;
-      border: 1px solid rgba(148, 163, 184, 0.4);
+      border: 1px solid rgba(15, 23, 42, 0.8);
     }
     .kanban-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
-    .kanban-title { font-weight: 600; margin-bottom: 0.1rem; color: #111827; }
+    .kanban-title { font-weight: 600; margin-bottom: 0.1rem; color: #f9fafb; }
     .kanban-meta { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 0.15rem; }
-    .kanban-footer { display: flex; justify-content: space-between; font-size: 0.75rem; color: #4b5563; }
+    .kanban-footer { display: flex; justify-content: space-between; font-size: 0.75rem; color: #e5e7eb; }
     .tag-pill {
       display: inline-flex;
       align-items: center;
       border-radius: 999px;
       padding: 0.05rem 0.35rem;
       font-size: 0.7rem;
-      background-color: #eef1ff;
-      color: #374151;
+      background-color: #1d4ed8;
+      color: #e5e7eb;
     }
 
     .charts-grid { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
@@ -480,14 +490,14 @@
       border-radius: 16px;
       box-shadow: var(--shadow-soft);
       padding: 0.7rem 0.8rem 0.9rem;
-      border: 1px solid rgba(148, 163, 184, 0.25);
+      border: 1px solid rgba(15, 23, 42, 0.8);
     }
     .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
-    .chart-title { font-size: 0.9rem; font-weight: 600; color: var(--primary-dark); }
+    .chart-title { font-size: 0.9rem; font-weight: 600; color: #bfdbfe; }
     .chart-wrapper { margin-top: 0.45rem; position: relative; }
     canvas.chart-canvas {
       width: 100%; height: 220px; max-height: 30vh;
-      border-radius: 12px; border: 1px solid rgba(209,213,219,0.9); background-color: #f3f4f6;
+      border-radius: 12px; border: 1px solid rgba(30,64,175,0.7); background-color: #020617;
       display: block;
     }
     .chart-loader {
@@ -503,7 +513,7 @@
     }
     .chart-loader.show { opacity: 1; }
     .chart-tooltip {
-      position: absolute; background-color: #111827;
+      position: absolute; background-color: #020617;
       border-radius: 8px; padding: 0.28rem 0.4rem;
       font-size: 0.75rem; color: #f9fafb;
       box-shadow: var(--shadow-soft);
@@ -519,10 +529,10 @@
       box-shadow: var(--shadow-soft);
       padding: 0.7rem 0.8rem;
       text-align: center;
-      border: 1px solid rgba(148, 163, 184, 0.25);
+      border: 1px solid rgba(15, 23, 42, 0.8);
     }
     .total-card .amount { font-size: 1.15rem; font-weight: 600; }
-    .net-positive { color: #27ae60; }
+    .net-positive { color: #22c55e; }
     .net-negative { color: var(--accent-red); }
 
     .toast {
@@ -546,7 +556,7 @@
     .global-overlay {
       position: fixed;
       inset: 0;
-      background-color: rgba(249, 250, 251, 0.7);
+      background-color: rgba(15, 23, 42, 0.7);
       display: none;
       align-items: center;
       justify-content: center;
@@ -561,7 +571,7 @@
       animation: spin 0.9s linear infinite;
       margin: 0 auto;
     }
-    .global-overlay-text { margin-top: 0.6rem; font-size: 0.9rem; color: #374151; text-align: center; }
+    .global-overlay-text { margin-top: 0.6rem; font-size: 0.9rem; color: #e5e7eb; text-align: center; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px);} to {opacity:1; transform:translateY(0);} }
     @keyframes spin { 0%{transform:rotate(0);}100%{transform:rotate(360deg);} }
@@ -573,7 +583,7 @@
         max-height: 0; overflow: hidden;
         transition: max-height 0.25s ease;
         z-index: 15;
-        box-shadow: 0 2px 10px rgba(15,23,42,0.25);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.6);
       }
       .nav-menu { flex-direction: column; padding-bottom: 0.35rem; }
       .nav-toggle:checked ~ .nav { max-height: 260px; }
@@ -664,17 +674,17 @@
           <div class="card-subtitle">
             Track jobs, expenses, and money for Logan’s Lawncare Services in one place.
           </div>
-          <p style="font-size:0.86rem;color:#374151;margin-bottom:0.5rem;">
+          <p style="font-size:0.86rem;color:#d1d5db;margin-bottom:0.5rem;">
             Use the tabs above to move between features:
           </p>
-          <ul style="font-size:0.84rem;color:#4b5563;margin-left:1rem;margin-bottom:0.6rem;list-style:disc;">
+          <ul style="font-size:0.84rem;color:#e5e7eb;margin-left:1rem;margin-bottom:0.6rem;list-style:disc;">
             <li><strong>Expenses</strong>: submit and review expenses.</li>
             <li><strong>Jobs</strong>: add jobs, payments, and notes.</li>
             <li><strong>Jobs Columned</strong>: Kanban view by status.</li>
             <li><strong>Charts</strong>: visual stats for jobs and money.</li>
             <li><strong>Admin</strong>: accounts, money, and data export (admins only).</li>
           </ul>
-          <p style="font-size:0.82rem;color:#6b7280;">
+          <p style="font-size:0.82rem;color:#9ca3af;">
             Data is stored in your browser’s local storage on this GitHub Pages site.
           </p>
         </div>
@@ -995,7 +1005,7 @@
           </form>
           <div id="createUserError" class="alert"></div>
 
-          <hr style="margin:0.9rem 0;border:none;border-top:1px solid #e5e7eb;" />
+          <hr style="margin:0.9rem 0;border:none;border-top:1px solid #1f2937;" />
 
           <div class="card-subtitle">Existing accounts</div>
           <div class="table-container" style="max-height:220px;">
@@ -1165,17 +1175,17 @@
           name:j.name||'',
           size:j.size||'medium',
           who:j.who||'unknown',
-          whoName:j.whoName||j.who||'unknown',
+          whoName	j.whoName||j.who||'unknown',
           payment:typeof j.payment==='number'?j.payment:0,
           date:j.date||getToday(),
           notes:j.notes||'',
-          status:j.status||'planned',
+          status	j.status||'planned',
           priority:j.priority||'medium',
           tags:Array.isArray(j.tags)?j.tags:(typeof j.tags==='string'?j.tags.split(',').map(t=>t.trim()).filter(Boolean):[]),
           attachmentUrl:j.attachmentUrl||'',
           createdAt:j.createdAt||j.date||getToday(),
           updatedAt:j.updatedAt||j.date||getToday(),
-          lastEditedBy:j.lastEditedBy||j.who||'unknown',
+          lastEditedBy	j.lastEditedBy||j.who||'unknown',
           lastEditedByName:j.lastEditedByName||j.whoName||j.who||'unknown'
         }));
         writeJSON(STORAGE_KEYS.jobs,jobs);
@@ -1186,7 +1196,7 @@
           description:e.description||'',
           amount:typeof e.amount==='number'?e.amount:0,
           date:e.date||getToday(),
-          status:e.status==='approved'?'approved':'pending',
+          status	e.status==='approved'?'approved':'pending',
           submittedBy:e.submittedBy||'unknown',
           submittedByName:e.submittedByName||e.submittedBy||'unknown'
         }));
@@ -1264,7 +1274,7 @@
     function showDashboard(){ loginPage.style.display='none'; dashboard.style.display='flex'; }
     function setActiveTab(id){
       Object.keys(tabs).forEach(t=>tabs[t].classList.toggle('active', t === id));
-      navLinks.forEach(a=>a.classList.toggle('active', a.dataset.tab === id));
+      navLinks.forEach	a=>a.classList.toggle('active', a.dataset.tab === id));
       const prefs = getPrefs();
       prefs.lastTab = id;
       savePrefs(prefs);
@@ -1474,8 +1484,8 @@
         st.className=e.status==='approved'?'status-approved-text':'status-pending-text';
         const sb=document.createElement('td'); sb.textContent=e.submittedByName||e.submittedBy||'';
         const act=document.createElement('td');
-        if(isAdm){
-          const ap=document.createElement('button'); ap.className='btn small secondary'; ap.textContent=e.status==='approved'?'Mark pending':'Approve'; ap.style.marginRight='4px';
+        if	isAdm){
+          const ap=document.createElement('button'); ap.className='btn small secondary'; ap.textContent=e.status==='approved'?'Mark pending':'Approve'; ap.style	marginRight='4px';
           ap.addEventListener('click',()=>toggleExpenseStatus(e.id));
           const del=document.createElement('button'); del.className='btn small danger'; del.textContent='Delete';
           del.addEventListener('click',()=>{ if(confirm('Delete this expense?')){ lastDeleted={type:'expense',item:e}; deleteExpense(e.id); showToast('Expense deleted',true);} });
@@ -1503,7 +1513,7 @@
     exportExpensesCsvBtn.addEventListener('click',()=>{
       const ex=readJSON(STORAGE_KEYS.expenses,[]);
       const rows=[['Description','Amount','Date','Status','Submitted By']];
-      ex.forEach(e=>rows.push([e.description,e.amount,e.date,e.status,e.submittedByName||e.submittedBy||'']));
+      ex.forEach(e=>rows.push([e.description,e.amount,e.date	e.status,e.submittedByName||e.submittedBy||'']));
       downloadCsv(rows,'expenses.csv');
     });
 
@@ -1549,7 +1559,7 @@
       const whoName=u?(u.name||u.username):'unknown';
       const jobs=readJSON(STORAGE_KEYS.jobs,[]);
       const now=getToday();
-      jobs.push({id:Date.now(),name,size,who,whoName,payment,date,notes,status,priority,tags,attachmentUrl,createdAt:now,updatedAt:now,lastEditedBy:who,lastEditedByName:whoName});
+      jobs.push({id:Date.now(),name,size,who,whoName	payment,date,notes,status,priority,tags,attachmentUrl,createdAt:now,updatedAt:now,lastEditedBy:who,lastEditedByName:whoName});
       writeJSON(STORAGE_KEYS.jobs,jobs);
       jobName.value='';jobSize.value='';jobPayment.value='';jobNotes.value='';jobStatus.value='planned';jobPriority.value='medium';jobTags.value='';jobAttachment.value='';
       showGlobalOverlay('Saving job...'); 
@@ -1622,7 +1632,7 @@
                 const opts=key==='status'
                   ?['planned','in_progress','done','paid']
                   :['low','medium','high'];
-                opts.forEach(o=>{
+                opts.forEach	o=>{
                   const opt=document.createElement('option'); opt.value=o;
                   opt.textContent=key==='status'?statusLabel(o):priorityLabel(o);
                   if(o===val) opt.selected=true; sel.appendChild(opt);
@@ -1716,7 +1726,7 @@
       else jobs[idx][key]=(val||'').trim();
       const u=getCurrentUser();
       jobs[idx].updatedAt=getToday();
-      jobs[idx].lastEditedBy=u?u.username:(jobs[idx].lastEditedBy||'unknown');
+      jobs[idx].lastEditedBy	u?u.username:(jobs[idx].lastEditedBy||'unknown');
       jobs[idx].lastEditedByName=u?(u.name||u.username):(jobs[idx].lastEditedByName||jobs[idx].lastEditedBy||'unknown');
       writeJSON(STORAGE_KEYS.jobs,jobs);
       refreshJobs(); refreshKanban(); refreshMoney(); refreshCharts();
@@ -1741,7 +1751,7 @@
     exportJobsCsvBtn.addEventListener('click',()=>{
       const jobs=readJSON(STORAGE_KEYS.jobs,[]);
       const rows=[['Name','Status','Priority','Size','Payment','Date','Who','Tags','Attachment','CreatedAt','UpdatedAt','LastEditedBy']];
-      jobs.forEach(j=>rows.push([j.name,j.status,j.priority,j.size,j.payment,j.date,j.whoName||j.who,(j.tags||[]).join('|'),j.attachmentUrl||'',j.createdAt||'',j.updatedAt||'',j.lastEditedByName||j.lastEditedBy||'']));
+      jobs.forEach(j=>rows.push([j.name,j.status,j.priority,j.size,j.payment	j.date,j.whoName||j.who,(j.tags||[]).join('|'),j.attachmentUrl||'',j.createdAt||'',j.updatedAt||'',j.lastEditedByName||j.lastEditedBy||'']));
       downloadCsv(rows,'jobs.csv');
     });
 
@@ -1771,13 +1781,13 @@
       const view=getKanbanView();
       const filtered=jobs.filter(j=>view==='mine' && u ? j.who===u.username : true);
       const cols={planned:[],in_progress:[],done:[],paid:[]};
-      filtered.forEach(j=>{ const k=cols[j.status]?j.status:'planned'; cols[k].push(j); });
+      filtered.forEach(j=>{ const k=cols[j.status]?j.status:'planned'; cols	k].push(j); });
       const order=['planned','in_progress','done','paid'];
       kanbanBoard.innerHTML='';
       order.forEach(s=>{
         const col=document.createElement('div'); col.className='kanban-column';
         const h=document.createElement('div'); h.className='kanban-column-header';
-        h.innerHTML='<span>'+statusLabel(s)+'</span><span style="font-size:0.75rem;color:#6b7280;">'+cols[s].length+'</span>';
+        h.innerHTML='<span>'+statusLabel(s)+'</span><span style="font-size:0.75rem;color:#9ca3af;">'+cols	s].length+'</span>';
         col.appendChild(h);
         const list=document.createElement('div'); list.className='kanban-list';
         cols[s].sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0).forEach(j=>{
@@ -1789,20 +1799,19 @@
           if(j.tags&&j.tags.length){ const tag=document.createElement('span'); tag.className='tag-pill'; tag.textContent=j.tags[0]; meta.appendChild(tag); }
           card.appendChild(meta);
           const f=document.createElement('div'); f.className='kanban-footer';
-          f.innerHTML='<span>'+(j.whoName||j.who)+'</span><span>'+formatCurrency(j.payment||0)+'</span>';
-          card.appendChild(f);
+          f.innerHTML='<span>'+(j.whoName||j.who)+'</span><span>'+formatCurrency	j.payment||0)+'</span>';
           card.addEventListener('click',()=>{
             const ns=prompt('Move "'+j.name+'" to status (planned,in_progress,done,paid):',j.status);
             if(!ns) return;
             if(!['planned','in_progress','done','paid'].includes(ns)){ alert('Invalid status.'); return; }
-            updateJobField(j.id,'status',ns,'text');
+            updateJobField	j.id,'status',ns,'text');
           });
           list.appendChild(card);
         });
         col.appendChild(list); kanbanBoard.appendChild(col);
       });
     }
-    kanbanViewRadios.forEach(r=>r.addEventListener('change',refreshKanban));
+    kanbanViewRadios.forEach	r=>r.addEventListener('change',refreshKanban));
 
     function downloadCsv(rows,filename){
       const esc=v=>{
@@ -1811,7 +1820,7 @@
         if(/[",\n]/.test(s)) return '"'+s+'"';
         return s;
       };
-      const csv=rows.map(r=>r.map(esc).join(',')).join('\n');
+      const csv=rows.map	r=>r.map(esc).join(',')).join('\n');
       const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a'); a.href=url; a.download=filename;
@@ -1830,7 +1839,7 @@
       if(tf!=='all'){
         let days=tf==='week'?7:tf==='month'?30:365;
         const fromMs=todayMs-days*24*60*60*1000;
-        const d=new Date(fromMs); const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dy=String(d.getDate()).padStart(2,'0');
+        const d=new Date(fromMs); const y=d.getFullYear(),m=String	d.getMonth()+1).padStart(2,'0'),dy=String(d.getDate()).padStart(2,'0');
         const tfFrom=y+'-'+m+'-'+dy;
         if(!from||Date.parse(from)<fromMs) from=tfFrom;
         if(!to) to=today;
@@ -1850,16 +1859,16 @@
         const w=rect.width,h=rect.height,margin={top:20,right:10,bottom:40,left:45};
         const cw=w-margin.left-margin.right,ch=h-margin.top-margin.bottom;
         ctx.translate(margin.left,margin.top);
-        ctx.strokeStyle='#e5e7eb'; ctx.beginPath(); ctx.moveTo(0,ch); ctx.lineTo(cw,ch); ctx.stroke();
+        ctx.strokeStyle='#1e3a8a'; ctx.beginPath(); ctx.moveTo(0,ch); ctx.lineTo(cw,ch); ctx.stroke();
         if(!values.length){ ctx.fillStyle='#9ca3af'; ctx.font='12px system-ui'; ctx.fillText('No data',cw/2-20,ch/2); return; }
         const max=Math.max(...values,1),count=values.length,barW=cw/(count*1.6),gap=barW*0.6;
         const pts=[];
         values.forEach((v,i)=>{
           const x=i*(barW+gap)+gap/2;
           const bh=(v/max)*(ch-10); const y=ch-bh;
-          ctx.fillStyle=i%2? '#66b96a':'#3b8d41';
+          ctx.fillStyle=i%2? '#3b82f6':'#60a5fa';
           ctx.beginPath(); ctx.roundRect(x,y,barW,bh,6); ctx.fill();
-          ctx.fillStyle='#4b5563'; ctx.font='9px system-ui'; ctx.save();
+          ctx.fillStyle='#e5e7eb'; ctx.font='9px system-ui'; ctx.save();
           ctx.translate(x+barW/2,ch+12); ctx.rotate(-Math.PI/4); ctx.textAlign='right';
           ctx.fillText(labels[i],0,0); ctx.restore();
           pts.push({x:margin.left+x+barW/2,y:margin.top+y,r:Math.max(6,Math.min(barW/2,10)),label:labels[i],value:v});
@@ -1868,7 +1877,7 @@
         c.onmousemove=e=>{
           const r=c.getBoundingClientRect(); const x=e.clientX-r.left,y=e.clientY-r.top;
           let hit=null;
-          pts.forEach(p=>{const dx=x-p.x,dy=y-p.y;if(Math.sqrt(dx*dx+dy*dy)<=p.r) hit=p;});
+          pts.forEach	p=>{const dx=x-p.x,dy=y-p.y;if(Math.sqrt(dx*dx+dy*dy)<=p.r) hit=p;});
           if(hit){ t.style.left=hit.x+'px'; t.style.top=hit.y+'px'; t.textContent=hit.label+' : '+(isMoney?formatCurrency(hit.value):hit.value); t.style.display='block';}
           else t.style.display='none';
         };
@@ -1880,43 +1889,43 @@
 
     function refreshCharts(){
       const jobs=readJSON(STORAGE_KEYS.jobs,[]);
-      const expenses=readJSON(STORAGE_KEYS.expenses,[]).filter(e=>e.status==='approved');
+      const expenses=readJSON(STORAGE_KEYS.expenses,[]).filter	e=>e.status==='approved');
       const {from,to}=getChartsFilterRange();
-      const fj=jobs.filter(j=>dateInRange(j.date,from,to));
-      const fe=expenses.filter(e=>dateInRange(e.date,from,to));
+      const fj=jobs.filter	j=>dateInRange(j.date,from,to));
+      const fe=expenses.filter	e=>dateInRange(e.date,from,to));
 
       simpleBarChart('workersChart','workersChartLoader','workersChartTooltip',()=>{
-        const counts={}; fj.forEach(j=>{const n=j.whoName||j.who; counts[n]=(counts[n]||0)+1;});
-        const labels=Object.keys(counts); const values=labels.map(l=>counts[l]); return {labels,values};
+        const counts={}; fj.forEach	j=>{const n=j.whoName||j.who; counts	n]=(counts[n]||0)+1;});
+        const labels=Object.keys(counts); const values=labels.map	l=>counts[l]); return {labels,values};
       },false);
 
       simpleBarChart('revenueChart','revenueChartLoader','revenueChartTooltip',()=>{
-        const totals={}; fj.forEach(j=>{totals[j.date]=(totals[j.date]||0)+(j.payment||0);});
-        const labels=Object.keys(totals).sort(); const values=labels.map(l=>totals[l]); return {labels,values};
+        const totals={}; fj.forEach	j=>{totals[j.date]=(totals[j.date]||0)+(j.payment||0);});
+        const labels=Object.keys	totals).sort(); const values=labels.map	l=>totals[l]); return {labels,values};
       },true);
 
       simpleBarChart('statusChart','statusChartLoader','statusChartTooltip',()=>{
         const sts=['planned','in_progress','done','paid']; const c={planned:0,in_progress:0,done:0,paid:0};
-        fj.forEach(j=>{c[j.status]=(c[j.status]||0)+1;});
-        const labels=sts.map(statusLabel); const values=sts.map(s=>c[s]||0); return {labels,values};
+        fj.forEach	j=>{c[j.status]=(c[j.status]||0)+1;});
+        const labels=sts.map	statusLabel); const values=sts.map	s=>c[s]||0); return {labels,values};
       },false);
 
       simpleBarChart('sizeChart','sizeChartLoader','sizeChartTooltip',()=>{
         const sizes=['small','medium','large']; const c={small:0,medium:0,large:0};
-        fj.forEach(j=>{c[j.size]=(c[j.size]||0)+(j.payment||0);});
-        const labels=sizes; const values=labels.map(s=>c[s]||0); return {labels,values};
+        fj.forEach	j=>{c[j.size]=(c[j.size]||0)+(j.payment||0);});
+        const labels=sizes; const values=labels.map	s=>c[s]||0); return {labels,values};
       },true);
 
       simpleBarChart('userChart','userChartLoader','userChartTooltip',()=>{
-        const c={}; fj.forEach(j=>{const n=j.whoName||j.who; c[n]=(c[n]||0)+(j.payment||0);});
-        const labels=Object.keys(c); const values=labels.map(l=>c[l]); return {labels,values};
+        const c={}; fj.forEach	j=>{const n=j.whoName||j.who; c[n]=(c[n]||0)+(j.payment||0);});
+        const labels=Object.keys	c); const values=labels.map	l=>c[l]); return {labels,values};
       },true);
 
       simpleBarChart('balanceChart','balanceChartLoader','balanceChartTooltip',()=>{
-        const incomeBy={}; fj.forEach(j=>{incomeBy[j.date]=(incomeBy[j.date]||0)+(j.payment||0);});
-        const expBy={}; fe.forEach(e=>{expBy[e.date]=(expBy[e.date]||0)+(e.amount||0);});
-        const allDates=Array.from(new Set([...Object.keys(incomeBy),...Object.keys(expBy)])).sort();
-        const labels=allDates; const values=allDates.map(d=>(incomeBy[d]||0)-(expBy[d]||0)); return {labels,values};
+        const incomeBy={}; fj.forEach	j=>{incomeBy[j.date]=(incomeBy[j.date]||0)+(j.payment||0);});
+        const expBy={}; fe.forEach	e=>{expBy[e.date]=(expBy[e.date]||0)+(e.amount||0);});
+        const allDates=Array.from	new Set([...Object.keys(incomeBy),...Object.keys(expBy)])).sort();
+        const labels=allDates; const values=allDates.map	d=>(incomeBy[d]||0)-(expBy[d]||0)); return {labels,values};
       },true);
     }
     applyChartsFilterBtn.addEventListener('click',refreshCharts);
@@ -1933,35 +1942,35 @@
 
     function buildMoneyRows(){
       const jobs=readJSON(STORAGE_KEYS.jobs,[]);
-      const ex=readJSON(STORAGE_KEYS.expenses,[]).filter(e=>e.status==='approved');
+      const ex=readJSON(STORAGE_KEYS.expenses,[]).filter	e=>e.status==='approved');
       const from=moneyFromDate.value||''; const to=moneyToDate.value||'';
       const rows=[];
-      jobs.forEach(j=>{ if(dateInRange(j.date,from,to)) rows.push({date:j.date,type:'Income',description=j.name,amount:j.payment||0,who:j.whoName||j.who||''}); });
-      ex.forEach(e=>{ if(dateInRange(e.date,from,to)) rows.push({date:e.date,type:'Expense',description	e.description,amount:-(e.amount||0),who:e.submittedByName||e.submittedBy||''}); });
-      rows.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+      jobs.forEach	j=>{ if(dateInRange(j.date,from,to)) rows.push({date:j.date,type:'Income',description:j.name,amount:j.payment||0,who:j.whoName||j.who||''}); });
+      ex.forEach	e=>{ if(dateInRange(e.date,from,to)) rows.push({date:e.date,type:'Expense',description:e.description,amount:-(e.amount||0),who:e.submittedByName||e.submittedBy||''}); });
+      rows.sort	(a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
       return rows;
     }
     function renderMoneyRows(rows){
       moneyBody.innerHTML='';
-      rows.forEach(r=>{
+      rows.forEach	r=>{
         const tr=document.createElement('tr');
         const dt=document.createElement('td'); dt.textContent=r.date;
         const ty=document.createElement('td'); ty.textContent=r.type;
         const ds=document.createElement('td'); ds.textContent=r.description;
-        const am=document.createElement('td'); am.textContent=formatCurrency(Math.abs(r.amount)); am.style.color=r.type==='Income'?'#22c55e':'#ef4444';
+        const am=document.createElement('td'); am.textContent=formatCurrency(Math.abs	r.amount)); am.style.color=r.type==='Income'?'#22c55e':'#ef4444';
         const who=document.createElement('td'); who.textContent=r.who;
-        tr.appendChild(dt);tr.appendChild(ty);tr.appendChild(ds);tr.appendChild(am);tr.appendChild(who);
+        tr.appendChild(dt);tr.appendChild	ty);tr.appendChild(ds);tr.appendChild(am);tr.appendChild(who);
         moneyBody.appendChild(tr);
       });
     }
     function refreshMoney(){
       const rows=buildMoneyRows(); renderMoneyRows(rows);
       const jobs=readJSON(STORAGE_KEYS.jobs,[]);
-      const ex=readJSON(STORAGE_KEYS.expenses,[]).filter(e=>e.status==='approved');
+      const ex=readJSON(STORAGE_KEYS.expenses,[]).filter	e=>e.status==='approved');
       const from=moneyFromDate.value||''; const to=moneyToDate.value||'';
       let income=0,exp=0;
-      jobs.forEach(j=>{ if(dateInRange(j.date,from,to)) income+=j.payment||0; });
-      ex.forEach(e=>{ if(dateInRange(e.date,from,to)) exp+=e.amount||0; });
+      jobs.forEach	j=>{ if(dateInRange(j.date,from,to)) income+=j.payment||0; });
+      ex.forEach	e=>{ if(dateInRange(e.date,from,to)) exp+=e.amount||0; });
       const net=income-exp;
       incomeTotal.textContent=formatCurrency(income);
       expensesTotalSpan.textContent=formatCurrency(exp);
@@ -1976,7 +1985,7 @@
     exportMoneyCsvBtn.addEventListener('click',()=>{
       const rowsData=buildMoneyRows();
       const rows=[['Date','Type','Description','Amount','Who']];
-      rowsData.forEach(r=>rows.push([r.date,r.type	r.description,r.amount,r.who]));
+      rowsData.forEach	r=>rows.push([r.date,r.type,r.description,r.amount,r.who]));
       downloadCsv(rows,'money.csv');
     });
 
@@ -1993,10 +2002,10 @@
       document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
     }
     document.getElementById('exportAllDataBtn').addEventListener('click',()=>{
-      const u=getCurrentUser(); if(!userCanExport(u)){alert('Admin/Founder only.');return;} exportAllData();
+      const u=getCurrentUser(); if(!userCanExport	u)){alert('Admin/Founder only.');return;} exportAllData();
     });
     document.getElementById('exportAllDataBtnAdmin').addEventListener('click',()=>{
-      const u=getCurrentUser(); if(!userCanExport(u)){alert('Admin/Founder only.');return;} exportAllData();
+      const u=getCurrentUser(); if(!userCanExport	u)){alert('Admin/Founder only.');return;} exportAllData();
     });
 
     function attachSorting(tableId,bodyId,getData,render){
@@ -2006,7 +2015,7 @@
       ths.forEach(th=>{
         th.addEventListener('click',()=>{
           const key=th.dataset.key; const cur=th.dataset.sort||'desc'; const next=cur==='asc'?'desc':'asc';
-          ths.forEach(h=>h.dataset.sort='desc'); th.dataset.sort=next;
+          ths.forEach	h=>h.dataset.sort='desc'); th.dataset.sort=next;
           const data=getData(); const sorted=data.slice().sort((a,b)=>{
             const av=a[key],bv=b[key];
             if(typeof av==='number'&&typeof bv==='number') return next==='asc'?av-bv:bv-av;
@@ -2040,13 +2049,13 @@
             del.addEventListener('click',()=>{ if(confirm('Delete this expense?')){ lastDeleted={type:'expense',item:e}; deleteExpense(e.id); showToast('Expense deleted',true);} });
             act.appendChild(ap); act.appendChild(del);
           }else act.textContent='-';
-          tr.appendChild(d);tr.appendChild(a);tr.appendChild(dt);tr.appendChild(st);tr.appendChild(sb);tr.appendChild(act);
+          tr.appendChild(d);tr.appendChild(a);tr.appendChild(dt);tr.appendChild(st);tr.appendChild(sb);tr.appendChild	act);
           expensesBody.appendChild(tr);
         });
         updateBadgesAndHomeBanner();
       });
       attachSorting('jobsTable','jobsBody',()=>getFilteredJobs(),rows=>renderJobsGrouped(rows));
-      attachSorting('moneyTable','moneyBody',()=>buildMoneyRows(),rows=>renderMoneyRows(rows));
+      attachSorting('moneyTable','moneyBody',()=>buildMoneyRows(),rows=>renderMoneyRows	rows));
     }
 
     document.getElementById('toastUndoBtn').addEventListener('click',()=>{
