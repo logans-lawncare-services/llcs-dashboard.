@@ -349,7 +349,8 @@
     }
     .filter-row input[type="date"],
     .filter-row select,
-    .filter-row input[type="text"] {
+    .filter-row input[type="text"],
+    .filter-row input[type="number"] {
       font-size: 0.78rem;
       padding: 0.22rem 0.6rem;
       border-radius: 999px;
@@ -491,6 +492,10 @@
     }
     .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
     .chart-title { font-size: 0.9rem; font-weight: 600; color: #bfdbfe; }
+    .chart-card-fullscreen-badge {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
     .chart-wrapper { margin-top: 0.45rem; position: relative; }
     canvas.chart-canvas {
       width: 100%; height: 220px; max-height: 30vh;
@@ -516,6 +521,19 @@
       box-shadow: var(--shadow-soft);
       pointer-events: none; transform: translate(-50%, -130%);
       white-space: nowrap; display: none; z-index: 5;
+    }
+
+    .chart-card.fullscreen {
+      position: fixed;
+      inset: 56px 8px 8px 8px;
+      z-index: 30;
+      background-color: #020617;
+      border-radius: 18px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.85);
+    }
+    .chart-card.fullscreen .chart-canvas {
+      height: calc(100vh - 140px);
+      max-height: none;
     }
 
     .totals { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 0.8rem; }
@@ -570,7 +588,7 @@
     }
     .global-overlay-text { margin-top: 0.6rem; font-size: 0.9rem; color: #e5e7eb; text-align: center; }
 
-    /* NEW: smoother inline controls in tables */
+    /* smoother inline controls in tables */
     .table-container input[type="text"],
     .table-container input[type="number"],
     .table-container input[type="url"],
@@ -600,7 +618,7 @@
       border-color: rgba(37, 99, 235, 0.7);
     }
 
-    /* NEW: nicer custom arrow for all selects */
+    /* nicer custom arrow for all selects */
     select {
       -webkit-appearance: none;
       -moz-appearance: none;
@@ -641,7 +659,8 @@
       .main { padding: 1.1rem 1.3rem 1.3rem; }
       .charts-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
-  </style></head>
+  </style>
+</head>
 <body>
   <!-- LOGIN PAGE -->
   <div class="login" id="loginPage">
@@ -983,7 +1002,15 @@
       <!-- CHARTS TAB -->
       <section class="tab" id="chartsTab">
         <div class="card">
-          <div class="card-header">Filters</div>
+          <div class="card-header">Filters & goals</div>
+
+          <div class="filter-row" style="margin-bottom:0.4rem;">
+            <span>Monthly revenue goal:</span>
+            <input type="number" id="chartsMonthlyGoal" min="0" step="50" style="width:110px;" />
+            <button type="button" class="btn small secondary" id="saveChartsGoalBtn">Save goal</button>
+            <span id="chartsGoalSummary" style="font-size:0.78rem;color:#9ca3af;"></span>
+          </div>
+
           <div class="filter-row">
             <span>Date range:</span>
             <input type="date" id="chartsFromDate" />
@@ -1001,7 +1028,10 @@
 
         <div class="charts-grid">
           <div class="chart-card">
-            <div class="chart-header"><div class="chart-title">Top Workers by Job Count</div></div>
+            <div class="chart-header">
+              <div class="chart-title">Top workers by job count</div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
             <div class="chart-wrapper">
               <canvas id="workersChart" class="chart-canvas"></canvas>
               <div class="chart-loader" id="workersChartLoader"></div>
@@ -1010,7 +1040,10 @@
           </div>
 
           <div class="chart-card">
-            <div class="chart-header"><div class="chart-title">Revenue by Day</div></div>
+            <div class="chart-header">
+              <div class="chart-title">Daily revenue</div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
             <div class="chart-wrapper">
               <canvas id="revenueChart" class="chart-canvas"></canvas>
               <div class="chart-loader" id="revenueChartLoader"></div>
@@ -1019,7 +1052,10 @@
           </div>
 
           <div class="chart-card">
-            <div class="chart-header"><div class="chart-title">Income vs Expenses Over Time</div></div>
+            <div class="chart-header">
+              <div class="chart-title">Income vs expenses (net)</div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
             <div class="chart-wrapper">
               <canvas id="balanceChart" class="chart-canvas"></canvas>
               <div class="chart-loader" id="balanceChartLoader"></div>
@@ -1028,7 +1064,10 @@
           </div>
 
           <div class="chart-card">
-            <div class="chart-header"><div class="chart-title">Jobs by Status</div></div>
+            <div class="chart-header">
+              <div class="chart-title">Jobs by status</div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
             <div class="chart-wrapper">
               <canvas id="statusChart" class="chart-canvas"></canvas>
               <div class="chart-loader" id="statusChartLoader"></div>
@@ -1037,7 +1076,10 @@
           </div>
 
           <div class="chart-card">
-            <div class="chart-header"><div class="chart-title">Revenue by Size</div></div>
+            <div class="chart-header">
+              <div class="chart-title">Revenue by job size</div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
             <div class="chart-wrapper">
               <canvas id="sizeChart" class="chart-canvas"></canvas>
               <div class="chart-loader" id="sizeChartLoader"></div>
@@ -1046,7 +1088,10 @@
           </div>
 
           <div class="chart-card">
-            <div class="chart-header"><div class="chart-title">Earnings by User</div></div>
+            <div class="chart-header">
+              <div class="chart-title">Earnings by worker</div>
+              <div class="chart-card-fullscreen-badge">Click chart to toggle fullscreen</div>
+            </div>
             <div class="chart-wrapper">
               <canvas id="userChart" class="chart-canvas"></canvas>
               <div class="chart-loader" id="userChartLoader"></div>
@@ -1250,7 +1295,8 @@
         theme: 'light',
         lastTab: 'homeTab',
         jobsView: 'all',
-        kanbanView: 'all'
+        kanbanView: 'all',
+        monthlyGoal: 1500
       });
     }
 
@@ -2442,6 +2488,30 @@
     const chartsToDate = document.getElementById('chartsToDate');
     const chartsTimeframe = document.getElementById('chartsTimeframe');
     const applyChartsFilterBtn = document.getElementById('applyChartsFilterBtn');
+    const chartsMonthlyGoalInput = document.getElementById('chartsMonthlyGoal');
+    const saveChartsGoalBtn = document.getElementById('saveChartsGoalBtn');
+    const chartsGoalSummary = document.getElementById('chartsGoalSummary');
+
+    function loadChartsGoalFromPrefs() {
+      const prefs = getPrefs();
+      if (chartsMonthlyGoalInput) {
+        chartsMonthlyGoalInput.value = prefs.monthlyGoal || 0;
+      }
+    }
+
+    function saveChartsGoalToPrefs() {
+      const raw = chartsMonthlyGoalInput ? Number(chartsMonthlyGoalInput.value || '0') : 0;
+      const goal = Number.isNaN(raw) || raw < 0 ? 0 : Math.round(raw);
+      const prefs = getPrefs();
+      prefs.monthlyGoal = goal;
+      savePrefs(prefs);
+      showToast('Charts goal updated');
+      refreshCharts();
+    }
+
+    if (saveChartsGoalBtn) {
+      saveChartsGoalBtn.addEventListener('click', saveChartsGoalToPrefs);
+    }
 
     function getChartsFilterRange() {
       let from = chartsFromDate.value || '';
@@ -2499,17 +2569,24 @@
           return;
         }
 
-        const max = Math.max(...values, 1);
+        const max = Math.max(...values.map(v => Math.abs(v)), 1);
         const count = values.length;
         const barW = cw / (count * 1.6);
         const gap = barW * 0.6;
         const pts = [];
+        const isBalanceChart = (canvasId === 'balanceChart');
 
         values.forEach((v, i) => {
           const x = i * (barW + gap) + gap / 2;
-          const bh = (v / max) * (ch - 10);
+          const bh = (Math.abs(v) / max) * (ch - 10);
           const y = ch - bh;
-          ctx.fillStyle = i % 2 ? '#3b82f6' : '#60a5fa';
+
+          if (isBalanceChart) {
+            ctx.fillStyle = v >= 0 ? '#16a34a' : '#dc2626';
+          } else {
+            ctx.fillStyle = i % 2 ? '#16a34a' : '#22c55e';
+          }
+
           ctx.beginPath();
           if (ctx.roundRect) ctx.roundRect(x, y, barW, bh, 6);
           else ctx.fillRect(x, y, barW, bh);
@@ -2546,7 +2623,8 @@
           if (hit) {
             t.style.left = hit.x + 'px';
             t.style.top = hit.y + 'px';
-            t.textContent = hit.label + ' : ' + (isMoney ? formatCurrency(hit.value) : hit.value);
+            const valText = isMoney ? formatCurrency(hit.value) : hit.value;
+            t.textContent = hit.label + ' – ' + valText;
             t.style.display = 'block';
           } else {
             t.style.display = 'none';
@@ -2571,6 +2649,31 @@
       const { from, to } = getChartsFilterRange();
       const fj = jobs.filter(j => dateInRange(j.date, from, to));
       const fe = expenses.filter(e => dateInRange(e.date, from, to));
+
+      // goal vs this month
+      const prefs = getPrefs();
+      const goal = prefs.monthlyGoal || 0;
+      const todayStr = getToday();
+      const d = new Date(todayStr);
+      const monthStart = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-01';
+      const jobsThisMonth = jobs.filter(j => dateInRange(j.date, monthStart, todayStr));
+      const revenueThisMonth = jobsThisMonth.reduce((sum, j) => sum + (j.payment || 0), 0);
+
+      if (chartsGoalSummary) {
+        if (goal <= 0) {
+          chartsGoalSummary.textContent = 'No monthly goal set yet.';
+          chartsGoalSummary.style.color = '#9ca3af';
+        } else {
+          const pct = Math.round((revenueThisMonth / goal) * 100);
+          const remaining = Math.max(goal - revenueThisMonth, 0);
+          chartsGoalSummary.textContent =
+            'This month: ' + formatCurrency(revenueThisMonth) +
+            ' / ' + formatCurrency(goal) +
+            ' (' + pct + '%). ' +
+            (remaining > 0 ? ('Need ' + formatCurrency(remaining) + ' to hit goal.') : 'Goal reached!');
+          chartsGoalSummary.style.color = remaining > 0 ? '#fbbf24' : '#22c55e';
+        }
+      }
 
       simpleBarChart('workersChart', 'workersChartLoader', 'workersChartTooltip', () => {
         const counts = {};
@@ -2643,6 +2746,22 @@
     }
 
     applyChartsFilterBtn.addEventListener('click', refreshCharts);
+
+    function initChartFullscreen() {
+      const cards = document.querySelectorAll('.chart-card');
+      cards.forEach(card => {
+        const canvas = card.querySelector('canvas.chart-canvas');
+        if (!canvas) return;
+        card.style.cursor = 'zoom-in';
+
+        card.addEventListener('click', e => {
+          if (['BUTTON', 'SELECT', 'OPTION', 'INPUT', 'LABEL'].includes(e.target.tagName)) return;
+          const isFull = card.classList.toggle('fullscreen');
+          card.style.cursor = isFull ? 'zoom-out' : 'zoom-in';
+          setTimeout(() => refreshCharts(), 80);
+        });
+      });
+    }
 
     // MONEY TAB
     const incomeTotal = document.getElementById('incomeTotal');
@@ -2949,7 +3068,6 @@
         }
       }
 
-      // My summary card
       const myCard = document.getElementById('homeMySummaryCard');
       const myJobsWeekEl = document.getElementById('homeMyJobsWeek');
       const myRevenueMonthEl = document.getElementById('homeMyRevenueMonth');
@@ -2983,7 +3101,6 @@
       }
     }
 
-    // Click handler for My summary card
     const homeMySummaryCard = document.getElementById('homeMySummaryCard');
     if (homeMySummaryCard) {
       homeMySummaryCard.addEventListener('click', () => {
@@ -3022,6 +3139,7 @@
       ensureMetaAndMigrate();
       ensureAdminUser();
       applyThemeFromPrefs();
+      loadChartsGoalFromPrefs();
 
       const u = getCurrentUser();
       const prefs = getPrefs();
@@ -3037,6 +3155,7 @@
         showLogin();
       }
       initSorting();
+      initChartFullscreen();
     });
   </script>
 </body>
